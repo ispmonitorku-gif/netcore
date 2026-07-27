@@ -434,7 +434,7 @@
         </div>
     </div>
 
-    <!-- Modal Form & List OTDR -->
+    <!-- Modal Form & List OTDR (REVISI MULTIPLE UPLOAD & AUTO FOLDER) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
         <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[75vh]">
             <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
@@ -446,8 +446,9 @@
                 <form id="otdrInputForm" onsubmit="handleOTDRInput(event)" class="space-y-3 mb-6 bg-slate-800/50 p-4 rounded-xl border border-slate-700/80 shadow-inner">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div class="space-y-1 md:col-span-2">
-                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Nama Folder / Project</label>
-                            <input type="text" id="folderOtdr" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-purple-500 focus:outline-none" placeholder="Contoh: OTDR Line Core POP Setiabudi">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Nama Folder / Project (Opsional)</label>
+                            <!-- Dibuat opsional. Jika kosong akan menjadi Auto Folder. -->
+                            <input type="text" id="folderOtdr" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-purple-500 focus:outline-none" placeholder="Otomatis dibuat jika dikosongkan (Lokasi + OTB)">
                         </div>
                         <div class="space-y-1">
                             <label class="text-[10px] text-slate-400 font-semibold uppercase">Nama OTB</label>
@@ -459,7 +460,8 @@
                         </div>
                         <div class="space-y-1 md:col-span-2">
                             <label class="text-[10px] text-slate-400 font-semibold uppercase">File Pengukuran (.sor)</label>
-                            <input type="file" id="fileOtdr" accept=".sor" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-purple-500 focus:outline-none file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer">
+                            <!-- Ditambahkan attribute 'multiple' agar dapat memilih banyak file sekaligus -->
+                            <input type="file" id="fileOtdr" accept=".sor" multiple required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-purple-500 focus:outline-none file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer">
                         </div>
                     </div>
                     <button type="submit" id="submitOtdrBtn" class="w-full mt-3 bg-purple-600 active:scale-95 text-white font-bold py-2.5 rounded-lg transition shadow-lg flex items-center justify-center gap-2 text-sm">
@@ -498,7 +500,7 @@
         // GITHUB PAGES FETCH WRAPPER & MOCK DATA
         // ==============================================================
         // IMPORTANT: MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyN_CecgDysX4IaqXvxk9MuT61OsVEkYPR_RtoUUkU2wyhMibCw-StxKLdpzXwy_Jy0/exec"; 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec"; 
 
         if (typeof google === 'undefined') {
             console.log("Environment: Luar Apps Script (GitHub Pages)");
@@ -1105,41 +1107,86 @@
             showNotification(`${cbs.length} file sedang dibuka.`, 'success');
         }
 
+        // ==============================================================
+        // FUNGSI MULTI-UPLOAD OTDR & AUTO FOLDER
+        // ==============================================================
         function handleOTDRInput(e) {
             e.preventDefault();
             const fileInput = document.getElementById('fileOtdr');
-            if(fileInput.files.length === 0) return showNotification('Pilih file .sor!', 'error');
-            const file = fileInput.files[0];
-            const reader = new FileReader();
+            if (fileInput.files.length === 0) return showNotification('Pilih minimal satu file .sor!', 'error');
+            const files = fileInput.files;
             
             const btn = document.getElementById('submitOtdrBtn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Base64...'; btn.disabled = true;
+            btn.disabled = true;
             
-            reader.onload = function(ev) {
-                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up fa-bounce"></i> Mengunggah...';
-                const base64Data = ev.target.result;
-                const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-                const dataObj = {
-                    nama_folder: document.getElementById('folderOtdr').value,
-                    nama_otb: document.getElementById('otbOtdr').value,
-                    lokasi: document.getElementById('lokasiOtdr').value,
-                    fileName: file.name,
-                    fileMimeType: file.type || 'application/octet-stream',
-                    fileData: base64Data,
-                    userEmail: session.email
-                };
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const otbVal = document.getElementById('otbOtdr').value;
+            const lokasiVal = document.getElementById('lokasiOtdr').value;
+            
+            // Konfigurasi Auto Folder:
+            // Jika dikosongkan, buat nama folder otomatis dengan format "OTDR - [Lokasi] - [OTB]"
+            let folderVal = document.getElementById('folderOtdr').value.trim();
+            if (!folderVal) {
+                folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
+            }
+
+            // Fungsi helper untuk membaca Base64 Async
+            const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = ev => resolve(ev.target.result);
+                reader.onerror = err => reject(err);
+                reader.readAsDataURL(file);
+            });
+
+            // Wrapper Promise untuk eksekusi upload ke server via API/ScriptRun
+            const uploadFilePromise = (dataObj) => new Promise((resolve, reject) => {
+                google.script.run
+                .withSuccessHandler(res => { if(res.success) resolve(res); else reject(new Error(res.message)); })
+                .withFailureHandler(err => reject(err))
+                .uploadOTDRData(dataObj);
+            });
+
+            // Jalankan loop sequential agar tidak overload request dan file aman masuk folder
+            (async function processUploads() {
+                let successCount = 0;
+                let errorMsgs = [];
                 
-                google.script.run.withSuccessHandler(res => {
-                    restoreBtn(btn, originalText);
-                    if(res.success) { 
-                        showNotification(res.message, 'success'); 
-                        document.getElementById('otdrInputForm').reset();
-                        refreshOTDRList(1);
-                    } else showNotification(res.message, 'error');
-                }).withFailureHandler(err => { restoreBtn(btn, originalText); showNotification(err.message, 'error'); }).uploadOTDRData(dataObj);
-            };
-            reader.readAsDataURL(file);
+                for (let i = 0; i < files.length; i++) {
+                    try {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah ${i + 1} dari ${files.length}...`;
+                        const file = files[i];
+                        const base64Data = await readFileAsBase64(file);
+                        
+                        const dataObj = {
+                            nama_folder: folderVal,
+                            nama_otb: otbVal,
+                            lokasi: lokasiVal,
+                            fileName: file.name,
+                            fileMimeType: file.type || 'application/octet-stream',
+                            fileData: base64Data,
+                            userEmail: session.email
+                        };
+                        
+                        await uploadFilePromise(dataObj);
+                        successCount++;
+                    } catch (err) {
+                        errorMsgs.push(`${files[i].name}: ${err.message}`);
+                    }
+                }
+                
+                restoreBtn(btn, originalText);
+                
+                if (successCount > 0) {
+                    showNotification(`${successCount} file berhasil diunggah!`, 'success');
+                    document.getElementById('otdrInputForm').reset();
+                    refreshOTDRList(1);
+                }
+                if (errorMsgs.length > 0) {
+                    showNotification(`Gagal mengupload ${errorMsgs.length} file. Periksa log.`, 'error');
+                    console.error("Gagal Upload OTDR: ", errorMsgs);
+                }
+            })();
         }
 
         function openEditOTDR(otb, timestamp, folder, lokasi) {
