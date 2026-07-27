@@ -434,7 +434,7 @@
         </div>
     </div>
 
-    <!-- Modal Form & List OTDR (REVISI MULTIPLE UPLOAD & AUTO FOLDER) -->
+    <!-- Modal Form & List OTDR (REVISI MULTIPLE UPLOAD & AUTO FOLDER & COLLAPSIBLE) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
         <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[75vh]">
             <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
@@ -1052,6 +1052,23 @@
 
         function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
 
+        // FUNGSI UNTUK MENGATUR COLLAPSIBLE FOLDER
+        function toggleFolderContent(headerEl) {
+            const content = headerEl.nextElementSibling;
+            const chevron = headerEl.querySelector('.chevron-icon');
+            const folderIcon = headerEl.querySelector('.folder-icon');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                chevron.classList.remove('rotate-180');
+                folderIcon.classList.replace('fa-folder', 'fa-folder-open');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.add('rotate-180');
+                folderIcon.classList.replace('fa-folder-open', 'fa-folder');
+            }
+        }
+
         function renderOTDRList(data) {
             const lst = document.getElementById('otdrList');
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
@@ -1065,9 +1082,17 @@
             
             let html = '';
             for(let folderName in folders) {
+                // MODIFIKASI: Menambahkan event onclick, badge jumlah file, dan efek panah (chevron)
                 html += `<div class="mb-3 border border-slate-700/50 rounded-xl overflow-hidden bg-slate-900/40">
-                    <div class="bg-slate-800/80 px-3 py-2 font-bold text-slate-300 text-[11px] flex items-center"><i class="fa-solid fa-folder-open text-purple-400 mr-2"></i> ${folderName}</div>
-                    <div class="p-2 space-y-2">`;
+                    <div onclick="toggleFolderContent(this)" class="bg-slate-800/80 px-3 py-2.5 font-bold text-slate-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-slate-700/80 transition-colors">
+                        <span class="flex items-center truncate pr-2">
+                            <i class="fa-solid fa-folder-open text-purple-400 mr-2 text-sm folder-icon"></i> 
+                            <span class="truncate">${folderName}</span> 
+                            <span class="ml-2 text-[9px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded-md border border-purple-500/30 shrink-0">${folders[folderName].length} File</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-up text-slate-500 transition-transform duration-300 chevron-icon shrink-0"></i>
+                    </div>
+                    <div class="p-2 space-y-2 folder-content block transition-all duration-300">`;
                 
                 folders[folderName].forEach(item => {
                     let ownerHTML = '';
@@ -1097,6 +1122,8 @@
         }
 
         function toggleAllOTDR(cbx) {
+            // Hanya menyeleksi checkbox yang berada di folder yang sedang terbuka (tidak ada class hidden)
+            // Namun karena user ingin mendownload semua, kita centang semua saja meskipun tertutup.
             document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked);
         }
 
