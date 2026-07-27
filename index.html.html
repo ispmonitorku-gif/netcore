@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>ISP Dashboard - Netcore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            -webkit-tap-highlight-color: transparent; 
+            overscroll-behavior-y: none; 
+            overflow-x: hidden; 
+            width: 100vw;
+        }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        .toast-exit { animation: slideOut 0.3s ease-out forwards; }
+        
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-active { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .mobile-card { background: linear-gradient(145deg, #1e293b, #0f172a); }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-[#f8fafc] font-sans">
+    
+    <div id="toastContainer" class="fixed top-5 right-5 lg:right-5 lg:top-5 z-[999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-auto left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
+
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4 w-full relative overflow-hidden">
+        <div class="absolute top-1/4 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-1/4 right-0 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl -z-10"></div>
+        
+        <div class="glass-panel p-6 md:p-8 rounded-3xl w-full max-w-md shadow-2xl shadow-blue-900/20 border border-slate-700/60 z-10">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-500/30 mb-4">
+                    <i class="fa-solid fa-user-shield text-3xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold tracking-wider">NETCORE</h2>
+                <p class="text-xs md:text-sm text-slate-400 mt-1">Sistem Manajemen ISP Medan</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs md:text-sm font-medium text-slate-400 mb-1.5">Email Terdaftar</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3.5 top-3 text-slate-500 text-base"></i>
+                        <input type="email" id="loginEmail" required placeholder="admin@netcore.co.id" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs md:text-sm font-medium text-slate-400 mb-1.5">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-500 text-base"></i>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner text-white">
+                    </div>
+                </div>
+                
+                <div id="loginError" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl text-center font-medium"></div>
+                
+                <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 mt-4 text-sm md:text-base">
+                    <span>Masuk Sistem</span>
+                    <i class="fa-solid fa-arrow-right text-base"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-24 md:pb-10">
+        <div class="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-lg border-b border-slate-700/50 shadow-md flex justify-between items-center px-4 py-3 mb-4 w-full">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-network-wired text-white text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="text-base md:text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 leading-tight">
+                        Netcore ISP Database
+                    </h1>
+                    <p class="text-slate-400 text-[10px] md:text-xs leading-none mt-0.5">Medan Area Network <span id="ownerRoleBadge" class="hidden ml-1 px-1.5 py-0.5 text-[8px] bg-yellow-500 text-slate-950 font-black rounded">OWNER MODE</span></p>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <button onclick="refreshDashboardStats()" class="w-9 h-9 md:w-auto bg-slate-800 active:scale-90 text-blue-400 border border-slate-700 md:px-4 md:py-2 rounded-xl transition flex items-center justify-center shadow-sm">
+                    <i id="syncIcon" class="fa-solid fa-rotate"></i> <span class="hidden md:inline ml-2 text-slate-200 text-sm font-semibold">Sync</span>
+                </button>
+                <button onclick="handleLogout()" class="w-9 h-9 md:w-auto bg-slate-800 active:scale-90 text-red-400 border border-slate-700 md:px-4 md:py-2 rounded-xl transition flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-power-off"></i> <span class="hidden md:inline ml-2 text-sm font-semibold">Keluar</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="px-4 md:px-6 w-full"> 
+            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-5 w-full">
+                <!-- Summary cards generated here -->
+            </div>
+
+            <div class="mb-5 w-full">
+                <div class="glass-panel p-4 md:p-5 rounded-2xl shadow-lg border border-slate-700/30">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+                        <h3 class="text-slate-300 text-xs md:text-sm font-bold uppercase flex items-center">
+                            <i class="fa-solid fa-chart-pie mr-2 text-blue-400"></i>Status Node Keseluruhan
+                        </h3>
+                        <span class="text-[10px] text-slate-400 font-semibold bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700 self-start sm:self-auto flex items-center gap-1.5 shadow-inner">
+                            <i class="fa-solid fa-cloud-arrow-down text-blue-400"></i> Ketuk card untuk load rekap
+                        </span>
+                    </div>
+                    <div id="detailedStats" class="space-y-3 md:space-y-0 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-sm w-full">
+                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
+                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
+                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
+                    </div>
+                    <div id="recapDropdownPanel" class="hidden mt-4 pt-4 border-t border-slate-700/50 transition-all duration-300 w-full"></div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-4 md:p-5 mb-5 shadow-lg border border-slate-700/30 w-full">
+                <h3 class="text-slate-300 text-xs md:text-sm font-bold uppercase mb-4 flex items-center"><i class="fa-solid fa-folder-open mr-2 text-yellow-500"></i>Akses Database</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                    <button onclick="openDatabaseModal('All')" class="bg-blue-600 active:scale-95 text-white py-4 px-2 rounded-2xl font-bold transition flex flex-col items-center justify-center gap-3 shadow-lg shadow-blue-600/30">
+                        <i class="fa-solid fa-layer-group text-2xl md:text-3xl"></i> <span class="text-[11px] md:text-sm">Semua Node</span>
+                    </button>
+                    <button onclick="openDatabaseModal('OLT')" class="bg-slate-800 border border-slate-700 active:scale-95 text-slate-300 py-4 px-2 rounded-2xl font-bold transition flex flex-col items-center justify-center gap-3 shadow-md">
+                        <i class="fa-solid fa-server text-purple-400 text-2xl md:text-3xl"></i> <span class="text-[11px] md:text-sm">Data OLT</span>
+                    </button>
+                    <button onclick="openDatabaseModal('Switch')" class="bg-slate-800 border border-slate-700 active:scale-95 text-slate-300 py-4 px-2 rounded-2xl font-bold transition flex flex-col items-center justify-center gap-3 shadow-md">
+                        <i class="fa-solid fa-random text-blue-400 text-2xl md:text-3xl"></i> <span class="text-[11px] md:text-sm">Data Switch</span>
+                    </button>
+                    <button onclick="openDatabaseModal('Backbone')" class="bg-slate-800 border border-slate-700 active:scale-95 text-slate-300 py-4 px-2 rounded-2xl font-bold transition flex flex-col items-center justify-center gap-3 shadow-md">
+                        <i class="fa-solid fa-route text-orange-400 text-2xl md:text-3xl"></i> <span class="text-[11px] md:text-sm">Data Backbone</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 z-[90] pb-safe md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-between items-center py-2 px-4 w-full">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center justify-center w-16 text-blue-400 active:scale-90 transition-transform">
+                    <div class="bg-blue-500/20 p-2 rounded-xl mb-1 border border-blue-500/30"><i class="fa-solid fa-home text-lg"></i></div><span class="text-[9px] font-bold">Home</span>
+                </button>
+                <button onclick="toggleInputModal()" class="flex flex-col items-center justify-center w-16 text-slate-400 active:scale-90 transition-transform group">
+                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-plus-circle text-xl text-emerald-500 group-active:text-emerald-400"></i></div><span class="text-[9px] font-medium group-active:text-white">Input Node</span>
+                </button>
+                <button onclick="toggleEWOModal()" class="flex flex-col items-center justify-center w-16 text-slate-400 active:scale-90 transition-transform group">
+                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-file-invoice text-xl text-yellow-500 group-active:text-yellow-400"></i></div><span class="text-[9px] font-medium group-active:text-white">EWO</span>
+                </button>
+                <button onclick="toggleOTDRModal()" class="flex flex-col items-center justify-center w-16 text-slate-400 active:scale-90 transition-transform group">
+                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-file-waveform text-xl text-purple-500 group-active:text-purple-400"></i></div><span class="text-[9px] font-medium group-active:text-white">OTDR</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DATABASE -->
+    <div id="databaseModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
+        <div class="glass-panel w-full max-w-4xl mx-auto rounded-3xl h-[85vh] md:h-[80vh] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
+                <h3 id="dbModalTitle" class="text-white font-bold"><i class="fa-solid fa-layer-group text-blue-400 mr-2"></i>Database</h3>
+                <button onclick="closeDatabaseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 border-b border-slate-700 bg-slate-900/50 flex flex-wrap gap-2">
+                <input type="text" id="searchNama" placeholder="Nama..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                <input type="text" id="searchLokasi" placeholder="Lokasi..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                <button onclick="executeSearch()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition"><i class="fa-solid fa-search"></i> Cari</button>
+            </div>
+            <div id="dbResultList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar text-sm">
+                <!-- Data will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INPUT NODE -->
+    <div id="inputModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
+        <div class="glass-panel w-full max-w-md mx-auto rounded-3xl flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
+                <h3 class="text-white font-bold"><i class="fa-solid fa-plus-circle text-emerald-400 mr-2"></i>Input Data Node</h3>
+                <button onclick="toggleInputModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form id="inputForm" onsubmit="submitNetworkData(event)" class="p-5 space-y-4">
+                <input type="text" id="inNama" placeholder="Nama Perangkat" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <div class="grid grid-cols-2 gap-3">
+                    <select id="inTipe" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                        <option value="OLT">OLT</option><option value="SWITCH">SWITCH</option><option value="BACKBONE">BACKBONE</option>
+                    </select>
+                    <select id="inStatus" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                        <option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option>
+                    </select>
+                </div>
+                <input type="text" id="inIp" placeholder="IP Address (Opsional)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <input type="text" id="inLokasi" placeholder="Lokasi" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <input type="text" id="inPort" placeholder="Info Port (pisahkan koma untuk multiple)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <input type="text" id="inOtb" placeholder="Kode OTB (pisahkan koma untuk multiple)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <button type="submit" id="btnSubmitNode" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-500/30">Simpan Node Baru</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- MODAL EWO -->
+    <div id="ewoModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
+        <div class="glass-panel w-full max-w-2xl mx-auto rounded-3xl h-[85vh] md:h-[auto] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
+                <h3 class="text-white font-bold"><i class="fa-solid fa-file-invoice text-yellow-400 mr-2"></i>Engineering Work Order</h3>
+                <button onclick="toggleEWOModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <form id="ewoForm" onsubmit="submitEWO(event)" class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 mb-4 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase">Input EWO Baru</h4>
+                    <input type="text" id="ewoNo" placeholder="No EWO" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500">
+                    <textarea id="ewoDesc" placeholder="Deskripsi Pekerjaan" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500 h-20 resize-none"></textarea>
+                    <select id="ewoStatus" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500"><option value="NOT DONE">NOT DONE</option><option value="DONE">DONE</option></select>
+                    <button type="submit" id="btnSubmitEwo" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2.5 rounded-xl transition shadow-lg shadow-yellow-500/20 text-sm">Simpan EWO</button>
+                </form>
+                <div id="ewoList" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL OTDR -->
+    <div id="otdrModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
+        <div class="glass-panel w-full max-w-2xl mx-auto rounded-3xl h-[85vh] md:h-[auto] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
+                <h3 class="text-white font-bold"><i class="fa-solid fa-file-waveform text-purple-400 mr-2"></i>OTDR File Management</h3>
+                <button onclick="toggleOTDRModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-4 overflow-y-auto">
+                <div class="text-center text-slate-400 text-sm py-8 border border-dashed border-slate-700 rounded-2xl bg-slate-800/30">
+                    <i class="fa-solid fa-info-circle text-2xl text-purple-400 mb-2"></i><br>
+                    Modul OTDR dapat dikembangkan di sini sesuai kebutuhan server file.
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // ==============================================================================
+        // KONFIGURASI URL GOOGLE APPS SCRIPT WEB APP 
+        // Wajib Diisi dengan URL Web App hasil Deploy Apps Script milik Anda!
+        // ==============================================================================
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby_GANTI_URL_INI_DENGAN_URL_WEB_APP_ANDA/exec"; 
+        
+        let sessionData = null;
+        let currentSearchType = 'All';
+
+        // Helper Fetch ke Apps Script Backend
+        async function fetchGAS(action, payload = {}) {
+            if (GAS_WEB_APP_URL.includes("GANTI_URL_INI")) {
+                showToast("Peringatan: URL API Apps Script belum diisi!", "error");
+                return null;
+            }
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: action, payload: payload })
+                });
+                const result = await response.json();
+                if (result.error) throw new Error(result.message);
+                return result.data;
+            } catch (err) {
+                console.error("Fetch GAS Error:", err);
+                throw err;
+            }
+        }
+
+        // Notification UI
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const isSuccess = type === 'success';
+            toast.className = `glass-panel flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border-l-4 ${isSuccess ? 'border-emerald-500' : 'border-red-500'} toast-enter`;
+            
+            toast.innerHTML = `
+                <div class="${isSuccess ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid ${isSuccess ? 'fa-check' : 'fa-triangle-exclamation'} text-sm"></i>
+                </div>
+                <div class="text-sm font-medium text-slate-200">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Login Logic
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const errDiv = document.getElementById('loginError');
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Memverifikasi...';
+            btn.disabled = true;
+            errDiv.classList.add('hidden');
+            
+            try {
+                const res = await fetchGAS('verifyLogin', { email: email, password: pass });
+                if (res && res.success) {
+                    sessionData = res;
+                    localStorage.setItem('netcore_session', JSON.stringify(sessionData));
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('dashboardPage').classList.remove('hidden');
+                    
+                    if (sessionData.role === 'OWNER') {
+                        document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                    }
+                    
+                    showToast("Selamat datang, " + email);
+                    refreshDashboardStats();
+                } else {
+                    errDiv.innerText = res ? res.message : "Gagal terhubung.";
+                    errDiv.classList.remove('hidden');
+                }
+            } catch(e) {
+                errDiv.innerText = "Error server: " + e.message;
+                errDiv.classList.remove('hidden');
+            } finally {
+                btn.innerHTML = '<span>Masuk Sistem</span><i class="fa-solid fa-arrow-right text-base"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('netcore_session');
+            sessionData = null;
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        // Dashboard Stats
+        async function refreshDashboardStats() {
+            const icon = document.getElementById('syncIcon');
+            icon.classList.add('fa-spin');
+            
+            try {
+                const stats = await fetchGAS('getDashboardStats');
+                if (stats) {
+                    document.getElementById('summaryCards').innerHTML = `
+                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center">
+                            <span class="text-[10px] md:text-xs text-slate-400 font-bold uppercase mb-1">Total Perangkat</span>
+                            <span class="text-xl md:text-3xl font-black text-white">${stats.total}</span>
+                        </div>
+                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center">
+                            <span class="text-[10px] md:text-xs text-slate-400 font-bold uppercase mb-1">Total Port/Core</span>
+                            <span class="text-xl md:text-3xl font-black text-blue-400">${stats.total_port}</span>
+                        </div>
+                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-emerald-500/5"></div>
+                            <span class="text-[10px] md:text-xs text-emerald-400 font-bold uppercase mb-1 z-10">Node Online</span>
+                            <span class="text-xl md:text-3xl font-black text-emerald-400 z-10">${stats.online}</span>
+                        </div>
+                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-red-500/5"></div>
+                            <span class="text-[10px] md:text-xs text-red-400 font-bold uppercase mb-1 z-10">Node Offline</span>
+                            <span class="text-xl md:text-3xl font-black text-red-400 z-10">${stats.offline}</span>
+                        </div>
+                    `;
+                    
+                    document.getElementById('detailedStats').innerHTML = `
+                        <div onclick="loadRecap('OLT')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
+                            <div class="flex items-center gap-3"><i class="fa-solid fa-server text-purple-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Total OLT</span></div>
+                            <span class="text-lg md:text-xl font-black text-white">${stats.olt}</span>
+                        </div>
+                        <div onclick="loadRecap('SWITCH')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
+                            <div class="flex items-center gap-3"><i class="fa-solid fa-random text-blue-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Switch Distribusi</span></div>
+                            <span class="text-lg md:text-xl font-black text-white">${stats.switch}</span>
+                        </div>
+                        <div onclick="loadRecap('BACKBONE')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
+                            <div class="flex items-center gap-3"><i class="fa-solid fa-route text-orange-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Jalur Backbone</span></div>
+                            <span class="text-lg md:text-xl font-black text-white">${stats.backbone}</span>
+                        </div>
+                    `;
+                }
+            } catch(e) {
+                showToast("Gagal memuat statistik", "error");
+            } finally {
+                icon.classList.remove('fa-spin');
+            }
+        }
+
+        async function loadRecap(type) {
+            const panel = document.getElementById('recapDropdownPanel');
+            panel.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i><br><span class="text-xs text-slate-400">Memuat Rekap ${type}...</span></div>`;
+            panel.classList.remove('hidden');
+            
+            try {
+                const data = await fetchGAS('getRecapStats', { type: type });
+                if(data && data.length > 0) {
+                    panel.innerHTML = `<h4 class="text-xs font-bold text-slate-300 mb-3"><i class="fa-solid fa-list text-blue-400 mr-2"></i>Detail Node: ${type}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto custom-scrollbar pr-2">` + 
+                    data.map(d => `<div class="bg-slate-900/50 p-2.5 rounded-lg border border-slate-700/50 flex justify-between items-center"><div class="text-xs font-bold text-white truncate max-w-[60%]">${d.nama}</div><div class="text-[10px] text-slate-400 flex gap-2"><span>${d.total_port} Port</span><span>${d.total_otb} OTB</span></div></div>`).join('') + 
+                    `</div>`;
+                } else {
+                    panel.innerHTML = `<div class="text-center py-4 text-xs text-slate-400">Tidak ada data rekap ${type}</div>`;
+                }
+            } catch(e) {
+                panel.innerHTML = `<div class="text-center py-4 text-xs text-red-400">Gagal memuat rekap</div>`;
+            }
+        }
+
+        // Database Modal
+        function openDatabaseModal(type) {
+            currentSearchType = type;
+            document.getElementById('dbModalTitle').innerHTML = `<i class="fa-solid fa-layer-group text-blue-400 mr-2"></i>Database: ${type}`;
+            document.getElementById('databaseModal').classList.remove('hidden');
+            executeSearch();
+        }
+        function closeDatabaseModal() {
+            document.getElementById('databaseModal').classList.add('hidden');
+        }
+
+        async function executeSearch() {
+            const list = document.getElementById('dbResultList');
+            list.innerHTML = `<div class="text-center py-8"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-400 mb-2"></i><br><span class="text-slate-400">Mencari data...</span></div>`;
+            
+            const filters = {
+                type: currentSearchType,
+                nama: document.getElementById('searchNama').value,
+                lokasi: document.getElementById('searchLokasi').value
+            };
+            
+            try {
+                const data = await fetchGAS('searchNetworkData', { filters: filters });
+                if(data && data.length > 0) {
+                    list.innerHTML = data.map(d => {
+                        const statusColor = d.status.toLowerCase().includes('online') ? 'text-emerald-400 border-emerald-500/30' : d.status.toLowerCase().includes('offline') ? 'text-red-400 border-red-500/30' : 'text-yellow-400 border-yellow-500/30';
+                        return `
+                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/50 mb-3 hover:bg-slate-800 transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <div><h5 class="font-bold text-white text-sm">${d.nama_perangkat}</h5><span class="text-[10px] text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${d.tipe}</span></div>
+                                <span class="text-[10px] font-bold px-2 py-1 rounded border bg-slate-900 ${statusColor}">${d.status.toUpperCase()}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-400 mt-3">
+                                <div><i class="fa-solid fa-network-wired w-4"></i> ${d.ip_address || '-'}</div>
+                                <div><i class="fa-solid fa-location-dot w-4 text-emerald-500"></i> ${d.lokasi}</div>
+                                <div><i class="fa-solid fa-plug w-4 text-yellow-500"></i> Port: ${d.info_port}</div>
+                                <div><i class="fa-solid fa-box w-4 text-orange-400"></i> OTB: ${d.kode_otb}</div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    list.innerHTML = `<div class="text-center py-8 text-slate-400 text-sm">Tidak ada data ditemukan</div>`;
+                }
+            } catch(e) {
+                list.innerHTML = `<div class="text-center py-8 text-red-400 text-sm">Error memuat data</div>`;
+            }
+        }
+
+        // Input Modals
+        function toggleInputModal() {
+            const m = document.getElementById('inputModal');
+            m.classList.contains('hidden') ? m.classList.remove('hidden') : m.classList.add('hidden');
+        }
+
+        async function submitNetworkData(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitNode');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyimpan...';
+            
+            const dataObj = {
+                nama_perangkat: document.getElementById('inNama').value,
+                tipe: document.getElementById('inTipe').value,
+                ip_address: document.getElementById('inIp').value,
+                lokasi: document.getElementById('inLokasi').value,
+                info_port: document.getElementById('inPort').value,
+                kode_otb: document.getElementById('inOtb').value,
+                status: document.getElementById('inStatus').value
+            };
+            
+            try {
+                const res = await fetchGAS('insertNetworkData', { dataObj: dataObj, email: sessionData.email });
+                if(res.success) {
+                    showToast(res.message);
+                    document.getElementById('inputForm').reset();
+                    toggleInputModal();
+                    refreshDashboardStats();
+                } else showToast(res.message, 'error');
+            } catch(err) { showToast("Gagal menyimpan", 'error'); }
+            finally { btn.innerHTML = 'Simpan Node Baru'; }
+        }
+
+        // EWO & OTDR Modals
+        function toggleEWOModal() {
+            const m = document.getElementById('ewoModal');
+            if(m.classList.contains('hidden')) {
+                m.classList.remove('hidden');
+                loadEWO();
+            } else { m.classList.add('hidden'); }
+        }
+        function toggleOTDRModal() {
+            const m = document.getElementById('otdrModal');
+            m.classList.contains('hidden') ? m.classList.remove('hidden') : m.classList.add('hidden');
+        }
+
+        async function loadEWO() {
+            const list = document.getElementById('ewoList');
+            list.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-slate-400"></i></div>`;
+            try {
+                const data = await fetchGAS('getEWOData');
+                if(data && data.length>0) {
+                    list.innerHTML = data.map(d => `
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/50 flex justify-between items-center text-sm">
+                            <div class="flex-1 pr-2">
+                                <div class="font-bold text-blue-300 text-xs">${d.no_ewo}</div>
+                                <div class="text-slate-300 text-[11px] leading-tight mt-1">${d.deskripsi}</div>
+                            </div>
+                            <span class="text-[9px] font-bold px-2 py-1 rounded border ${d.status === 'DONE' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' : 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10'}">${d.status}</span>
+                        </div>
+                    `).join('');
+                } else list.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">Belum ada EWO</div>`;
+            } catch(e) { list.innerHTML = `<div class="text-center text-red-400 text-xs py-4">Error EWO</div>`; }
+        }
+
+        async function submitEWO(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitEwo');
+            btn.innerHTML = '...';
+            try {
+                const obj = { no_ewo: document.getElementById('ewoNo').value, deskripsi: document.getElementById('ewoDesc').value, status: document.getElementById('ewoStatus').value };
+                const res = await fetchGAS('insertEWOData', { dataObj: obj, email: sessionData.email });
+                if(res.success) { showToast(res.message); document.getElementById('ewoForm').reset(); loadEWO(); }
+                else showToast(res.message, 'error');
+            } catch(e) { showToast("Gagal menyimpan EWO", "error"); }
+            finally { btn.innerHTML = 'Simpan EWO'; }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('netcore_session');
+            if(saved) {
+                sessionData = JSON.parse(saved);
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                if (sessionData.role === 'OWNER') document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                refreshDashboardStats();
+            }
+        });
+    </script>
+</body>
+</html>
