@@ -37,8 +37,9 @@
 </head>
 <body class="bg-[#0f172a] text-[#f8fafc] font-sans">
     
-    <div id="toastContainer" class="fixed top-5 right-5 lg:right-5 lg:top-5 z-[999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-auto left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
+    <div id="toastContainer" class="fixed top-5 right-5 lg:right-5 lg:top-5 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-auto left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
 
+    <!-- Halaman Login -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-4 w-full relative overflow-hidden">
         <div class="absolute top-1/4 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
         <div class="absolute bottom-1/4 right-0 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl -z-10"></div>
@@ -57,14 +58,14 @@
                     <label class="block text-xs md:text-sm font-medium text-slate-400 mb-1.5">Email Terdaftar</label>
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3.5 top-3 text-slate-500 text-base"></i>
-                        <input type="email" id="loginEmail" required placeholder="admin@netcore.co.id" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner text-white">
+                        <input type="email" id="loginEmail" required placeholder="admin@netcore.co.id" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs md:text-sm font-medium text-slate-400 mb-1.5">Password</label>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-500 text-base"></i>
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner text-white">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition shadow-inner">
                     </div>
                 </div>
                 
@@ -78,6 +79,7 @@
         </div>
     </div>
 
+    <!-- Halaman Dashboard ISP -->
     <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-24 md:pb-10">
         <div class="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-lg border-b border-slate-700/50 shadow-md flex justify-between items-center px-4 py-3 mb-4 w-full">
             <div class="flex items-center gap-3">
@@ -103,9 +105,7 @@
         </div>
 
         <div class="px-4 md:px-6 w-full"> 
-            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-5 w-full">
-                <!-- Summary cards generated here -->
-            </div>
+            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-5 w-full"></div>
 
             <div class="mb-5 w-full">
                 <div class="glass-panel p-4 md:p-5 rounded-2xl shadow-lg border border-slate-700/30">
@@ -118,9 +118,7 @@
                         </span>
                     </div>
                     <div id="detailedStats" class="space-y-3 md:space-y-0 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-sm w-full">
-                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
-                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
-                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
+                        <div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div><div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div><div class="animate-pulse bg-slate-800 h-12 rounded-xl"></div>
                     </div>
                     <div id="recapDropdownPanel" class="hidden mt-4 pt-4 border-t border-slate-700/50 transition-all duration-300 w-full"></div>
                 </div>
@@ -155,403 +153,1073 @@
                     <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-plus-circle text-xl text-emerald-500 group-active:text-emerald-400"></i></div><span class="text-[9px] font-medium group-active:text-white">Input Node</span>
                 </button>
                 <button onclick="toggleEWOModal()" class="flex flex-col items-center justify-center w-16 text-slate-400 active:scale-90 transition-transform group">
-                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-file-invoice text-xl text-yellow-500 group-active:text-yellow-400"></i></div><span class="text-[9px] font-medium group-active:text-white">EWO</span>
+                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-file-invoice text-xl text-yellow-500 group-active:text-yellow-400"></i></div><span class="text-[9px] font-medium group-active:text-white">Form EWO</span>
                 </button>
                 <button onclick="toggleOTDRModal()" class="flex flex-col items-center justify-center w-16 text-slate-400 active:scale-90 transition-transform group">
-                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-file-waveform text-xl text-purple-500 group-active:text-purple-400"></i></div><span class="text-[9px] font-medium group-active:text-white">OTDR</span>
+                    <div class="p-2 rounded-xl mb-1 group-active:bg-slate-800 transition-colors"><i class="fa-solid fa-wave-square text-xl text-purple-500 group-active:text-purple-400"></i></div><span class="text-[9px] font-medium group-active:text-white">Data OTDR</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DATABASE -->
-    <div id="databaseModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
-        <div class="glass-panel w-full max-w-4xl mx-auto rounded-3xl h-[85vh] md:h-[80vh] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
-            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
-                <h3 id="dbModalTitle" class="text-white font-bold"><i class="fa-solid fa-layer-group text-blue-400 mr-2"></i>Database</h3>
-                <button onclick="closeDatabaseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- ================== SEMUA MODAL ================== -->
+    <!-- Modal List Database -->
+    <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-6xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col h-[75vh] md:h-[85vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80">
+                <h3 id="databaseModalTitle" class="text-white text-base font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-database text-blue-400"></i> Database</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="exportTableToCSV()" class="text-[10px] md:text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 active:scale-95 transition shadow-lg"><i class="fa-solid fa-file-csv"></i> <span class="hidden md:inline">Export</span></button>
+                    <div id="serverLoadingIndicator" class="hidden text-xs text-blue-400 font-bold animate-pulse flex items-center gap-1.5"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+                    <button onclick="closeDatabaseModal()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
+                </div>
             </div>
-            <div class="p-4 border-b border-slate-700 bg-slate-900/50 flex flex-wrap gap-2">
-                <input type="text" id="searchNama" placeholder="Nama..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
-                <input type="text" id="searchLokasi" placeholder="Lokasi..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-white">
-                <button onclick="executeSearch()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition"><i class="fa-solid fa-search"></i> Cari</button>
-            </div>
-            <div id="dbResultList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar text-sm">
-                <!-- Data will be loaded here -->
+            <div class="p-4 md:p-5 overflow-y-auto scrollbar-hide bg-[#0f172a]/95 flex-1 flex flex-col gap-4 w-full">
+                <!-- Filter Tab -->
+                <div class="flex flex-nowrap md:flex-wrap overflow-x-auto scrollbar-hide gap-2 border-b border-slate-700/50 pb-4 shrink-0 w-full">
+                    <button id="modal-btn-All" onclick="setModalFilter('All')" class="modal-filter-btn shrink-0 bg-blue-600 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center justify-center gap-2 shadow-md"><i class="fa-solid fa-layer-group"></i> All Node</button>
+                    <button id="modal-btn-OLT" onclick="setModalFilter('OLT')" class="modal-filter-btn shrink-0 bg-slate-800 border border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-server text-purple-400"></i> OLT</button>
+                    <button id="modal-btn-Switch" onclick="setModalFilter('Switch')" class="modal-filter-btn shrink-0 bg-slate-800 border border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-random text-blue-400"></i> Switch</button>
+                    <button id="modal-btn-Backbone" onclick="setModalFilter('Backbone')" class="modal-filter-btn shrink-0 bg-slate-800 border border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition flex items-center justify-center gap-2"><i class="fa-solid fa-route text-orange-400"></i> Backbone</button>
+                </div>
+                <!-- Input Pencarian -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full shrink-0">
+                    <div class="relative w-full"><i class="fa-solid fa-desktop absolute left-2.5 top-3 text-slate-500 text-xs"></i><input type="text" id="searchNama" oninput="triggerServerSearch()" placeholder="Cari Nama..." class="w-full bg-slate-900 border border-slate-700 text-white text-[11px] md:text-sm rounded-xl pl-7 p-2.5 focus:outline-none focus:border-blue-500 transition shadow-inner"></div>
+                    <div class="relative w-full"><i class="fa-solid fa-map-location-dot absolute left-2.5 top-3 text-slate-500 text-xs"></i><input type="text" id="searchLokasi" oninput="triggerServerSearch()" placeholder="Cari Lokasi..." class="w-full bg-slate-900 border border-slate-700 text-white text-[11px] md:text-sm rounded-xl pl-7 p-2.5 focus:outline-none focus:border-blue-500 transition shadow-inner"></div>
+                    <div class="relative w-full"><i class="fa-solid fa-ethernet absolute left-2.5 top-3 text-slate-500 text-xs"></i><input type="text" id="searchPort" oninput="triggerServerSearch()" placeholder="Cari Port..." class="w-full bg-slate-900 border border-slate-700 text-white text-[11px] md:text-sm rounded-xl pl-7 p-2.5 focus:outline-none focus:border-blue-500 transition shadow-inner"></div>
+                    <div class="relative w-full"><i class="fa-solid fa-barcode absolute left-2.5 top-3 text-slate-500 text-xs"></i><input type="text" id="searchOtb" oninput="triggerServerSearch()" placeholder="Cari OTB..." class="w-full bg-slate-900 border border-slate-700 text-white text-[11px] md:text-sm rounded-xl pl-7 p-2.5 focus:outline-none focus:border-blue-500 transition shadow-inner"></div>
+                </div>
+                <div class="text-[9px] text-slate-500 italic px-1"><i class="fa-solid fa-info-circle"></i> Menampilkan max 50 hasil.</div>
+                
+                <div class="rounded-xl relative flex-1 flex flex-col w-full h-full pb-10">
+                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0 content-start pb-10"></div>
+                    <div id="emptyState" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-slate-500 h-full w-full">
+                        <i class="fa-solid fa-box-open text-5xl mb-3 opacity-30 text-blue-400"></i><h3 class="text-sm font-bold text-slate-400">Data Tidak Ditemukan</h3>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL INPUT NODE -->
-    <div id="inputModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
-        <div class="glass-panel w-full max-w-md mx-auto rounded-3xl flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
-            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
-                <h3 class="text-white font-bold"><i class="fa-solid fa-plus-circle text-emerald-400 mr-2"></i>Input Data Node</h3>
-                <button onclick="toggleInputModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- Modal Form Input Node Baru -->
+    <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[75vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-server text-emerald-400"></i> Registrasi Node Baru</h3>
+                <button onclick="toggleInputModal()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
             </div>
-            <form id="inputForm" onsubmit="submitNetworkData(event)" class="p-5 space-y-4">
-                <input type="text" id="inNama" placeholder="Nama Perangkat" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                <div class="grid grid-cols-2 gap-3">
-                    <select id="inTipe" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                        <option value="OLT">OLT</option><option value="SWITCH">SWITCH</option><option value="BACKBONE">BACKBONE</option>
-                    </select>
-                    <select id="inStatus" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                        <option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option>
-                    </select>
-                </div>
-                <input type="text" id="inIp" placeholder="IP Address (Opsional)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                <input type="text" id="inLokasi" placeholder="Lokasi" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                <input type="text" id="inPort" placeholder="Info Port (pisahkan koma untuk multiple)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                <input type="text" id="inOtb" placeholder="Kode OTB (pisahkan koma untuk multiple)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 outline-none">
-                <button type="submit" id="btnSubmitNode" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-500/30">Simpan Node Baru</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- MODAL EWO -->
-    <div id="ewoModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
-        <div class="glass-panel w-full max-w-2xl mx-auto rounded-3xl h-[85vh] md:h-[auto] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
-            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
-                <h3 class="text-white font-bold"><i class="fa-solid fa-file-invoice text-yellow-400 mr-2"></i>Engineering Work Order</h3>
-                <button onclick="toggleEWOModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            <div class="p-4 overflow-y-auto">
-                <form id="ewoForm" onsubmit="submitEWO(event)" class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 mb-4 space-y-3">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase">Input EWO Baru</h4>
-                    <input type="text" id="ewoNo" placeholder="No EWO" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500">
-                    <textarea id="ewoDesc" placeholder="Deskripsi Pekerjaan" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500 h-20 resize-none"></textarea>
-                    <select id="ewoStatus" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-sm text-white outline-none focus:border-yellow-500"><option value="NOT DONE">NOT DONE</option><option value="DONE">DONE</option></select>
-                    <button type="submit" id="btnSubmitEwo" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2.5 rounded-xl transition shadow-lg shadow-yellow-500/20 text-sm">Simpan EWO</button>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
+                <form id="manualInputForm" onsubmit="handleInputData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Nama Perangkat</label>
+                        <input type="text" id="inputNama" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none shadow-inner" placeholder="Contoh: OLT-ZTE-MDN-05">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Tipe Node</label>
+                        <select id="inputTipe" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none appearance-none">
+                            <option value="OLT">OLT</option><option value="Switch">Switch</option><option value="Backbone">Backbone</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">IP Address</label>
+                        <input type="text" id="inputIp" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none shadow-inner" placeholder="10.x.x.x">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Area / Lokasi</label>
+                        <input type="text" id="inputLokasi" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none shadow-inner" placeholder="POP Setiabudi">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase flex justify-between items-center">
+                            <span>Port Info</span><span class="text-[9px] text-emerald-400 lowercase italic font-normal">*bisa input banyak</span>
+                        </label>
+                        <textarea id="inputPort" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none shadow-inner resize-y" placeholder="PON 1, PON 2..."></textarea>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase flex justify-between items-center">
+                            <span>Kode OTB</span><span class="text-[9px] text-emerald-400 lowercase italic font-normal">*bisa input banyak</span>
+                        </label>
+                        <textarea id="inputOtb" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none shadow-inner resize-y" placeholder="OTB-01, OTB-02..."></textarea>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Status Awal</label>
+                        <select id="inputStatus" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-emerald-500 focus:outline-none appearance-none">
+                            <option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 pt-3">
+                        <button type="submit" id="submitInputBtn" class="w-full bg-emerald-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Database Server
+                        </button>
+                    </div>
                 </form>
-                <div id="ewoList" class="space-y-2"></div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL OTDR -->
-    <div id="otdrModal" class="hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm p-4 flex flex-col justify-end md:justify-center">
-        <div class="glass-panel w-full max-w-2xl mx-auto rounded-3xl h-[85vh] md:h-[auto] flex flex-col border border-slate-700/50 shadow-2xl overflow-hidden modal-active">
-            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
-                <h3 class="text-white font-bold"><i class="fa-solid fa-file-waveform text-purple-400 mr-2"></i>OTDR File Management</h3>
-                <button onclick="toggleOTDRModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- [OWNER ONLY] MODAL FORM EDIT DEVICE -->
+    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-slate-900/85 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[85vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2 text-yellow-400"><i class="fa-solid fa-file-pen"></i> Edit Node (Owner)</h3>
+                <button onclick="toggleEditModal()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
             </div>
-            <div class="p-4 overflow-y-auto">
-                <div class="text-center text-slate-400 text-sm py-8 border border-dashed border-slate-700 rounded-2xl bg-slate-800/30">
-                    <i class="fa-solid fa-info-circle text-2xl text-purple-400 mb-2"></i><br>
-                    Modul OTDR dapat dikembangkan di sini sesuai kebutuhan server file.
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
+                <form id="manualEditForm" onsubmit="handleUpdateData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Nama Perangkat</label>
+                        <input type="text" id="editNama" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Tipe Node</label>
+                        <select id="editTipe" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none appearance-none">
+                            <option value="OLT">OLT</option><option value="Switch">Switch</option><option value="Backbone">Backbone</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">IP Address</label>
+                        <input type="text" id="editIp" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Area / Lokasi</label>
+                        <input type="text" id="editLokasi" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Status Node</label>
+                        <select id="editStatus" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none appearance-none">
+                            <option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Port Info</label>
+                        <input type="text" id="editPort" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Kode OTB</label>
+                        <input type="text" id="editOtb" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="md:col-span-2 pt-3">
+                        <button type="submit" id="submitEditBtn" class="w-full bg-yellow-600 hover:bg-yellow-700 active:scale-95 text-slate-950 font-bold py-3.5 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-save"></i> Terapkan Perubahan ke Server
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- [OWNER ONLY] MODAL FORM EDIT EWO -->
+    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-slate-900/85 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[85vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2 text-yellow-400"><i class="fa-solid fa-file-pen"></i> Edit EWO (Owner)</h3>
+                <button onclick="closeEditEWO()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
+                <form id="editEwoForm" onsubmit="handleUpdateEWO(event)" class="space-y-4 pb-10">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Nomor EWO</label>
+                        <input type="text" id="editEwoNo" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Deskripsi Pekerjaan</label>
+                        <input type="text" id="editEwoDesk" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Status</label>
+                        <select id="editEwoStat" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none appearance-none">
+                            <option value="Not Done">Not Done</option><option value="Done">Done</option>
+                        </select>
+                    </div>
+                    <div class="pt-3">
+                        <button type="submit" id="submitEditEwoBtn" class="w-full bg-yellow-600 hover:bg-yellow-700 active:scale-95 text-slate-950 font-bold py-3.5 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-save"></i> Simpan EWO ke Server
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- [OWNER ONLY] MODAL FORM EDIT OTDR -->
+    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-slate-900/85 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[85vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2 text-yellow-400"><i class="fa-solid fa-file-pen"></i> Edit Detail OTDR</h3>
+                <button onclick="closeEditOTDR()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
+                <form id="editOtdrForm" onsubmit="handleUpdateOTDR(event)" class="space-y-4 pb-10">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Nama Folder</label>
+                        <input type="text" id="editOtdrFolder" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Nama OTB</label>
+                        <input type="text" id="editOtdrOtb" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-slate-400 font-semibold uppercase">Lokasi Area</label>
+                        <input type="text" id="editOtdrLokasi" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-yellow-500 focus:outline-none shadow-inner">
+                    </div>
+                    <div class="text-[10px] text-slate-500 italic mt-2"><i class="fa-solid fa-info-circle"></i> Catatan: File SOR tidak dapat diubah di mode ini. Anda harus menghapus dan mengupload ulang untuk mengganti file.</div>
+                    
+                    <div class="pt-3">
+                        <button type="submit" id="submitEditOtdrBtn" class="w-full bg-yellow-600 hover:bg-yellow-700 active:scale-95 text-slate-950 font-bold py-3.5 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-save"></i> Update Detail OTDR
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- [OWNER ONLY] MODAL KONFIRMASI HAPUS DATA GLOBAL -->
+    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#1e293b] border border-slate-700/60 w-full max-w-sm rounded-2xl shadow-2xl p-6 text-center transform scale-95 transition-all duration-300">
+            <div class="w-14 h-14 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-4">
+                <i class="fa-solid fa-trash-can text-2xl"></i>
+            </div>
+            <h3 class="text-white text-base font-bold mb-2">Hapus <span id="deleteContextType">Data</span>?</h3>
+            <p class="text-slate-400 text-xs mb-6">Apakah Anda yakin ingin menghapus data ini secara permanen dari server? Tindakan ini tidak dapat dibatalkan.</p>
+            
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeDeleteModal()" class="flex-1 bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-semibold py-3 rounded-xl transition active:scale-95 border border-slate-700">
+                    Batal
+                </button>
+                <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-3 rounded-xl transition active:scale-95 shadow-lg shadow-red-500/20">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form & List EWO -->
+    <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[75vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-file-invoice text-yellow-400"></i> Work Order (EWO)</h3>
+                <button onclick="toggleEWOModal()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1 pb-10">
+                <form id="ewoInputForm" onsubmit="handleEWOInput(event)" class="space-y-3 mb-6 bg-slate-800/50 p-4 rounded-xl border border-slate-700/80 shadow-inner">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Nomor EWO</label>
+                            <input type="text" id="noEwo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-yellow-500 focus:outline-none" placeholder="EWO-2026-001">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Status</label>
+                            <select id="statEwo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-yellow-500 focus:outline-none appearance-none">
+                                <option value="Not Done">Not Done</option><option value="Done">Done</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Deskripsi Pekerjaan</label>
+                            <input type="text" id="deskEwo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-yellow-500 focus:outline-none" placeholder="Jelaskan jenis pekerjaan...">
+                        </div>
+                    </div>
+                    <button type="submit" id="submitEwoBtn" class="w-full mt-3 bg-yellow-600 text-slate-900 active:scale-95 font-bold py-2.5 rounded-lg transition shadow-lg flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-save"></i> Simpan Data EWO
+                    </button>
+                </form>
+                <h4 class="text-xs font-bold text-slate-400 uppercase mb-3 flex items-center"><i class="fa-solid fa-list mr-2 text-blue-400"></i> Riwayat Terakhir</h4>
+                <div id="ewoList" class="space-y-2 text-xs w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form & List OTDR -->
+    <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-slate-900/80 backdrop-blur-sm transition-opacity w-full h-full">
+        <div class="bg-[#0f172a] w-full md:max-w-xl md:rounded-2xl rounded-t-[30px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden modal-active border-t border-slate-700 md:border flex flex-col max-h-[75vh]">
+            <div class="w-full flex justify-center pt-3 pb-1 md:hidden bg-slate-800/80"><div class="w-12 h-1.5 bg-slate-600 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/80 shrink-0">
+                <h3 class="text-white text-base font-bold uppercase flex items-center gap-2"><i class="fa-solid fa-wave-square text-purple-400"></i> Upload Data OTDR</h3>
+                <button onclick="toggleOTDRModal()" class="text-slate-400 bg-slate-700/50 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 border border-slate-600"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1 pb-10">
+                <form id="otdrInputForm" onsubmit="handleOTDRInput(event)" class="space-y-3 mb-6 bg-slate-800/50 p-4 rounded-xl border border-slate-700/80 shadow-inner">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Nama Folder / Project</label>
+                            <input type="text" id="folderOtdr" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-purple-500 focus:outline-none" placeholder="Contoh: OTDR Line Core POP Setiabudi">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Nama OTB</label>
+                            <input type="text" id="otbOtdr" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-purple-500 focus:outline-none" placeholder="OTB-STB-01">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">Lokasi Area</label>
+                            <input type="text" id="lokasiOtdr" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-purple-500 focus:outline-none" placeholder="POP Setiabudi">
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-[10px] text-slate-400 font-semibold uppercase">File Pengukuran (.sor)</label>
+                            <input type="file" id="fileOtdr" accept=".sor" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-purple-500 focus:outline-none file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700 cursor-pointer">
+                        </div>
+                    </div>
+                    <button type="submit" id="submitOtdrBtn" class="w-full mt-3 bg-purple-600 active:scale-95 text-white font-bold py-2.5 rounded-lg transition shadow-lg flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload File Server
+                    </button>
+                </form>
+                
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase flex items-center"><i class="fa-solid fa-history mr-2 text-blue-400"></i> Riwayat OTDR (Per Folder)</h4>
+                    <button onclick="downloadSelectedOTDR()" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-[10px] px-3 py-1.5 rounded-lg shadow-md flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-download"></i> Unduh Pilihan
+                    </button>
+                </div>
+                
+                <div class="flex items-center mb-2 px-1">
+                    <input type="checkbox" id="selectAllOtdr" onchange="toggleAllOTDR(this)" class="mr-2 w-4 h-4 rounded border-slate-600 bg-slate-900 accent-purple-500 cursor-pointer">
+                    <label for="selectAllOtdr" class="text-[10px] text-slate-400 cursor-pointer select-none">Pilih Semua di Halaman</label>
+                </div>
+                
+                <!-- Container Riwayat Per Folder -->
+                <div id="otdrList" class="space-y-3 text-xs w-full mb-3 min-h-[100px]"></div>
+                
+                <!-- Paginasi -->
+                <div id="otdrPagination" class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+                    <button id="otdrPrevBtn" onclick="changeOTDRPage(-1)" class="px-3 py-1.5 bg-slate-800 active:bg-slate-700 rounded-lg disabled:opacity-40 disabled:active:bg-slate-800 border border-slate-700 transition">&laquo; Prev</button>
+                    <span id="otdrPageInfo" class="font-semibold bg-slate-900 px-3 py-1 rounded border border-slate-800">Halaman 1 / 1</span>
+                    <button id="otdrNextBtn" onclick="changeOTDRPage(1)" class="px-3 py-1.5 bg-slate-800 active:bg-slate-700 rounded-lg disabled:opacity-40 disabled:active:bg-slate-800 border border-slate-700 transition">Next &raquo;</button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- MAIN JAVASCRIPT APP (Lengkap) -->
     <script>
-        // ==============================================================================
-        // KONFIGURASI URL GOOGLE APPS SCRIPT WEB APP 
-        // Wajib Diisi dengan URL Web App hasil Deploy Apps Script milik Anda!
-        // ==============================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7LgJsZKRIdV5R6bvFQYDSyfVin2NprFmizCzAmPhSBaS-aYhtq9jwi0Wy9I0ffb3U/exec"; 
-        
-        let sessionData = null;
-        let currentSearchType = 'All';
+        // ==============================================================
+        // GITHUB PAGES FETCH WRAPPER & MOCK DATA
+        // ==============================================================
+        // IMPORTANT: MASUKKAN URL WEB APP APPS SCRIPT ANDA DI SINI
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyN_CecgDysX4IaqXvxk9MuT61OsVEkYPR_RtoUUkU2wyhMibCw-StxKLdpzXwy_Jy0/exec"; 
 
-        // Helper Fetch ke Apps Script Backend
-        async function fetchGAS(action, payload = {}) {
-            if (GAS_WEB_APP_URL.includes("GANTI_URL_INI")) {
-                showToast("Peringatan: URL API Apps Script belum diisi!", "error");
-                return null;
-            }
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: action, payload: payload })
-                });
-                const result = await response.json();
-                if (result.error) throw new Error(result.message);
-                return result.data;
-            } catch (err) {
-                console.error("Fetch GAS Error:", err);
-                throw err;
-            }
+        if (typeof google === 'undefined') {
+            console.log("Environment: Luar Apps Script (GitHub Pages)");
+            
+            // Mock Data Storage
+            let mockNetworkData = [
+                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1/1", kode_otb: "OTB-STB-01", status: "Online" },
+                { nama_perangkat: "OLT-ZTE-MDN-02", tipe: "OLT", ip_address: "10.10.10.2", lokasi: "POP Setiabudi", info_port: "PON 1/2", kode_otb: "OTB-STB-01", status: "Online" },
+                { nama_perangkat: "SW-DIS-MDN-01", tipe: "Switch", ip_address: "10.10.20.1", lokasi: "POP Sunggal", info_port: "Eth 1/1", kode_otb: "-", status: "Offline" }
+            ];
+            let mockEWOData = [
+                {no_ewo: "EWO-2026-001", deskripsi: "Pengecekan Kabel FO Putus di Setiabudi", status: "Done"}
+            ];
+            let mockOTDRData = [
+                {nama_folder: "Core Line Setiabudi", nama_otb: "OTB-STB-01", lokasi: "POP Setiabudi", file_url: "#", timestamp: "2026-07-23 08:35:08"}
+            ];
+
+            // Real Fetch Function to Apps Script API
+            const fetchAPI = async (action, payload, sCb, fCb) => {
+                if (!GAS_API_URL) {
+                    console.log(`Fallback Mock API call for action: ${action}`);
+                    return runMock(action, payload, sCb, fCb);
+                }
+                
+                try {
+                    const response = await fetch(GAS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: action, payload: payload }),
+                        redirect: "follow"
+                    });
+                    const result = await response.json();
+                    if (result.error) {
+                        if(fCb) fCb(new Error(result.message));
+                    } else {
+                        if(sCb) sCb(result.data);
+                    }
+                } catch (error) {
+                    if(fCb) fCb(error);
+                }
+            };
+
+            // Mock Implementation logic
+            const runMock = (action, payload, sCb, fCb) => {
+                setTimeout(() => {
+                    try {
+                        let res;
+                        if(action === 'verifyLogin') {
+                            let role = (payload.email || "").includes("owner") ? "OWNER" : "ADMIN";
+                            res = {success: true, role: role, email: payload.email};
+                        } else if(action === 'getDashboardStats') {
+                            res = {
+                                total: mockNetworkData.length, total_port: mockNetworkData.length,
+                                online: mockNetworkData.filter(d=>d.status.includes('Online')).length, 
+                                offline: mockNetworkData.filter(d=>d.status.includes('Offline')).length, 
+                                warning: mockNetworkData.filter(d=>d.status.includes('Warning')).length, 
+                                olt: mockNetworkData.filter(d=>d.tipe==='OLT').length, 
+                                switch: mockNetworkData.filter(d=>d.tipe==='Switch').length, 
+                                backbone: mockNetworkData.filter(d=>d.tipe==='Backbone').length
+                            };
+                        } else if(action === 'getRecapStats') {
+                            res = [{nama: "Mock Device 1", total_port: 12, total_otb: 2}];
+                        } else if(action === 'searchNetworkData') {
+                            let filters = payload.filters;
+                            let out = mockNetworkData;
+                            if(filters.type && filters.type !== 'All') out = out.filter(d => d.tipe.toUpperCase() === filters.type.toUpperCase());
+                            res = out;
+                        } else if(action === 'insertNetworkData') {
+                            mockNetworkData.unshift(payload.dataObj); res = {success:true, message:"Disimpan (Mock)"};
+                        } else if(action === 'updateNetworkData') {
+                            res = {success:true, message: "Berhasil diupdate (Mock)"};
+                        } else if(action === 'deleteNetworkData') {
+                            res = {success:true, message: "Berhasil dihapus (Mock)"};
+                        } else if(action === 'getEWOData') {
+                            res = mockEWOData;
+                        } else if(action === 'insertEWOData') {
+                            mockEWOData.unshift(payload.dataObj); res = {success:true, message:"EWO Disimpan (Mock)"};
+                        } else if(action === 'updateEWOData') {
+                            res = {success:true, message:"EWO Diupdate (Mock)"};
+                        } else if(action === 'deleteEWOData') {
+                            res = {success:true, message:"EWO Dihapus (Mock)"};
+                        } else if(action === 'getOTDRData') {
+                            let p = payload.page || 1; let limit = 50; let reversed = [...mockOTDRData].reverse(); let start = (p-1) * limit;
+                            res = { data: reversed.slice(start, start + limit), totalPages: Math.ceil(reversed.length / limit) || 1, currentPage: p };
+                        } else if(action === 'uploadOTDRData') {
+                            mockOTDRData.unshift({ nama_folder: payload.dataObj.nama_folder || "Umum", nama_otb: payload.dataObj.nama_otb, lokasi: payload.dataObj.lokasi, file_url: '#', timestamp: new Date().toISOString() });
+                            res = {success:true, message: "Upload berhasil (Mock)!"};
+                        } else if(action === 'updateOTDRData') {
+                            res = {success:true, message:"OTDR Diupdate (Mock)"};
+                        } else if(action === 'deleteOTDRData') {
+                            res = {success:true, message:"OTDR Dihapus (Mock)"};
+                        }
+                        
+                        if(sCb) sCb(res);
+                    } catch(e) {
+                        if(fCb) fCb(e);
+                    }
+                }, 600);
+            };
+
+            // Re-create the google.script.run structure for identical execution pattern
+            const createRun = () => {
+                let sCb = null, fCb = null;
+                return {
+                    withSuccessHandler: function(cb) { sCb = cb; return this; },
+                    withFailureHandler: function(cb) { fCb = cb; return this; },
+                    verifyLogin: (email, pass) => fetchAPI('verifyLogin', {email, password: pass}, sCb, fCb),
+                    getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
+                    getRecapStats: (type) => fetchAPI('getRecapStats', {type}, sCb, fCb),
+                    searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
+                    insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
+                    updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteNetworkData: (targetData, email) => fetchAPI('deleteNetworkData', {targetData, email}, sCb, fCb),
+                    getEWOData: () => fetchAPI('getEWOData', {}, sCb, fCb),
+                    insertEWOData: (dataObj, email) => fetchAPI('insertEWOData', {dataObj, email}, sCb, fCb),
+                    updateEWOData: (originalData, updatedData, email) => fetchAPI('updateEWOData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteEWOData: (targetData, email) => fetchAPI('deleteEWOData', {targetData, email}, sCb, fCb),
+                    getOTDRData: (page) => fetchAPI('getOTDRData', {page}, sCb, fCb),
+                    uploadOTDRData: (dataObj) => fetchAPI('uploadOTDRData', {dataObj}, sCb, fCb),
+                    updateOTDRData: (originalData, updatedData, email) => fetchAPI('updateOTDRData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb)
+                };
+            };
+            window.google = { script: { get run() { return createRun(); } } };
         }
 
-        // Notification UI
-        function showToast(message, type = 'success') {
+        let currentFilter = 'All';
+        let activeRecapType = null; 
+        let searchTimeout = null;
+        let lastSearchResult = []; 
+        
+        let deleteTargetType = 'NODE';
+        let originalSelectedNode = null; 
+        let originalSelectedEWO = null;
+        let originalSelectedOTDR = null;
+
+        let currentOtdrPage = 1;
+        let totalOtdrPages = 1;
+
+        // UI Utils
+        function showNotification(message, type = 'error') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            
-            const isSuccess = type === 'success';
-            toast.className = `glass-panel flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border-l-4 ${isSuccess ? 'border-emerald-500' : 'border-red-500'} toast-enter`;
-            
-            toast.innerHTML = `
-                <div class="${isSuccess ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} w-8 h-8 rounded-full flex items-center justify-center shrink-0">
-                    <i class="fa-solid ${isSuccess ? 'fa-check' : 'fa-triangle-exclamation'} text-sm"></i>
-                </div>
-                <div class="text-sm font-medium text-slate-200">${message}</div>
-            `;
-            
+            toast.className = `toast-enter flex items-center gap-3 w-full ${type === 'error' ? 'bg-red-500' : 'bg-emerald-500'} text-white px-4 py-3 rounded-xl shadow-xl z-[9999]`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-triangle-exclamation' : 'fa-check-circle'} text-lg"></i><span class="font-medium text-xs md:text-sm flex-1">${message}</span>`;
             container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.replace('toast-enter', 'toast-exit');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // Login Logic
-        async function handleLogin(e) {
+        function restoreBtn(btn, html) { btn.innerHTML = html; btn.disabled = false; btn.classList.remove('opacity-70'); }
+        function formatIP(ip) { return ip && ip !== '-' ? `<span class="text-[11px] font-mono bg-slate-800 text-blue-300 px-2 py-0.5 rounded border border-slate-700 mt-1 inline-block"><i class="fa-solid fa-network-wired mr-1"></i>${ip}</span>` : '-'; }
+        
+        function getStatusBadge(status) {
+            const stat = (status || '').toLowerCase();
+            if (stat.includes('online')) return `<span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 text-[10px] font-bold"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div> Online</span>`;
+            if (stat.includes('offline')) return `<span class="px-2.5 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/30 flex items-center gap-1.5 text-[10px] font-bold"><div class="w-1.5 h-1.5 rounded-full bg-red-500"></div> Offline</span>`;
+            return `<span class="px-2.5 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 flex items-center gap-1.5 text-[10px] font-bold"><div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> Warning</span>`;
+        }
+        function getTypeIcon(type) {
+            const t = (type || '').toUpperCase();
+            if(t === 'OLT') return `<span class="px-2 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded text-[9px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-server"></i> OLT</span>`;
+            if(t === 'SWITCH') return `<span class="px-2 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded text-[9px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-random"></i> SW</span>`;
+            if(t === 'BACKBONE') return `<span class="px-2 py-1 bg-orange-500/20 text-orange-300 border border-orange-500/30 rounded text-[9px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-route"></i> CORE</span>`;
+            return `<span class="px-2 py-1 bg-slate-700 text-slate-300 rounded text-[9px] font-bold inline-flex items-center">${type}</span>`;
+        }
+
+        function refreshDashboardStats() {
+            const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
+            if (typeof google !== 'undefined' && google.script) {
+                google.script.run.withSuccessHandler(stats => {
+                    renderDashboardStats(stats);
+                    if (activeRecapType) loadRecapFromServer(activeRecapType);
+                    if(syncIcon) syncIcon.classList.remove('fa-spin');
+                    showNotification('Statistik Tersinkronisasi', 'success');
+                }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showNotification('Gagal load stats', 'error'); }).getDashboardStats();
+            }
+        }
+
+        function renderDashboardStats(stats) {
+            if(!stats) return;
+            document.getElementById('summaryCards').innerHTML = `
+                <div class="glass-panel p-3 rounded-xl border-t-2 border-blue-500 flex justify-between items-center shadow-md"><div><div class="text-xl font-bold text-white">${stats.total}</div><div class="text-[9px] text-slate-400 uppercase font-semibold">Total Node</div></div><div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400"><i class="fa-solid fa-server"></i></div></div>
+                <div class="glass-panel p-3 rounded-xl border-t-2 border-emerald-500 flex justify-between items-center shadow-md"><div><div class="text-xl font-bold text-emerald-400">${stats.online}</div><div class="text-[9px] text-slate-400 uppercase font-semibold">Online</div></div><div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400"><i class="fa-solid fa-check"></i></div></div>
+                <div class="glass-panel p-3 rounded-xl border-t-2 border-red-500 flex justify-between items-center shadow-md"><div><div class="text-xl font-bold text-red-400">${stats.offline}</div><div class="text-[9px] text-slate-400 uppercase font-semibold">Offline</div></div><div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400"><i class="fa-solid fa-xmark"></i></div></div>
+                <div class="glass-panel p-3 rounded-xl border-t-2 border-yellow-500 flex justify-between items-center shadow-md"><div><div class="text-xl font-bold text-yellow-400">${stats.warning}</div><div class="text-[9px] text-slate-400 uppercase font-semibold">Warning</div></div><div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400"><i class="fa-solid fa-triangle-exclamation"></i></div></div>
+            `;
+            const isOlt = activeRecapType === 'OLT', isSw = activeRecapType === 'Switch', isCore = activeRecapType === 'Backbone';
+            document.getElementById('detailedStats').innerHTML = `
+                <div onclick="toggleRecap('OLT')" class="cursor-pointer group flex justify-between items-center p-3 rounded-xl border transition-all ${isOlt ? 'bg-purple-500/10 border-purple-500/50' : 'bg-slate-800/80 border-slate-700/50 hover:bg-slate-800'}"><div class="flex items-center gap-2"><i class="fa-solid fa-server text-purple-400"></i> <span class="text-slate-300 font-semibold text-xs">Total OLT</span></div><div class="font-bold text-white bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg text-xs">${stats.olt}</div></div>
+                <div onclick="toggleRecap('Switch')" class="cursor-pointer group flex justify-between items-center p-3 rounded-xl border transition-all ${isSw ? 'bg-blue-500/10 border-blue-500/50' : 'bg-slate-800/80 border-slate-700/50 hover:bg-slate-800'}"><div class="flex items-center gap-2"><i class="fa-solid fa-random text-blue-400"></i> <span class="text-slate-300 font-semibold text-xs">Total Switch</span></div><div class="font-bold text-white bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg text-xs">${stats.switch}</div></div>
+                <div onclick="toggleRecap('Backbone')" class="cursor-pointer group flex justify-between items-center p-3 rounded-xl border transition-all ${isCore ? 'bg-orange-500/10 border-orange-500/50' : 'bg-slate-800/80 border-slate-700/50 hover:bg-slate-800'}"><div class="flex items-center gap-2"><i class="fa-solid fa-route text-orange-400"></i> <span class="text-slate-300 font-semibold text-xs">Total Backbone</span></div><div class="font-bold text-white bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg text-xs">${stats.backbone}</div></div>
+            `;
+        }
+
+        function toggleRecap(type) {
+            const panel = document.getElementById('recapDropdownPanel');
+            if (activeRecapType === type) {
+                activeRecapType = null;
+                panel.classList.add('hidden');
+                refreshDashboardStats(); 
+            } else {
+                activeRecapType = type;
+                panel.classList.remove('hidden');
+                loadRecapFromServer(type);
+                refreshDashboardStats();
+            }
+        }
+
+        function loadRecapFromServer(type) {
+            const panel = document.getElementById('recapDropdownPanel');
+            panel.innerHTML = `<div class="text-center py-4 text-xs text-blue-400 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Memuat rekap ${type}...</div>`;
+            if (typeof google !== 'undefined' && google.script) {
+                google.script.run.withSuccessHandler(data => {
+                    if(!data || data.length === 0) {
+                        panel.innerHTML = `<div class="text-center py-4 text-xs text-slate-500">Tidak ada data rekap ${type}.</div>`; return;
+                    }
+                    let html = `<h4 class="text-xs font-bold text-slate-300 mb-3 flex items-center gap-2"><i class="fa-solid fa-list-check text-emerald-400"></i> Detail Port & OTB ${type}</h4><div class="space-y-2 max-h-60 overflow-y-auto pr-1 scrollbar-hide">`;
+                    data.forEach(item => {
+                        html += `<div class="bg-slate-900/50 p-2.5 rounded-lg border border-slate-700/50 flex justify-between items-center">
+                            <span class="text-[11px] font-bold text-slate-200 truncate pr-2 w-1/2">${item.nama}</span>
+                            <div class="flex gap-2 w-1/2 justify-end">
+                                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-ethernet"></i> ${item.total_port} Port</span>
+                                <span class="text-[9px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-1 rounded flex items-center gap-1"><i class="fa-solid fa-barcode"></i> ${item.total_otb} OTB</span>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                    panel.innerHTML = html;
+                }).withFailureHandler(err => {
+                    panel.innerHTML = `<div class="text-center py-4 text-xs text-red-400">Gagal memuat rekap.</div>`;
+                }).getRecapStats(type);
+            }
+        }
+
+        function renderTable(data) {
+            lastSearchResult = data;
+            const container = document.getElementById('data-list-container');
+            const emptyState = document.getElementById('emptyState');
+            container.innerHTML = '';
+            
+            if (!data || data.length === 0) { emptyState.classList.remove('hidden'); return; }
+            emptyState.classList.add('hidden');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const userRole = (session.role || '').toUpperCase();
+
+            data.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'w-full mobile-card rounded-xl p-3 border border-slate-700/60 shadow-lg relative overflow-hidden flex-shrink-0 flex flex-col justify-between';
+                
+                let accent = 'bg-slate-500'; const t = (item.tipe || '').toUpperCase();
+                if(t === 'OLT') accent = 'bg-purple-500'; else if(t === 'SWITCH') accent = 'bg-blue-500'; else if(t === 'BACKBONE') accent = 'bg-orange-500';
+
+                let ownerActionsHTML = '';
+                if (userRole === 'OWNER') {
+                    ownerActionsHTML = `
+                        <div class="col-span-2 flex gap-2 mt-3 pt-2.5 border-t border-slate-700/60 justify-end w-full">
+                            <button onclick="openEditModal(${index})" class="px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 active:scale-95 text-slate-950 rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-md">
+                                <i class="fa-solid fa-file-pen"></i> Edit Node
+                            </button>
+                            <button onclick="confirmDeleteNode(${index})" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-md">
+                                <i class="fa-solid fa-trash-can"></i> Hapus
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${accent} opacity-70"></div>
+                        <div class="pl-2 w-full">
+                            <div class="flex justify-between items-start mb-2 gap-1 w-full">
+                                <div class="flex-1 min-w-0 pr-1"><h4 class="font-bold text-slate-100 text-[13px] truncate leading-tight w-full">${item.nama_perangkat || '-'}</h4><div class="mt-1">${formatIP(item.ip_address)}</div></div>
+                                <div class="shrink-0 flex flex-col items-end gap-1.5">${getTypeIcon(item.tipe)} ${getStatusBadge(item.status)}</div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-slate-700/50 w-full">
+                                <div class="min-w-0"><span class="block text-[9px] text-slate-400 font-semibold mb-0.5"><i class="fa-solid fa-map-marker-alt text-emerald-400 mr-1"></i>Lokasi</span><span class="text-[11px] text-slate-200 truncate block w-full">${item.lokasi || '-'}</span></div>
+                                <div class="min-w-0"><span class="block text-[9px] text-slate-400 font-semibold mb-0.5"><i class="fa-solid fa-ethernet text-purple-400 mr-1"></i>Port Info</span><span class="text-[11px] text-slate-200 truncate block w-full">${item.info_port || '-'}</span></div>
+                                <div class="col-span-2 bg-slate-900/50 rounded-lg p-2 border border-slate-800 flex items-center justify-between mt-1"><span class="text-[9px] text-slate-400 font-semibold shrink-0"><i class="fa-solid fa-barcode text-orange-400 mr-1"></i>Kode OTB</span><span class="text-[11px] text-slate-200 font-mono font-bold truncate ml-2">${item.kode_otb || '-'}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    ${ownerActionsHTML}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function exportTableToCSV() {
+            if (!lastSearchResult || lastSearchResult.length === 0) return showNotification('Tidak ada data!', 'error');
+            let csv = "\uFEFFNama Perangkat,Tipe,IP Address,Lokasi,Port Info,Kode OTB,Status\n";
+            lastSearchResult.forEach(d => { csv += `"${d.nama_perangkat}","${d.tipe}","${d.ip_address}","${d.lokasi}","${(d.info_port||'').replace(/"/g, '""')}","${(d.kode_otb||'').replace(/"/g, '""')}","${d.status}"\n`; });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+            link.download = `Export_Netcore_${currentFilter}.csv`; link.style.visibility = 'hidden';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            showNotification('Export ke CSV Berhasil', 'success');
+        }
+
+        function setModalFilter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.modal-filter-btn').forEach(btn => { btn.classList.replace('bg-blue-600', 'bg-slate-800'); btn.classList.replace('text-white', 'text-slate-300'); });
+            const activeBtn = document.getElementById(`modal-btn-${type}`);
+            if(activeBtn) { activeBtn.classList.replace('bg-slate-800', 'bg-blue-600'); activeBtn.classList.replace('text-slate-300', 'text-white'); }
+            triggerServerSearch(true);
+        }
+
+        function triggerServerSearch(immediate = false) {
+            clearTimeout(searchTimeout);
+            const delay = immediate ? 0 : 600; 
+            document.getElementById('serverLoadingIndicator').classList.remove('hidden');
+            searchTimeout = setTimeout(() => {
+                const filters = { type: currentFilter, nama: document.getElementById('searchNama').value, lokasi: document.getElementById('searchLokasi').value, port: document.getElementById('searchPort').value, otb: document.getElementById('searchOtb').value };
+                if (typeof google !== 'undefined' && google.script) {
+                    google.script.run.withSuccessHandler(data => { renderTable(data); document.getElementById('serverLoadingIndicator').classList.add('hidden'); }).withFailureHandler(err => { showNotification(err.message, 'error'); document.getElementById('serverLoadingIndicator').classList.add('hidden'); }).searchNetworkData(filters);
+                }
+            }, delay);
+        }
+
+        function openDatabaseModal(type) {
+            document.getElementById('databaseModal').classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            const icons = { 'All': '<i class="fa-solid fa-layer-group text-blue-400"></i>', 'OLT': '<i class="fa-solid fa-server text-purple-400"></i>', 'Switch': '<i class="fa-solid fa-random text-blue-400"></i>', 'Backbone': '<i class="fa-solid fa-route text-orange-400"></i>' };
+            document.getElementById('databaseModalTitle').innerHTML = `${icons[type] || icons['All']} Database: ${type === 'All' ? 'Semua Node' : type}`;
+            setModalFilter(type);
+        }
+        function closeDatabaseModal() { document.getElementById('databaseModal').classList.add('hidden'); document.body.style.overflow = ''; }
+
+        function toggleInputModal() { 
+            const mod = document.getElementById('inputModal');
+            if(mod.classList.contains('hidden')) { mod.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } 
+            else { mod.classList.add('hidden'); document.body.style.overflow = ''; }
+        }
+
+        function toggleEditModal() {
+            const mod = document.getElementById('editModal');
+            if(mod.classList.contains('hidden')) { mod.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } 
+            else { mod.classList.add('hidden'); document.body.style.overflow = ''; originalSelectedNode = null; }
+        }
+
+        function handleInputData(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitInputBtn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...'; btn.disabled = true; btn.classList.add('opacity-70');
+
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const dataObj = {
+                nama_perangkat: document.getElementById('inputNama').value,
+                tipe: document.getElementById('inputTipe').value,
+                ip_address: document.getElementById('inputIp').value || '-',
+                lokasi: document.getElementById('inputLokasi').value,
+                info_port: document.getElementById('inputPort').value || '-',
+                kode_otb: document.getElementById('inputOtb').value || '-',
+                status: document.getElementById('inputStatus').value
+            };
+
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, originalHtml);
+                if (res.success) {
+                    showNotification(res.message, 'success');
+                    document.getElementById('manualInputForm').reset();
+                    toggleInputModal();
+                    refreshDashboardStats();
+                    if(!document.getElementById('databaseModal').classList.contains('hidden')) triggerServerSearch(true);
+                } else showNotification(res.message, 'error');
+            }).withFailureHandler(err => {
+                restoreBtn(btn, originalHtml);
+                showNotification(err.message, 'error');
+            }).insertNetworkData(dataObj, session.email);
+        }
+
+        function openEditModal(index) {
+            const data = lastSearchResult[index];
+            if(!data) return;
+            originalSelectedNode = data;
+            document.getElementById('editNama').value = data.nama_perangkat;
+            document.getElementById('editTipe').value = data.tipe;
+            document.getElementById('editIp').value = data.ip_address === '-' ? '' : data.ip_address;
+            document.getElementById('editLokasi').value = data.lokasi;
+            document.getElementById('editStatus').value = data.status;
+            document.getElementById('editPort').value = data.info_port;
+            document.getElementById('editOtb').value = data.kode_otb;
+            toggleEditModal();
+        }
+
+        function handleUpdateData(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitEditBtn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Merubah...'; btn.disabled = true;
+            
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updatedData = {
+                nama_perangkat: document.getElementById('editNama').value,
+                tipe: document.getElementById('editTipe').value,
+                ip_address: document.getElementById('editIp').value || '-',
+                lokasi: document.getElementById('editLokasi').value,
+                info_port: document.getElementById('editPort').value,
+                kode_otb: document.getElementById('editOtb').value,
+                status: document.getElementById('editStatus').value
+            };
+
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, originalHtml);
+                if(res.success) {
+                    showNotification(res.message, 'success');
+                    toggleEditModal();
+                    triggerServerSearch(true);
+                    refreshDashboardStats();
+                } else showNotification(res.message, 'error');
+            }).withFailureHandler(err => {
+                restoreBtn(btn, originalHtml);
+                showNotification(err.message, 'error');
+            }).updateNetworkData(originalSelectedNode, updatedData, session.email);
+        }
+
+        function closeDeleteModal() { document.getElementById('confirmDeleteModal').classList.add('hidden'); }
+        
+        function confirmDeleteNode(index) {
+            const data = lastSearchResult[index];
+            if(!data) return;
+            originalSelectedNode = data;
+            deleteTargetType = 'NODE';
+            document.getElementById('deleteContextType').innerText = `Node ${data.nama_perangkat}`;
+            document.getElementById('confirmDeleteModal').classList.remove('hidden');
+        }
+
+        function executeDeleteData() {
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const btn = document.getElementById('confirmDeleteBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>...'; btn.disabled = true;
+
+            if (deleteTargetType === 'NODE') {
+                google.script.run.withSuccessHandler(res => {
+                    restoreBtn(btn, originalText); closeDeleteModal();
+                    if(res.success) { showNotification(res.message, 'success'); triggerServerSearch(true); refreshDashboardStats(); }
+                    else showNotification(res.message, 'error');
+                }).withFailureHandler(err => { restoreBtn(btn, originalText); closeDeleteModal(); showNotification(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
+            } else if (deleteTargetType === 'EWO') {
+                google.script.run.withSuccessHandler(res => {
+                    restoreBtn(btn, originalText); closeDeleteModal();
+                    if(res.success) { showNotification(res.message, 'success'); refreshEWOList(); }
+                    else showNotification(res.message, 'error');
+                }).withFailureHandler(err => { restoreBtn(btn, originalText); closeDeleteModal(); showNotification(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
+            } else if (deleteTargetType === 'OTDR') {
+                google.script.run.withSuccessHandler(res => {
+                    restoreBtn(btn, originalText); closeDeleteModal();
+                    if(res.success) { showNotification(res.message, 'success'); refreshOTDRList(currentOtdrPage); }
+                    else showNotification(res.message, 'error');
+                }).withFailureHandler(err => { restoreBtn(btn, originalText); closeDeleteModal(); showNotification(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
+            }
+        }
+
+        function toggleEWOModal() {
+            const mod = document.getElementById('ewoModal');
+            if(mod.classList.contains('hidden')) { mod.classList.remove('hidden'); document.body.style.overflow = 'hidden'; refreshEWOList(); } 
+            else { mod.classList.add('hidden'); document.body.style.overflow = ''; }
+        }
+
+        function refreshEWOList() {
+            const lst = document.getElementById('ewoList'); lst.innerHTML = '<div class="text-center py-2 animate-pulse text-yellow-400">Loading EWO...</div>';
+            google.script.run.withSuccessHandler(data => renderEWOList(data)).withFailureHandler(err => lst.innerHTML='Gagal memuat EWO').getEWOData();
+        }
+
+        function renderEWOList(data) {
+            const lst = document.getElementById('ewoList');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const userRole = (session.role || '').toUpperCase();
+            
+            if(!data || data.length === 0) { lst.innerHTML = '<div class="text-slate-500 italic text-center py-3">Belum ada data EWO.</div>'; return; }
+            let html = '';
+            data.forEach(item => {
+                let statBadge = item.status === 'Done' ? `<span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold border border-emerald-500/30">Done</span>` : `<span class="bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold border border-red-500/30">Not Done</span>`;
+                let ownerHTML = '';
+                if(userRole === 'OWNER') {
+                    ownerHTML = `<div class="flex gap-2 mt-2 pt-2 border-t border-slate-700/50">
+                        <button type="button" onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="px-2 py-1 bg-yellow-600 rounded text-[9px] font-bold text-slate-900 active:scale-95"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button type="button" onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="px-2 py-1 bg-red-600 rounded text-[9px] font-bold text-white active:scale-95"><i class="fa-solid fa-trash"></i> Hapus</button>
+                    </div>`;
+                }
+                html += `<div class="bg-slate-900/50 border border-slate-700/50 p-2.5 rounded-xl flex flex-col mb-2">
+                    <div class="flex justify-between items-start"><span class="font-bold text-yellow-400 text-[11px]">${item.no_ewo}</span> ${statBadge}</div>
+                    <span class="text-slate-300 text-[11px] mt-1">${item.deskripsi}</span>
+                    ${ownerHTML}
+                </div>`;
+            });
+            lst.innerHTML = html;
+        }
+
+        function handleEWOInput(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitEwoBtn');
+            const originalHtml = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...'; btn.disabled = true;
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const obj = { no_ewo: document.getElementById('noEwo').value, deskripsi: document.getElementById('deskEwo').value, status: document.getElementById('statEwo').value };
+            
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, originalHtml);
+                if(res.success) { showNotification(res.message, 'success'); document.getElementById('ewoInputForm').reset(); refreshEWOList(); }
+                else showNotification(res.message, 'error');
+            }).withFailureHandler(err => { restoreBtn(btn, originalHtml); showNotification(err.message, 'error'); }).insertEWOData(obj, session.email);
+        }
+
+        function openEditEWO(no_ewo, deskripsi) {
+            originalSelectedEWO = {no_ewo, deskripsi};
+            document.getElementById('editEwoNo').value = no_ewo;
+            document.getElementById('editEwoDesk').value = deskripsi;
+            document.getElementById('editEwoModal').classList.remove('hidden');
+        }
+        function closeEditEWO() { document.getElementById('editEwoModal').classList.add('hidden'); }
+        
+        function confirmDeleteEWO(no_ewo, desk) {
+            originalSelectedEWO = {no_ewo: no_ewo, deskripsi: desk};
+            deleteTargetType = 'EWO';
+            document.getElementById('deleteContextType').innerText = `EWO ${no_ewo}`;
+            document.getElementById('confirmDeleteModal').classList.remove('hidden');
+        }
+
+        function handleUpdateEWO(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitEditEwoBtn');
+            const orig = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>...'; btn.disabled = true;
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { no_ewo: document.getElementById('editEwoNo').value, deskripsi: document.getElementById('editEwoDesk').value, status: document.getElementById('editEwoStat').value };
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, orig);
+                if(res.success) { showNotification(res.message, 'success'); closeEditEWO(); refreshEWOList(); }
+                else showNotification(res.message, 'error');
+            }).withFailureHandler(err => { restoreBtn(btn, orig); showNotification(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updated, session.email);
+        }
+
+        function toggleOTDRModal() {
+            const mod = document.getElementById('otdrModal');
+            if(mod.classList.contains('hidden')) { mod.classList.remove('hidden'); document.body.style.overflow = 'hidden'; refreshOTDRList(1); } 
+            else { mod.classList.add('hidden'); document.body.style.overflow = ''; }
+        }
+
+        function refreshOTDRList(page) {
+            const lst = document.getElementById('otdrList'); lst.innerHTML = '<div class="text-center py-2 animate-pulse text-purple-400">Loading OTDR Data...</div>';
+            google.script.run.withSuccessHandler(res => {
+                currentOtdrPage = res.currentPage; totalOtdrPages = res.totalPages;
+                document.getElementById('otdrPageInfo').innerText = `Halaman ${currentOtdrPage} / ${totalOtdrPages}`;
+                document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1;
+                document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
+                document.getElementById('selectAllOtdr').checked = false;
+                renderOTDRList(res.data);
+            }).withFailureHandler(err => lst.innerHTML='Gagal memuat OTDR').getOTDRData(page);
+        }
+
+        function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
+
+        function renderOTDRList(data) {
+            const lst = document.getElementById('otdrList');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const userRole = (session.role || '').toUpperCase();
+            
+            if(!data || data.length === 0) { lst.innerHTML = '<div class="text-slate-500 italic text-center py-3">Belum ada file OTDR.</div>'; return; }
+            
+            // Group by folder
+            let folders = {};
+            data.forEach(item => { let f = item.nama_folder || 'Umum'; if(!folders[f]) folders[f] = []; folders[f].push(item); });
+            
+            let html = '';
+            for(let folderName in folders) {
+                html += `<div class="mb-3 border border-slate-700/50 rounded-xl overflow-hidden bg-slate-900/40">
+                    <div class="bg-slate-800/80 px-3 py-2 font-bold text-slate-300 text-[11px] flex items-center"><i class="fa-solid fa-folder-open text-purple-400 mr-2"></i> ${folderName}</div>
+                    <div class="p-2 space-y-2">`;
+                
+                folders[folderName].forEach(item => {
+                    let ownerHTML = '';
+                    if(userRole === 'OWNER') {
+                        ownerHTML = `<div class="flex flex-col gap-1 ml-2 border-l border-slate-700 pl-2">
+                            <button type="button" onclick="openEditOTDR('${item.nama_otb}', '${item.timestamp}', '${item.nama_folder}', '${item.lokasi}')" class="text-yellow-500 active:scale-90 p-1 bg-slate-800 rounded"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                            <button type="button" onclick="confirmDeleteOTDR('${item.nama_otb}', '${item.timestamp}')" class="text-red-500 active:scale-90 p-1 bg-slate-800 rounded"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>`;
+                    }
+                    html += `<div class="bg-slate-800/50 border border-slate-700/50 p-2 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-2 flex-1 min-w-0">
+                            <input type="checkbox" class="otdr-checkbox w-3.5 h-3.5 rounded border-slate-600 bg-slate-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-bold text-purple-300 text-[10px] truncate"><i class="fa-solid fa-file-waveform mr-1"></i>${item.nama_otb}</span>
+                                <span class="text-slate-400 text-[9px] truncate">Lokasi: ${item.lokasi}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <a href="${item.file_url}" target="_blank" class="px-2 py-1.5 bg-blue-600 active:bg-blue-700 text-white rounded text-[9px] font-bold shadow-md whitespace-nowrap"><i class="fa-solid fa-download"></i> SOR</a>
+                            ${ownerHTML}
+                        </div>
+                    </div>`;
+                });
+                html += `</div></div>`;
+            }
+            lst.innerHTML = html;
+        }
+
+        function toggleAllOTDR(cbx) {
+            document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked);
+        }
+
+        function downloadSelectedOTDR() {
+            const cbs = document.querySelectorAll('.otdr-checkbox:checked');
+            if(cbs.length === 0) return showNotification('Pilih file dulu!', 'error');
+            cbs.forEach(cb => { if(cb.dataset.url && cb.dataset.url !== '#') window.open(cb.dataset.url, '_blank'); });
+            showNotification(`${cbs.length} file sedang dibuka.`, 'success');
+        }
+
+        function handleOTDRInput(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileOtdr');
+            if(fileInput.files.length === 0) return showNotification('Pilih file .sor!', 'error');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            const btn = document.getElementById('submitOtdrBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Base64...'; btn.disabled = true;
+            
+            reader.onload = function(ev) {
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up fa-bounce"></i> Mengunggah...';
+                const base64Data = ev.target.result;
+                const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+                const dataObj = {
+                    nama_folder: document.getElementById('folderOtdr').value,
+                    nama_otb: document.getElementById('otbOtdr').value,
+                    lokasi: document.getElementById('lokasiOtdr').value,
+                    fileName: file.name,
+                    fileMimeType: file.type || 'application/octet-stream',
+                    fileData: base64Data,
+                    userEmail: session.email
+                };
+                
+                google.script.run.withSuccessHandler(res => {
+                    restoreBtn(btn, originalText);
+                    if(res.success) { 
+                        showNotification(res.message, 'success'); 
+                        document.getElementById('otdrInputForm').reset();
+                        refreshOTDRList(1);
+                    } else showNotification(res.message, 'error');
+                }).withFailureHandler(err => { restoreBtn(btn, originalText); showNotification(err.message, 'error'); }).uploadOTDRData(dataObj);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openEditOTDR(otb, timestamp, folder, lokasi) {
+            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp};
+            document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum';
+            document.getElementById('editOtdrOtb').value = otb;
+            document.getElementById('editOtdrLokasi').value = lokasi;
+            document.getElementById('editOtdrModal').classList.remove('hidden');
+        }
+        function closeEditOTDR() { document.getElementById('editOtdrModal').classList.add('hidden'); }
+        
+        function confirmDeleteOTDR(otb, timestamp) {
+            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp};
+            deleteTargetType = 'OTDR';
+            document.getElementById('deleteContextType').innerText = `File OTB ${otb}`;
+            document.getElementById('confirmDeleteModal').classList.remove('hidden');
+        }
+
+        function handleUpdateOTDR(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitEditOtdrBtn');
+            const orig = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>...'; btn.disabled = true;
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, orig);
+                if(res.success) { showNotification(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); }
+                else showNotification(res.message, 'error');
+            }).withFailureHandler(err => { restoreBtn(btn, orig); showNotification(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updated, session.email);
+        }
+
+        function handleLogin(e) {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
-            const errDiv = document.getElementById('loginError');
+            const errBox = document.getElementById('loginError');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifikasi...';
+            btn.disabled = true;
+            errBox.classList.add('hidden');
+
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
-            
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Memverifikasi...';
-            btn.disabled = true;
-            errDiv.classList.add('hidden');
-            
-            try {
-                const res = await fetchGAS('verifyLogin', { email: email, password: pass });
-                if (res && res.success) {
-                    sessionData = res;
-                    localStorage.setItem('netcore_session', JSON.stringify(sessionData));
-                    document.getElementById('loginPage').classList.add('hidden');
-                    document.getElementById('dashboardPage').classList.remove('hidden');
-                    
-                    if (sessionData.role === 'OWNER') {
-                        document.getElementById('ownerRoleBadge').classList.remove('hidden');
-                    }
-                    
-                    showToast("Selamat datang, " + email);
-                    refreshDashboardStats();
+
+            google.script.run.withSuccessHandler(res => {
+                restoreBtn(btn, originalHtml);
+                if (res.success) {
+                    localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role }));
+                    checkSession();
                 } else {
-                    errDiv.innerText = res ? res.message : "Gagal terhubung.";
-                    errDiv.classList.remove('hidden');
+                    errBox.innerText = res.message; errBox.classList.remove('hidden');
                 }
-            } catch(e) {
-                errDiv.innerText = "Error server: " + e.message;
-                errDiv.classList.remove('hidden');
-            } finally {
-                btn.innerHTML = '<span>Masuk Sistem</span><i class="fa-solid fa-arrow-right text-base"></i>';
-                btn.disabled = false;
-            }
+            }).withFailureHandler(err => {
+                restoreBtn(btn, originalHtml);
+                errBox.innerText = "Error Koneksi Server!"; errBox.classList.remove('hidden');
+            }).verifyLogin(email, pass);
         }
 
         function handleLogout() {
             localStorage.removeItem('netcore_session');
-            sessionData = null;
-            document.getElementById('dashboardPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('loginForm').reset();
+            document.getElementById('ownerRoleBadge').classList.add('hidden');
+            checkSession();
         }
 
-        // Dashboard Stats
-        async function refreshDashboardStats() {
-            const icon = document.getElementById('syncIcon');
-            icon.classList.add('fa-spin');
-            
-            try {
-                const stats = await fetchGAS('getDashboardStats');
-                if (stats) {
-                    document.getElementById('summaryCards').innerHTML = `
-                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center">
-                            <span class="text-[10px] md:text-xs text-slate-400 font-bold uppercase mb-1">Total Perangkat</span>
-                            <span class="text-xl md:text-3xl font-black text-white">${stats.total}</span>
-                        </div>
-                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center">
-                            <span class="text-[10px] md:text-xs text-slate-400 font-bold uppercase mb-1">Total Port/Core</span>
-                            <span class="text-xl md:text-3xl font-black text-blue-400">${stats.total_port}</span>
-                        </div>
-                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
-                            <div class="absolute inset-0 bg-emerald-500/5"></div>
-                            <span class="text-[10px] md:text-xs text-emerald-400 font-bold uppercase mb-1 z-10">Node Online</span>
-                            <span class="text-xl md:text-3xl font-black text-emerald-400 z-10">${stats.online}</span>
-                        </div>
-                        <div class="glass-panel p-3 md:p-4 rounded-2xl border border-slate-700/30 shadow-lg flex flex-col items-center justify-center text-center relative overflow-hidden">
-                            <div class="absolute inset-0 bg-red-500/5"></div>
-                            <span class="text-[10px] md:text-xs text-red-400 font-bold uppercase mb-1 z-10">Node Offline</span>
-                            <span class="text-xl md:text-3xl font-black text-red-400 z-10">${stats.offline}</span>
-                        </div>
-                    `;
-                    
-                    document.getElementById('detailedStats').innerHTML = `
-                        <div onclick="loadRecap('OLT')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-server text-purple-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Total OLT</span></div>
-                            <span class="text-lg md:text-xl font-black text-white">${stats.olt}</span>
-                        </div>
-                        <div onclick="loadRecap('SWITCH')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-random text-blue-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Switch Distribusi</span></div>
-                            <span class="text-lg md:text-xl font-black text-white">${stats.switch}</span>
-                        </div>
-                        <div onclick="loadRecap('BACKBONE')" class="bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/50 p-3 rounded-xl cursor-pointer transition flex items-center justify-between shadow-sm group">
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-route text-orange-400 text-lg group-hover:scale-110 transition"></i><span class="text-xs md:text-sm font-bold text-slate-200">Jalur Backbone</span></div>
-                            <span class="text-lg md:text-xl font-black text-white">${stats.backbone}</span>
-                        </div>
-                    `;
-                }
-            } catch(e) {
-                showToast("Gagal memuat statistik", "error");
-            } finally {
-                icon.classList.remove('fa-spin');
-            }
-        }
-
-        async function loadRecap(type) {
-            const panel = document.getElementById('recapDropdownPanel');
-            panel.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i><br><span class="text-xs text-slate-400">Memuat Rekap ${type}...</span></div>`;
-            panel.classList.remove('hidden');
-            
-            try {
-                const data = await fetchGAS('getRecapStats', { type: type });
-                if(data && data.length > 0) {
-                    panel.innerHTML = `<h4 class="text-xs font-bold text-slate-300 mb-3"><i class="fa-solid fa-list text-blue-400 mr-2"></i>Detail Node: ${type}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto custom-scrollbar pr-2">` + 
-                    data.map(d => `<div class="bg-slate-900/50 p-2.5 rounded-lg border border-slate-700/50 flex justify-between items-center"><div class="text-xs font-bold text-white truncate max-w-[60%]">${d.nama}</div><div class="text-[10px] text-slate-400 flex gap-2"><span>${d.total_port} Port</span><span>${d.total_otb} OTB</span></div></div>`).join('') + 
-                    `</div>`;
-                } else {
-                    panel.innerHTML = `<div class="text-center py-4 text-xs text-slate-400">Tidak ada data rekap ${type}</div>`;
-                }
-            } catch(e) {
-                panel.innerHTML = `<div class="text-center py-4 text-xs text-red-400">Gagal memuat rekap</div>`;
-            }
-        }
-
-        // Database Modal
-        function openDatabaseModal(type) {
-            currentSearchType = type;
-            document.getElementById('dbModalTitle').innerHTML = `<i class="fa-solid fa-layer-group text-blue-400 mr-2"></i>Database: ${type}`;
-            document.getElementById('databaseModal').classList.remove('hidden');
-            executeSearch();
-        }
-        function closeDatabaseModal() {
-            document.getElementById('databaseModal').classList.add('hidden');
-        }
-
-        async function executeSearch() {
-            const list = document.getElementById('dbResultList');
-            list.innerHTML = `<div class="text-center py-8"><i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-400 mb-2"></i><br><span class="text-slate-400">Mencari data...</span></div>`;
-            
-            const filters = {
-                type: currentSearchType,
-                nama: document.getElementById('searchNama').value,
-                lokasi: document.getElementById('searchLokasi').value
-            };
-            
-            try {
-                const data = await fetchGAS('searchNetworkData', { filters: filters });
-                if(data && data.length > 0) {
-                    list.innerHTML = data.map(d => {
-                        const statusColor = d.status.toLowerCase().includes('online') ? 'text-emerald-400 border-emerald-500/30' : d.status.toLowerCase().includes('offline') ? 'text-red-400 border-red-500/30' : 'text-yellow-400 border-yellow-500/30';
-                        return `
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/50 mb-3 hover:bg-slate-800 transition">
-                            <div class="flex justify-between items-start mb-2">
-                                <div><h5 class="font-bold text-white text-sm">${d.nama_perangkat}</h5><span class="text-[10px] text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${d.tipe}</span></div>
-                                <span class="text-[10px] font-bold px-2 py-1 rounded border bg-slate-900 ${statusColor}">${d.status.toUpperCase()}</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-400 mt-3">
-                                <div><i class="fa-solid fa-network-wired w-4"></i> ${d.ip_address || '-'}</div>
-                                <div><i class="fa-solid fa-location-dot w-4 text-emerald-500"></i> ${d.lokasi}</div>
-                                <div><i class="fa-solid fa-plug w-4 text-yellow-500"></i> Port: ${d.info_port}</div>
-                                <div><i class="fa-solid fa-box w-4 text-orange-400"></i> OTB: ${d.kode_otb}</div>
-                            </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    list.innerHTML = `<div class="text-center py-8 text-slate-400 text-sm">Tidak ada data ditemukan</div>`;
-                }
-            } catch(e) {
-                list.innerHTML = `<div class="text-center py-8 text-red-400 text-sm">Error memuat data</div>`;
-            }
-        }
-
-        // Input Modals
-        function toggleInputModal() {
-            const m = document.getElementById('inputModal');
-            m.classList.contains('hidden') ? m.classList.remove('hidden') : m.classList.add('hidden');
-        }
-
-        async function submitNetworkData(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitNode');
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Menyimpan...';
-            
-            const dataObj = {
-                nama_perangkat: document.getElementById('inNama').value,
-                tipe: document.getElementById('inTipe').value,
-                ip_address: document.getElementById('inIp').value,
-                lokasi: document.getElementById('inLokasi').value,
-                info_port: document.getElementById('inPort').value,
-                kode_otb: document.getElementById('inOtb').value,
-                status: document.getElementById('inStatus').value
-            };
-            
-            try {
-                const res = await fetchGAS('insertNetworkData', { dataObj: dataObj, email: sessionData.email });
-                if(res.success) {
-                    showToast(res.message);
-                    document.getElementById('inputForm').reset();
-                    toggleInputModal();
-                    refreshDashboardStats();
-                } else showToast(res.message, 'error');
-            } catch(err) { showToast("Gagal menyimpan", 'error'); }
-            finally { btn.innerHTML = 'Simpan Node Baru'; }
-        }
-
-        // EWO & OTDR Modals
-        function toggleEWOModal() {
-            const m = document.getElementById('ewoModal');
-            if(m.classList.contains('hidden')) {
-                m.classList.remove('hidden');
-                loadEWO();
-            } else { m.classList.add('hidden'); }
-        }
-        function toggleOTDRModal() {
-            const m = document.getElementById('otdrModal');
-            m.classList.contains('hidden') ? m.classList.remove('hidden') : m.classList.add('hidden');
-        }
-
-        async function loadEWO() {
-            const list = document.getElementById('ewoList');
-            list.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-slate-400"></i></div>`;
-            try {
-                const data = await fetchGAS('getEWOData');
-                if(data && data.length>0) {
-                    list.innerHTML = data.map(d => `
-                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/50 flex justify-between items-center text-sm">
-                            <div class="flex-1 pr-2">
-                                <div class="font-bold text-blue-300 text-xs">${d.no_ewo}</div>
-                                <div class="text-slate-300 text-[11px] leading-tight mt-1">${d.deskripsi}</div>
-                            </div>
-                            <span class="text-[9px] font-bold px-2 py-1 rounded border ${d.status === 'DONE' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' : 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10'}">${d.status}</span>
-                        </div>
-                    `).join('');
-                } else list.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">Belum ada EWO</div>`;
-            } catch(e) { list.innerHTML = `<div class="text-center text-red-400 text-xs py-4">Error EWO</div>`; }
-        }
-
-        async function submitEWO(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitEwo');
-            btn.innerHTML = '...';
-            try {
-                const obj = { no_ewo: document.getElementById('ewoNo').value, deskripsi: document.getElementById('ewoDesc').value, status: document.getElementById('ewoStatus').value };
-                const res = await fetchGAS('insertEWOData', { dataObj: obj, email: sessionData.email });
-                if(res.success) { showToast(res.message); document.getElementById('ewoForm').reset(); loadEWO(); }
-                else showToast(res.message, 'error');
-            } catch(e) { showToast("Gagal menyimpan EWO", "error"); }
-            finally { btn.innerHTML = 'Simpan EWO'; }
-        }
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('netcore_session');
-            if(saved) {
-                sessionData = JSON.parse(saved);
+        function checkSession() {
+            const session = localStorage.getItem('netcore_session');
+            if(session) {
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('dashboardPage').classList.remove('hidden');
-                if (sessionData.role === 'OWNER') document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                const sData = JSON.parse(session);
+                if(sData.role === 'OWNER') document.getElementById('ownerRoleBadge').classList.remove('hidden');
                 refreshDashboardStats();
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('dashboardPage').classList.add('hidden');
             }
-        });
+        }
+
+        // INIT APP
+        window.onload = checkSession;
     </script>
 </body>
 </html>
