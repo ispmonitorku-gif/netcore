@@ -133,12 +133,12 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 md:gap-3">
                     <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50">
                         <i id="syncIcon" class="fa-solid fa-rotate-right"></i>
                     </button>
-                    <button onclick="handleLogout()" class="hidden md:flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-4 py-2 rounded-full transition-colors font-medium text-sm">
-                        <i class="fa-solid fa-power-off"></i> Keluar
+                    <button onclick="handleLogout()" class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-2 md:px-4 rounded-full transition-colors font-medium text-sm">
+                        <i class="fa-solid fa-power-off"></i> <span class="hidden md:inline">Keluar</span>
                     </button>
                 </div>
             </div>
@@ -240,8 +240,8 @@
                 </div>
             </div>
             
-            <div class="p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col gap-5 w-full relative">
-                <div class="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2 pb-2 shrink-0 w-full -mx-5 px-5">
+            <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col gap-4 md:gap-5 w-full relative">
+                <div class="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2 pb-2 shrink-0 w-full -mx-3 px-3 md:-mx-5 md:px-5">
                     <button id="modal-btn-All" onclick="setModalFilter('All')" class="modal-filter-btn shrink-0 bg-brand-500 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-neon-blue border border-brand-400/50">All Nodes</button>
                     <button id="modal-btn-OLT" onclick="setModalFilter('OLT')" class="modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all">OLT</button>
                     <button id="modal-btn-Switch" onclick="setModalFilter('Switch')" class="modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all">Switch</button>
@@ -257,7 +257,7 @@
                 <div class="text-[10px] text-zinc-500 pl-1">Showing max 50 recent records.</div>
                 
                 <div class="rounded-2xl relative flex-1 flex flex-col w-full h-full pb-10 bg-dark-800/30 border border-zinc-800/50 p-2 md:p-4 overflow-hidden">
-                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0 content-start pb-8"></div>
+                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 md:space-y-0 content-start pb-8"></div>
                     <div id="emptyState" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-zinc-500 h-full w-full bg-dark-900/80 backdrop-blur-sm z-10">
                         <div class="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4"><i class="fa-solid fa-ghost text-2xl opacity-50 text-brand-400"></i></div>
                         <h3 class="text-sm font-bold text-zinc-300 mb-1">No Records Found</h3>
@@ -778,12 +778,12 @@
                                 <span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${statusColor}">${item.status}</span>
                             </div>
                         </div>
-                        <h4 class="font-bold text-white text-sm mb-1 truncate">${item.nama_perangkat}</h4>
+                        <h4 class="font-bold text-white text-sm mb-1 break-words">${item.nama_perangkat}</h4>
                         <div class="text-[11px] text-zinc-400 space-y-1.5 mb-2">
-                            <p class="flex items-center"><i class="fa-solid fa-network-wired w-4 text-center mr-1.5 opacity-70"></i> ${item.ip_address || '-'}</p>
-                            <p class="flex items-center"><i class="fa-solid fa-map-pin w-4 text-center mr-1.5 opacity-70"></i> ${item.lokasi || '-'}</p>
-                            <p class="flex items-center"><i class="fa-solid fa-ethernet w-4 text-center mr-1.5 opacity-70"></i> <span class="truncate">${item.info_port || '-'}</span></p>
-                            <p class="flex items-center"><i class="fa-solid fa-barcode w-4 text-center mr-1.5 opacity-70"></i> <span class="truncate text-brand-400 font-mono">${item.kode_otb || '-'}</span></p>
+                            <p class="flex items-start"><i class="fa-solid fa-network-wired w-4 text-center mr-1.5 mt-0.5 opacity-70 shrink-0"></i> <span class="break-words flex-1">${item.ip_address || '-'}</span></p>
+                            <p class="flex items-start"><i class="fa-solid fa-map-pin w-4 text-center mr-1.5 mt-0.5 opacity-70 shrink-0"></i> <span class="break-words flex-1">${item.lokasi || '-'}</span></p>
+                            <p class="flex items-start"><i class="fa-solid fa-ethernet w-4 text-center mr-1.5 mt-0.5 opacity-70 shrink-0"></i> <span class="break-words flex-1 whitespace-pre-wrap">${item.info_port || '-'}</span></p>
+                            <p class="flex items-start"><i class="fa-solid fa-barcode w-4 text-center mr-1.5 mt-0.5 opacity-70 shrink-0"></i> <span class="break-words flex-1 text-brand-400 font-mono whitespace-pre-wrap">${item.kode_otb || '-'}</span></p>
                         </div>
                         ${ownerActions}
                     </div>`;
