@@ -11,8 +11,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- Chart.js Library untuk Chart Statistik Rekap -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
         tailwind.config = {
@@ -161,13 +159,8 @@
                             <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center mr-3 border border-brand-500/30"><i class="fa-solid fa-chart-column text-brand-400 text-xs"></i></div>
                             System Overview
                         </h3>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.stopPropagation(); openRecapChartModal();" class="text-xs bg-gradient-to-r from-brand-500 to-indigo-600 text-white font-bold px-3 py-1.5 rounded-xl border border-brand-400/30 active:scale-95 shadow-neon-blue flex items-center gap-1.5">
-                                <i class="fa-solid fa-chart-line"></i> Rekap Detail & Chart Lokasi
-                            </button>
-                            <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
-                                <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
-                            </div>
+                        <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
+                            <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
                         </div>
                     </div>
                     
@@ -278,56 +271,6 @@
                         <h3 class="text-sm font-bold text-zinc-300 mb-1">No Records Found</h3>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL REKAPITULASI DETAIL PER LOKASI & CHART STATISTIK (ON CLICK) -->
-    <div id="recapChartModal" class="hidden fixed inset-0 z-[105] flex flex-col items-center justify-end md:justify-center bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="recapChartModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1200px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-brand-500/20 flex flex-col h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
-            
-            <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
-            
-            <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
-                        <i class="fa-solid fa-chart-line text-brand-400 text-sm"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-white text-base font-bold tracking-wide">Rekapitulasi Detail & Chart Per Lokasi</h3>
-                        <p class="text-[10px] text-zinc-400">Statistik penggunaan OLT, PON, Port & OTB</p>
-                    </div>
-                </div>
-                <button onclick="closeRecapChartModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 space-y-6">
-                
-                <!-- Grafik Statistik Section -->
-                <div class="glass-card p-5 rounded-2xl border border-zinc-800">
-                    <div class="flex items-center justify-between mb-4">
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-chart-simple text-brand-400"></i> Chart Statistik Alokasi Per Lokasi
-                        </h4>
-                        <span class="text-[10px] text-zinc-400 bg-dark-800 px-3 py-1 rounded-full border border-zinc-700">Real-time Analysis</span>
-                    </div>
-                    <div class="w-full h-64 relative">
-                        <canvas id="locationChartCanvas"></canvas>
-                    </div>
-                </div>
-
-                <!-- Detail Rekapitulasi Cards Per Lokasi -->
-                <div>
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot text-accent-400"></i> Detail OLT, PON & Port Per Lokasi
-                    </h4>
-                    <div id="locationCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="col-span-full text-center py-8 text-brand-400 font-medium animate-pulse">
-                            <i class="fa-solid fa-spinner fa-spin mr-2"></i> Memuat data rekapitulasi...
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -580,23 +523,22 @@
 
     <script>
         // ==============================================================
-        // GITHUB PAGES FETCH WRAPPER & MOCK DATA
+        // GITHUB PAGES FETCH WRAPPER & MOCK DATA (Dari File 1.html)
         // ==============================================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec"; 
 
         if (typeof google === 'undefined') {
-            console.log("Environment: Luar Apps Script (GitHub Pages / Standalone)");
+            console.log("Environment: Luar Apps Script (GitHub Pages)");
             
-            // Mock Data Perangkat Jaringan
+            // Mock Data
             let mockNetworkData = [
-                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1, PON 2, PON 3, PON 4", kode_otb: "OTB-STB-01, OTB-STB-02", status: "Online" },
-                { nama_perangkat: "OLT-HW-MDN-02", tipe: "OLT", ip_address: "10.10.10.2", lokasi: "POP Sunggal", info_port: "PON 1, PON 2, PON 3, PON 4, PON 5, PON 6, PON 7, PON 8", kode_otb: "OTB-SGL-01, OTB-SGL-02", status: "Online" },
-                { nama_perangkat: "SW-DIS-MDN-01", tipe: "Switch", ip_address: "10.10.20.1", lokasi: "POP Sunggal", info_port: "Eth 1/1 - Eth 1/24", kode_otb: "-", status: "Offline" },
-                { nama_perangkat: "BB-CORE-MDN-01", tipe: "Backbone", ip_address: "10.10.30.1", lokasi: "POP Setiabudi", info_port: "10G SFP+ 1/1", kode_otb: "OTB-CORE-01", status: "Online" }
+                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1/1", kode_otb: "OTB-STB-01", status: "Online" },
+                { nama_perangkat: "SW-DIS-MDN-01", tipe: "Switch", ip_address: "10.10.20.1", lokasi: "POP Sunggal", info_port: "Eth 1/1", kode_otb: "-", status: "Offline" }
             ];
-            let mockEWOData = [{no_ewo: "EWO-2026-001", deskripsi: "Pengecekan FO Core Line Sunggal", status: "Done"}];
-            let mockOTDRData = [{nama_folder: "Core Line", nama_otb: "OTB-01", lokasi: "POP Setiabudi", file_url: "#", timestamp: "2026-07-23 08:35:08"}];
+            let mockEWOData = [{no_ewo: "EWO-2026-001", deskripsi: "Pengecekan FO", status: "Done"}];
+            let mockOTDRData = [{nama_folder: "Core Line", nama_otb: "OTB-01", lokasi: "POP A", file_url: "#", timestamp: "2026-07-23 08:35:08"}];
 
+            // Real Fetch Function to Apps Script API
             const fetchAPI = async (action, payload, sCb, fCb) => {
                 if (!GAS_API_URL) return runMock(action, payload, sCb, fCb);
                 try {
@@ -609,42 +551,20 @@
                     const result = await response.json();
                     if (result.error) { if(fCb) fCb(new Error(result.message)); } 
                     else { if(sCb) sCb(result.data); }
-                } catch (error) { 
-                    runMock(action, payload, sCb, fCb); 
-                }
+                } catch (error) { if(fCb) fCb(error); }
             };
 
             const runMock = (action, payload, sCb, fCb) => {
                 setTimeout(() => {
                     try {
                         let res;
-                        if(action === 'verifyLogin') { 
-                            res = {success: true, role: (payload.email || "").includes("owner") ? "OWNER" : "ADMIN", email: payload.email}; 
-                        } 
+                        if(action === 'verifyLogin') { res = {success: true, role: (payload.email || "").includes("owner") ? "OWNER" : "ADMIN", email: payload.email}; } 
                         else if(action === 'getDashboardStats') {
-                            res = { total: mockNetworkData.length, online: 3, offline: 1, warning: 0, olt: 2, switch: 1, backbone: 1 };
-                        }
-                        else if(action === 'getRecapStats') {
-                            res = [
-                                { nama: "OLT-ZTE-MDN-01", total_port: 4, total_otb: 2 },
-                                { nama: "OLT-HW-MDN-02", total_port: 8, total_otb: 2 }
-                            ];
-                        }
-                        else if(action === 'getDetailedLocationRecap') {
-                            res = {
-                                locations: [
-                                    { lokasi: "POP Setiabudi", oltCount: 1, switchCount: 0, backboneCount: 1, ponCount: 4, portCount: 32, otbCount: 3, totalDevices: 2 },
-                                    { lokasi: "POP Sunggal", oltCount: 1, switchCount: 1, backboneCount: 0, ponCount: 8, portCount: 64, otbCount: 2, totalDevices: 2 }
-                                ],
-                                summary: { totalLocations: 2, totalOLT: 2, totalPON: 12, totalPort: 96, totalOTB: 5 }
-                            };
-                        }
-                        else if(action === 'searchNetworkData') {
-                            res = mockNetworkData;
+                            res = { total: mockNetworkData.length, online: 1, offline: 1, warning: 0, olt: 1, switch: 1, backbone: 0 };
                         }
                         if(sCb) sCb(res);
                     } catch(e) { if(fCb) fCb(e); }
-                }, 400);
+                }, 600);
             };
 
             const createRun = () => {
@@ -655,7 +575,6 @@
                     verifyLogin: (email, pass) => fetchAPI('verifyLogin', {email, password: pass}, sCb, fCb),
                     getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
                     getRecapStats: (type) => fetchAPI('getRecapStats', {type}, sCb, fCb),
-                    getDetailedLocationRecap: () => fetchAPI('getDetailedLocationRecap', {}, sCb, fCb),
                     searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
                     insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
                     updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
@@ -688,8 +607,10 @@
         let currentOtdrPage = 1;
         let totalOtdrPages = 1;
         let isOwner = false;
-        let locationChartInstance = null;
 
+        // ==============================================================
+        // UI UTILITIES
+        // ==============================================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -703,7 +624,6 @@
 
         function setButtonState(btnId, isLoading, originalHtml) {
             const btn = document.getElementById(btnId);
-            if(!btn) return;
             if(isLoading) {
                 btn.dataset.original = originalHtml || btn.innerHTML;
                 btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
@@ -730,65 +650,16 @@
         }
 
         // ==============================================================
-        // LOGIN & SESSION MANAGEMENT
-        // ==============================================================
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            setButtonState('loginBtn', true, '<span>Authenticate</span> <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
-            
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('loginBtn', false);
-                if(res && res.success) {
-                    isOwner = res.role === 'OWNER';
-                    localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role }));
-                    initDashboardView();
-                } else {
-                    const err = document.getElementById('loginError');
-                    err.innerText = res.message || "Autentikasi gagal!"; err.classList.remove('hidden');
-                }
-            }).withFailureHandler(err => {
-                setButtonState('loginBtn', false);
-                showToast(err.message, 'error');
-            }).verifyLogin(email, pass);
-        }
-
-        function initDashboardView() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            if(isOwner) document.getElementById('ownerRoleBadge').classList.remove('hidden');
-            refreshDashboardStats();
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('netcore_session');
-            location.reload();
-        }
-
-        // Check active session on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const sess = localStorage.getItem('netcore_session');
-            if(sess) {
-                try {
-                    const parsed = JSON.parse(sess);
-                    if(parsed.email) {
-                        isOwner = parsed.role === 'OWNER';
-                        initDashboardView();
-                    }
-                } catch(e) {}
-            }
-        });
-
-        // ==============================================================
-        // DASHBOARD & RECAP STATS
+        // DASHBOARD & RECAP
         // ==============================================================
         function refreshDashboardStats() {
             const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
-            google.script.run.withSuccessHandler(stats => {
-                renderDashboardStats(stats);
-                if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Data Synced', 'success');
-            }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Failed to load stats', 'error'); }).getDashboardStats();
+            if (typeof google !== 'undefined' && google.script) {
+                google.script.run.withSuccessHandler(stats => {
+                    renderDashboardStats(stats);
+                    if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Data Synced', 'success');
+                }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Failed to load stats', 'error'); }).getDashboardStats();
+            }
         }
 
         function renderDashboardStats(stats) {
@@ -862,117 +733,6 @@
         }
 
         // ==============================================================
-        // REKAPITULASI DETAIL PER LOKASI & CHART (DAPAT DI-KLIK)
-        // ==============================================================
-        function openRecapChartModal() {
-            animateModalOpen('recapChartModal', 'recapChartModalContent');
-            loadDetailedRecapData();
-        }
-
-        function closeRecapChartModal() {
-            animateModalClose('recapChartModal', 'recapChartModalContent');
-        }
-
-        function loadDetailedRecapData() {
-            const container = document.getElementById('locationCardsContainer');
-            container.innerHTML = '<div class="col-span-full text-center py-8 text-brand-400 font-medium animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Memuat data rekapitulasi lokasi...</div>';
-            
-            google.script.run.withSuccessHandler(data => {
-                renderLocationCards(data);
-                renderLocationChart(data);
-            }).withFailureHandler(err => {
-                container.innerHTML = `<div class="col-span-full text-center py-8 text-red-400">Gagal memuat data rekap lokasi: ${err.message}</div>`;
-            }).getDetailedLocationRecap();
-        }
-
-        function renderLocationCards(data) {
-            const container = document.getElementById('locationCardsContainer');
-            container.innerHTML = '';
-            
-            if(!data || !data.locations || data.locations.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-6 text-zinc-500">Tidak ada data rekapitulasi lokasi.</div>';
-                return;
-            }
-
-            data.locations.forEach(loc => {
-                const cardHtml = `
-                    <div class="glass-card p-4 rounded-2xl border border-zinc-800 flex flex-col justify-between hover:border-brand-500/50 transition-all">
-                        <div class="flex justify-between items-center mb-3">
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-location-dot text-brand-400"></i>
-                                <h4 class="font-bold text-white text-sm truncate max-w-[160px]">${loc.lokasi}</h4>
-                            </div>
-                            <span class="text-[10px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded-full font-bold">${loc.oltCount} OLT</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-3 gap-2 text-center bg-dark-900/60 p-2.5 rounded-xl border border-zinc-800/80 mb-3">
-                            <div>
-                                <span class="block text-[9px] text-zinc-400 font-semibold">PON</span>
-                                <span class="text-xs font-black text-purple-400">${loc.ponCount}</span>
-                            </div>
-                            <div>
-                                <span class="block text-[9px] text-zinc-400 font-semibold">PORT</span>
-                                <span class="text-xs font-black text-blue-400">${loc.portCount}</span>
-                            </div>
-                            <div>
-                                <span class="block text-[9px] text-zinc-400 font-semibold">OTB</span>
-                                <span class="text-xs font-black text-orange-400">${loc.otbCount}</span>
-                            </div>
-                        </div>
-
-                        <div class="pt-2 border-t border-zinc-800/80 flex justify-between items-center text-[10px] text-zinc-400">
-                            <span>Perangkat: <strong class="text-white">${loc.totalDevices}</strong></span>
-                            <span class="text-emerald-400 font-medium flex items-center gap-1"><i class="fa-solid fa-circle text-[6px]"></i> Operational</span>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', cardHtml);
-            });
-        }
-
-        function renderLocationChart(data) {
-            const ctx = document.getElementById('locationChartCanvas');
-            if(!ctx) return;
-            
-            if (locationChartInstance) {
-                locationChartInstance.destroy();
-            }
-
-            if(!data || !data.locations || data.locations.length === 0) return;
-
-            const labels = data.locations.map(l => l.lokasi);
-            const oltData = data.locations.map(l => l.oltCount);
-            const ponData = data.locations.map(l => l.ponCount);
-            const portData = data.locations.map(l => l.portCount);
-            const otbData = data.locations.map(l => l.otbCount);
-
-            locationChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'OLT', data: oltData, backgroundColor: '#a855f7', borderRadius: 6 },
-                        { label: 'PON', data: ponData, backgroundColor: '#3b82f6', borderRadius: 6 },
-                        { label: 'Port', data: portData, backgroundColor: '#10b981', borderRadius: 6 },
-                        { label: 'OTB', data: otbData, backgroundColor: '#f97316', borderRadius: 6 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#a1a1aa', font: { family: 'Inter', size: 11 } } },
-                        tooltip: { backgroundColor: '#18181b', titleColor: '#fff', bodyColor: '#a1a1aa', borderColor: '#27272a', borderWidth: 1 }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                        y: { ticks: { color: '#71717a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        // ==============================================================
         // DATABASE MODAL & SEARCH
         // ==============================================================
         function openDatabaseModal(type) {
@@ -991,25 +751,12 @@
 
         function triggerServerSearch() {
             clearTimeout(searchTimeout);
-            const indicator = document.getElementById('serverLoadingIndicator');
-            if(indicator) indicator.classList.remove('hidden');
-            
+            document.getElementById('serverLoadingIndicator').classList.remove('hidden');
             searchTimeout = setTimeout(() => {
-                const filters = { 
-                    type: currentFilter, 
-                    nama: document.getElementById('searchNama').value, 
-                    lokasi: document.getElementById('searchLokasi').value, 
-                    port: document.getElementById('searchPort').value, 
-                    otb: document.getElementById('searchOtb').value 
-                };
-                google.script.run.withSuccessHandler(data => { 
-                    renderTable(data); 
-                    if(indicator) indicator.classList.add('hidden'); 
-                }).withFailureHandler(err => { 
-                    showToast(err.message, 'error'); 
-                    if(indicator) indicator.classList.add('hidden'); 
-                }).searchNetworkData(filters);
-            }, 500);
+                const filters = { type: currentFilter, nama: document.getElementById('searchNama').value, lokasi: document.getElementById('searchLokasi').value, port: document.getElementById('searchPort').value, otb: document.getElementById('searchOtb').value };
+                google.script.run.withSuccessHandler(data => { renderTable(data); document.getElementById('serverLoadingIndicator').classList.add('hidden'); })
+                .withFailureHandler(err => { showToast(err.message, 'error'); document.getElementById('serverLoadingIndicator').classList.add('hidden'); }).searchNetworkData(filters);
+            }, 600);
         }
 
         function renderTable(data) {
@@ -1099,18 +846,23 @@
             });
         }
 
+        function exportTableToCSV() {
+            exportTableToExcelTemplate('csv');
+        }
+
         function exportTableToExcelTemplate(format = 'xlsx') {
             if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
 
             const now = new Date();
             const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
 
+            // Susunan Template Laporan Resmi Netcore ISP
             const templateRows = [
                 ["NETCORE ISP - LAPORAN DATABASE JARINGAN"],
                 [`Tanggal Cetak: ${dateStr}`],
                 [`Kategori Filter: ${currentFilter}`],
                 [`Total Data: ${lastSearchResult.length} Node Perangkat`],
-                [], 
+                [], // Baris kosong pemisah
                 ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
             ];
 
@@ -1145,22 +897,24 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                showToast('Export CSV Berhasil', 'success');
+                showToast('Export CSV Template Berhasil', 'success');
             } else {
                 const wb = XLSX.utils.book_new();
                 const ws = XLSX.utils.aoa_to_sheet(templateRows);
 
+                // Mengatur lebar kolom agar rapi saat dibuka di MS Excel
                 ws['!cols'] = [
-                    { wch: 6 },  
-                    { wch: 26 }, 
-                    { wch: 12 }, 
-                    { wch: 18 }, 
-                    { wch: 24 }, 
-                    { wch: 22 }, 
-                    { wch: 22 }, 
-                    { wch: 14 }  
+                    { wch: 6 },  // NO
+                    { wch: 26 }, // NAMA PERANGKAT
+                    { wch: 12 }, // TIPE NODE
+                    { wch: 18 }, // IP ADDRESS
+                    { wch: 24 }, // LOKASI / AREA
+                    { wch: 22 }, // PORT INFO
+                    { wch: 22 }, // KODE OTB
+                    { wch: 14 }  // STATUS
                 ];
 
+                // Merge Cell Header Judul Laporan
                 ws['!merges'] = [
                     { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
                     { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } },
@@ -1170,7 +924,7 @@
 
                 XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
                 XLSX.writeFile(wb, `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
-                showToast('Export Excel (.xlsx) Berhasil!', 'success');
+                showToast('Export Excel Template (.xlsx) Berhasil!', 'success');
             }
         }
 
@@ -1215,40 +969,6 @@
                 if(res.success) { showToast(res.message, 'success'); toggleEditModal(); triggerServerSearch(); refreshDashboardStats(); } 
                 else showToast(res.message, 'error');
             }).withFailureHandler(err => { setButtonState('submitEditBtn', false); showToast(err.message, 'error'); }).updateNetworkData(originalSelectedNode, updatedData, session.email);
-        }
-
-        function confirmDeleteNode(index) {
-            deleteTargetType = 'NODE';
-            originalSelectedNode = lastSearchResult[index];
-            document.getElementById('deleteContextType').innerText = originalSelectedNode.nama_perangkat;
-            animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-
-        function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
-
-        function executeDeleteData() {
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            setButtonState('confirmDeleteBtn', true, 'Ya, Hapus');
-
-            if(deleteTargetType === 'NODE') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false);
-                    if(res.success) { showToast(res.message, 'success'); closeDeleteModal(); triggerServerSearch(); refreshDashboardStats(); }
-                    else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); showToast(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
-            } else if(deleteTargetType === 'EWO') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false);
-                    if(res.success) { showToast(res.message, 'success'); closeDeleteModal(); refreshEWOList(); }
-                    else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); showToast(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
-            } else if(deleteTargetType === 'OTDR') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false);
-                    if(res.success) { showToast(res.message, 'success'); closeDeleteModal(); refreshOTDRList(currentOtdrPage); }
-                    else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); showToast(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
-            }
         }
 
         // ==============================================================
@@ -1299,7 +1019,6 @@
 
         function openEditEWO(no_ewo, deskripsi) { originalSelectedEWO = {no_ewo, deskripsi}; document.getElementById('editEwoNo').value = no_ewo; document.getElementById('editEwoDesk').value = deskripsi; animateModalOpen('editEwoModal', 'editEwoModalContent'); }
         function closeEditEWO() { animateModalClose('editEwoModal', 'editEwoModalContent'); }
-        function confirmDeleteEWO(no_ewo, deskripsi) { deleteTargetType = 'EWO'; originalSelectedEWO = {no_ewo, deskripsi}; document.getElementById('deleteContextType').innerText = no_ewo; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent'); }
         function handleUpdateEWO(e) {
             e.preventDefault(); setButtonState('submitEditEwoBtn', true, '<i class="fa-solid fa-save"></i> Save EWO');
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
@@ -1311,7 +1030,7 @@
         }
 
         // ==============================================================
-        // OTDR MODULE
+        // OTDR MODULE (MULTI UPLOAD & AUTO FOLDER)
         // ==============================================================
         function toggleOTDRModal() {
             const mod = document.getElementById('otdrModal');
@@ -1362,18 +1081,16 @@
                             <button type="button" onclick="confirmDeleteOTDR('${item.nama_otb}', '${item.timestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
                         </div>`;
                     }
-                    html += `<div class="bg-dark-900/80 p-3 rounded-xl border border-zinc-800 flex justify-between items-center">
-                        <div class="flex items-center gap-3 truncate">
-                            <input type="checkbox" value="${item.file_url}" class="otdr-item-check w-4 h-4 rounded border-zinc-600 bg-dark-800 accent-purple-500 cursor-pointer shrink-0">
-                            <div class="truncate">
-                                <h5 class="text-white font-bold text-xs truncate">${item.nama_otb}</h5>
-                                <p class="text-[10px] text-zinc-400 flex items-center gap-2 mt-0.5"><i class="fa-solid fa-location-dot text-accent-400"></i> ${item.lokasi || '-'} <span class="text-zinc-600">|</span> <i class="fa-solid fa-clock"></i> ${item.timestamp || '-'}</p>
+                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-bold text-white text-[11px] truncate mb-0.5"><i class="fa-solid fa-file-waveform text-purple-400 mr-1.5"></i>${item.nama_otb}</span>
+                                <span class="text-zinc-500 text-[9px] truncate"><i class="fa-solid fa-map-pin mr-1 opacity-70"></i>${item.lokasi}</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <a href="${item.file_url}" target="_blank" class="text-xs bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition">
-                                <i class="fa-solid fa-download"></i> <span class="hidden md:inline">SOR</span>
-                            </a>
+                        <div class="flex items-center gap-2">
+                            <a href="${item.file_url}" target="_blank" class="px-2.5 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold shadow-md whitespace-nowrap transition-colors"><i class="fa-solid fa-download"></i> SOR</a>
                             ${ownerHTML}
                         </div>
                     </div>`;
@@ -1383,98 +1100,174 @@
             lst.innerHTML = html;
         }
 
-        function updateFileList(input) {
-            const list = document.getElementById('fileUploadList');
-            const prompt = document.getElementById('fileUploadPrompt');
-            if(input.files && input.files.length > 0) {
-                prompt.classList.add('opacity-0');
-                list.classList.remove('hidden');
-                list.innerHTML = `<span class="text-xs font-bold text-purple-400 mb-2 block">${input.files.length} file dipilih:</span>`;
-                for(let i=0; i<input.files.length; i++) {
-                    list.innerHTML += `<div class="text-[11px] text-zinc-300 truncate py-0.5"><i class="fa-solid fa-file-wave-pulse text-purple-400 mr-1.5"></i>${input.files[i].name}</div>`;
-                }
-            } else {
-                prompt.classList.remove('opacity-0');
-                list.classList.add('hidden');
-            }
-        }
-
-        function handleOTDRInput(e) {
-            e.preventDefault(); setButtonState('submitOtdrBtn', true, '<i class="fa-solid fa-upload"></i> Uploading...');
-            const fileInput = document.getElementById('fileOtdr');
-            const folder = document.getElementById('folderOtdr').value;
-            const otb = document.getElementById('otbOtdr').value;
-            const lokasi = document.getElementById('lokasiOtdr').value;
-
-            if(!fileInput.files || fileInput.files.length === 0) {
-                showToast('Pilih minimal satu file .sor!', 'error');
-                setButtonState('submitOtdrBtn', false); return;
-            }
-
-            let filePromises = [];
-            for(let i=0; i<fileInput.files.length; i++) {
-                const file = fileInput.files[i];
-                filePromises.push(new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (event) => resolve({ fileName: file.name, base64: event.target.result.split(',')[1] });
-                    reader.readAsDataURL(file);
-                }));
-            }
-
-            Promise.all(filePromises).then(filesData => {
-                const payload = { nama_folder: folder, nama_otb: otb, lokasi: lokasi, files: filesData };
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('submitOtdrBtn', false);
-                    if(res.success) {
-                        showToast(res.message, 'success');
-                        document.getElementById('otdrInputForm').reset();
-                        updateFileList(document.getElementById('fileOtdr'));
-                        refreshOTDRList(1);
-                    } else showToast(res.message, 'error');
-                }).withFailureHandler(err => {
-                    setButtonState('submitOtdrBtn', false); showToast(err.message, 'error');
-                }).uploadOTDRData(payload);
-            });
-        }
-
-        function toggleAllOTDR(chk) {
-            document.querySelectorAll('.otdr-item-check').forEach(c => c.checked = chk.checked);
-        }
-
+        function toggleAllOTDR(cbx) { document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked); }
         function downloadSelectedOTDR() {
-            const checked = document.querySelectorAll('.otdr-item-check:checked');
-            if(checked.length === 0) return showToast('Pilih minimal satu file OTDR!', 'error');
-            checked.forEach(c => { window.open(c.value, '_blank'); });
+            const cbs = document.querySelectorAll('.otdr-checkbox:checked');
+            if(cbs.length === 0) return showToast('Pilih file dulu!', 'error');
+            cbs.forEach(cb => { if(cb.dataset.url && cb.dataset.url !== '#') window.open(cb.dataset.url, '_blank'); });
+            showToast(`${cbs.length} file sedang dibuka.`, 'success');
         }
 
-        function openEditOTDR(nama_otb, timestamp, nama_folder, lokasi) {
-            originalSelectedOTDR = { nama_otb, timestamp };
-            document.getElementById('editOtdrFolder').value = nama_folder;
-            document.getElementById('editOtdrOtb').value = nama_otb;
-            document.getElementById('editOtdrLokasi').value = lokasi;
-            animateModalOpen('editOtdrModal', 'editOtdrModalContent');
+        function updateFileList(input) {
+            const prompt = document.getElementById('fileUploadPrompt');
+            const list = document.getElementById('fileUploadList');
+            
+            if (input.files && input.files.length > 0) {
+                prompt.classList.add('hidden');
+                list.classList.remove('hidden');
+                
+                let html = `<div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 sticky top-0 bg-dark-800 pb-2 z-10 text-center w-full shadow-[0_4px_10px_rgba(24,24,27,1)]">${input.files.length} File Terpilih (Tap to change)</div>`;
+                html += `<div class="space-y-1.5 w-full pb-2">`;
+                Array.from(input.files).forEach(file => {
+                    const size = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
+                    html += `
+                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50">
+                            <div class="flex items-center gap-2 overflow-hidden w-full">
+                                <i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i>
+                                <span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${file.name}</span>
+                                <span class="text-[9px] text-zinc-500 shrink-0 ml-2 font-mono">${size}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                list.innerHTML = html;
+            } else {
+                list.classList.add('hidden');
+                list.innerHTML = '';
+                prompt.classList.remove('hidden');
+            }
         }
+
+        // Logic Multi Upload
+        function handleOTDRInput(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileOtdr');
+            if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
+            
+            const btn = document.getElementById('submitOtdrBtn');
+            const originalText = btn.innerHTML; btn.disabled = true;
+            
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const otbVal = document.getElementById('otbOtdr').value;
+            const lokasiVal = document.getElementById('lokasiOtdr').value;
+            
+            let folderVal = document.getElementById('folderOtdr').value.trim();
+            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
+
+            const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader(); reader.onload = ev => resolve(ev.target.result); reader.onerror = err => reject(err); reader.readAsDataURL(file);
+            });
+            const uploadFilePromise = (dataObj) => new Promise((resolve, reject) => {
+                google.script.run.withSuccessHandler(res => { if(res.success) resolve(res); else reject(new Error(res.message)); })
+                .withFailureHandler(err => reject(err)).uploadOTDRData(dataObj);
+            });
+
+            (async function processUploads() {
+                let successCount = 0; let errorMsgs = [];
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    try {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah ${i + 1}/${fileInput.files.length}...`;
+                        const file = fileInput.files[i];
+                        const base64Data = await readFileAsBase64(file);
+                        const dataObj = { nama_folder: folderVal, nama_otb: otbVal, lokasi: lokasiVal, fileName: file.name, fileMimeType: file.type || 'application/octet-stream', fileData: base64Data, userEmail: session.email };
+                        await uploadFilePromise(dataObj); successCount++;
+                    } catch (err) { errorMsgs.push(`${fileInput.files[i].name}: ${err.message}`); }
+                }
+                btn.innerHTML = originalText; btn.disabled = false;
+                if (successCount > 0) { 
+                    showToast(`${successCount} file berhasil diunggah!`, 'success'); 
+                    document.getElementById('otdrInputForm').reset(); 
+                    updateFileList(document.getElementById('fileOtdr'));
+                    refreshOTDRList(1); 
+                }
+                if (errorMsgs.length > 0) showToast(`Gagal mengupload ${errorMsgs.length} file.`, 'error');
+            })();
+        }
+
+        function openEditOTDR(otb, timestamp, folder, lokasi) { originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; document.getElementById('editOtdrOtb').value = otb; document.getElementById('editOtdrLokasi').value = lokasi; animateModalOpen('editOtdrModal', 'editOtdrModalContent'); }
         function closeEditOTDR() { animateModalClose('editOtdrModal', 'editOtdrModalContent'); }
-        function confirmDeleteOTDR(nama_otb, timestamp) {
-            deleteTargetType = 'OTDR'; originalSelectedOTDR = { nama_otb, timestamp };
-            document.getElementById('deleteContextType').innerText = nama_otb;
-            animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-
         function handleUpdateOTDR(e) {
             e.preventDefault(); setButtonState('submitEditOtdrBtn', true, '<i class="fa-solid fa-save"></i> Update Details');
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const updated = {
-                nama_folder: document.getElementById('editOtdrFolder').value,
-                nama_otb: document.getElementById('editOtdrOtb').value,
-                lokasi: document.getElementById('editOtdrLokasi').value
-            };
+            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditOtdrBtn', false);
-                if(res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); }
-                else showToast(res.message, 'error');
+                if(res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
             }).withFailureHandler(err => { setButtonState('submitEditOtdrBtn', false); showToast(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updated, session.email);
         }
+
+        // ==============================================================
+        // DELETE GLOBAL
+        // ==============================================================
+        function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
+        function confirmDeleteNode(index) {
+            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data; deleteTargetType = 'NODE'; document.getElementById('deleteContextType').innerText = `Node ${data.nama_perangkat}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function confirmDeleteEWO(no_ewo, desk) {
+            originalSelectedEWO = {no_ewo: no_ewo, deskripsi: desk}; deleteTargetType = 'EWO'; document.getElementById('deleteContextType').innerText = `EWO ${no_ewo}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function confirmDeleteOTDR(otb, timestamp) {
+            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; deleteTargetType = 'OTDR'; document.getElementById('deleteContextType').innerText = `File OTB ${otb}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function executeDeleteData() {
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            setButtonState('confirmDeleteBtn', true, 'Ya, Hapus');
+            if (deleteTargetType === 'NODE') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); triggerServerSearch(); refreshDashboardStats(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
+            } else if (deleteTargetType === 'EWO') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshEWOList(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
+            } else if (deleteTargetType === 'OTDR') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
+            }
+        }
+
+        // ==============================================================
+        // AUTHENTICATION
+        // ==============================================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const errBox = document.getElementById('loginError'); errBox.classList.add('hidden');
+            setButtonState('loginBtn', true, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+            const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPassword').value;
+
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                if (res.success) { localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role })); checkSession(); } 
+                else { errBox.innerText = res.message; errBox.classList.remove('hidden'); }
+            }).withFailureHandler(err => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                errBox.innerText = "Error Koneksi Server!"; errBox.classList.remove('hidden');
+            }).verifyLogin(email, pass);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('netcore_session'); document.getElementById('loginForm').reset(); document.getElementById('ownerRoleBadge').classList.add('hidden');
+            checkSession();
+        }
+
+        function checkSession() {
+            const session = localStorage.getItem('netcore_session');
+            if(session) {
+                document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboardPage').classList.remove('hidden');
+                const sData = JSON.parse(session); isOwner = sData.role === 'OWNER';
+                if(isOwner) document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                refreshDashboardStats();
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
 </html>
