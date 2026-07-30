@@ -495,14 +495,14 @@
             let html = '';
             for(let folderName in folders) {
                 
-                // --- OWNER: Fitur Edit & Delete Folder Header ---
+                // --- OWNER: Tombol Edit & Delete yang lebih jelas ukurannya ---
                 let folderOwnerHTML = '';
                 if(isOwner) {
                     let safeFolderName = folderName.replace(/'/g, "\\'");
                     folderOwnerHTML = `
-                        <div class="flex items-center gap-1.5 mr-2">
-                            <button type="button" onclick="event.stopPropagation(); openEditOTDRFolder('${safeFolderName}')" class="text-amber-500 hover:bg-amber-500/10 p-1.5 rounded transition-colors" title="Edit Folder"><i class="fa-solid fa-pen text-[11px]"></i></button>
-                            <button type="button" onclick="event.stopPropagation(); confirmDeleteOTDRFolder('${safeFolderName}')" class="text-red-500 hover:bg-red-500/10 p-1.5 rounded transition-colors" title="Hapus Keseluruhan Folder"><i class="fa-solid fa-trash text-[11px]"></i></button>
+                        <div class="flex items-center gap-2 mr-3 border-r border-zinc-700 pr-3 shrink-0">
+                            <button type="button" onclick="event.stopPropagation(); openEditOTDRFolder('${safeFolderName}')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-2 py-1.5 rounded-lg text-[10px] font-bold border border-amber-500/30 transition-colors flex items-center gap-1.5 shadow-sm" title="Edit Folder"><i class="fa-solid fa-pen"></i> <span class="hidden sm:inline">Edit</span></button>
+                            <button type="button" onclick="event.stopPropagation(); confirmDeleteOTDRFolder('${safeFolderName}')" class="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-2 py-1.5 rounded-lg text-[10px] font-bold border border-red-500/30 transition-colors flex items-center gap-1.5 shadow-sm" title="Hapus Folder"><i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Hapus</span></button>
                         </div>
                     `;
                 }
@@ -511,12 +511,12 @@
                     <div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50">
                         <div class="flex items-center truncate pr-2 flex-1">
                             <i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> 
-                            <span class="truncate">${folderName}</span> 
-                            <span class="ml-3 text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 shrink-0">${folders[folderName].length} File</span>
+                            <span class="truncate text-sm tracking-wide text-white">${folderName}</span> 
+                            <span class="ml-3 text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-0.5 rounded-md border border-purple-500/30 shrink-0 font-bold">${folders[folderName].length} File</span>
                         </div>
                         <div class="flex items-center shrink-0">
                             ${folderOwnerHTML}
-                            <i class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 chevron-icon"></i>
+                            <div class="w-6 h-6 rounded-full bg-dark-900 flex items-center justify-center border border-zinc-700"><i class="fa-solid fa-chevron-down text-zinc-400 transition-transform duration-300 chevron-icon text-[10px]"></i></div>
                         </div>
                     </div>
                     <div class="p-3 space-y-2 folder-content hidden transition-all duration-300">`;
