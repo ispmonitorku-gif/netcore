@@ -10,8 +10,7 @@
     <title>Netcore | ISP Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-saver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -345,13 +344,7 @@
                     <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/30"><i class="fa-solid fa-file-signature text-amber-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">Work Order (EWO)</h3>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="exportEWOToExcel()" class="text-[10px] bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                        <i class="fa-solid fa-file-excel"></i> 
-                        <span class="hidden md:inline">Export Excel</span>
-                    </button>
-                    <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
-                </div>
+                <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
                 <form id="ewoInputForm" onsubmit="handleEWOInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl">
@@ -857,34 +850,39 @@
             exportTableToExcelTemplate('csv');
         }
 
-        async function exportTableToExcelTemplate(format = 'xlsx') {
+        function exportTableToExcelTemplate(format = 'xlsx') {
             if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
 
             const now = new Date();
             const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
 
-            if (format === 'csv' || typeof ExcelJS === 'undefined') {
-                const templateRows = [
-                    ["MANAGEMENT DATABASE ISP NETCORE"],
-                    [`Laporan Data Perangkat Network (${currentFilter})`],
-                    [`Tanggal Cetak: ${dateStr} | Total Records: ${lastSearchResult.length}`],
-                    [],
-                    ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
-                ];
+            // Susunan Template Laporan Resmi Netcore ISP
+            const templateRows = [
+                ["NETCORE ISP - LAPORAN DATABASE JARINGAN"],
+                [`Tanggal Cetak: ${dateStr}`],
+                [`Kategori Filter: ${currentFilter}`],
+                [`Total Data: ${lastSearchResult.length} Node Perangkat`],
+                [], // Baris kosong pemisah
+                ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
+            ];
 
-                lastSearchResult.forEach((item, index) => {
-                    templateRows.push([
-                        index + 1,
-                        item.nama_perangkat || '-',
-                        item.tipe || '-',
-                        item.ip_address || '-',
-                        item.lokasi || '-',
-                        item.info_port || '-',
-                        item.kode_otb || '-',
-                        item.status || '-'
-                    ]);
-                });
+            lastSearchResult.forEach((item, index) => {
+                templateRows.push([
+                    index + 1,
+                    item.nama_perangkat || '-',
+                    item.tipe || '-',
+                    item.ip_address || '-',
+                    item.lokasi || '-',
+                    item.info_port || '-',
+                    item.kode_otb || '-',
+                    item.status || '-'
+                ]);
+            });
 
+            templateRows.push([]);
+            templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
+
+            if (format === 'csv' || typeof XLSX === 'undefined') {
                 let csvContent = "\uFEFF";
                 templateRows.forEach(row => {
                     const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
@@ -894,153 +892,39 @@
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
-                link.download = `Management_ISP_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
+                link.download = `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
                 link.style.visibility = 'hidden';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                return showToast('Export CSV Template Berhasil', 'success');
-            }
+                showToast('Export CSV Template Berhasil', 'success');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(templateRows);
 
-            // Export Excel (.xlsx) dengan ExcelJS & Format Template Kustom
-            try {
-                showToast('Membangun file Excel Template...', 'info');
+                // Mengatur lebar kolom agar rapi saat dibuka di MS Excel
+                ws['!cols'] = [
+                    { wch: 6 },  // NO
+                    { wch: 26 }, // NAMA PERANGKAT
+                    { wch: 12 }, // TIPE NODE
+                    { wch: 18 }, // IP ADDRESS
+                    { wch: 24 }, // LOKASI / AREA
+                    { wch: 22 }, // PORT INFO
+                    { wch: 22 }, // KODE OTB
+                    { wch: 14 }  // STATUS
+                ];
 
-                const workbook = new ExcelJS.Workbook();
-                workbook.creator = 'Netcore ISP System';
-                workbook.lastModifiedBy = 'Netcore ISP System';
+                // Merge Cell Header Judul Laporan
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
+                    { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } },
+                    { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } },
+                    { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }
+                ];
 
-                const worksheet = workbook.addWorksheet(`Database_${currentFilter}`);
-                worksheet.pageSetup.orientation = 'landscape';
-
-                const fontName = 'Calibri'; // Jenis font standar spreadsheet yang rapi
-
-                // Baris 1: Judul Utama
-                const titleRow = worksheet.getRow(1);
-                titleRow.values = ['MANAGEMENT DATABASE ISP NETCORE'];
-                titleRow.height = 32;
-                worksheet.mergeCells('A1:H1');
-                const titleCell = worksheet.getCell('A1');
-                titleCell.font = { name: fontName, size: 16, bold: true, color: { argb: 'FF1E3A8A' } };
-                titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 2: Sub Judul
-                const subRow = worksheet.getRow(2);
-                subRow.values = [`Laporan Data Perangkat Network - Kategori: ${currentFilter}`];
-                subRow.height = 20;
-                worksheet.mergeCells('A2:H2');
-                const subCell = worksheet.getCell('A2');
-                subCell.font = { name: fontName, size: 11, italic: true, color: { argb: 'FF475569' } };
-                subCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 3: Informasi Cetak & Total
-                const metaRow = worksheet.getRow(3);
-                metaRow.values = [`Tanggal Cetak: ${dateStr}  |  Total Data: ${lastSearchResult.length} Node`];
-                metaRow.height = 18;
-                worksheet.mergeCells('A3:H3');
-                const metaCell = worksheet.getCell('A3');
-                metaCell.font = { name: fontName, size: 9, bold: true, color: { argb: 'FF64748B' } };
-                metaCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 4: Spasi Kosong
-                worksheet.getRow(4).height = 12;
-
-                // Baris 5: Header Tabel
-                const headers = ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"];
-                const headerRow = worksheet.getRow(5);
-                headerRow.values = headers;
-                headerRow.height = 26;
-
-                headerRow.eachCell((cell) => {
-                    cell.font = { name: fontName, size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
-                    cell.fill = {
-                        type: 'pattern',
-                        pattern: 'solid',
-                        fgColor: { argb: 'FF1E293B' } // Dark Slate Navy Header
-                    };
-                    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-                    cell.border = {
-                        top: { style: 'medium', color: { argb: 'FF0F172A' } },
-                        left: { style: 'thin', color: { argb: 'FF334155' } },
-                        bottom: { style: 'medium', color: { argb: 'FF0F172A' } },
-                        right: { style: 'thin', color: { argb: 'FF334155' } }
-                    };
-                });
-
-                // Memasukkan Isi Data (Mulai Baris 6)
-                lastSearchResult.forEach((item, idx) => {
-                    const rowNumber = idx + 6;
-                    const row = worksheet.getRow(rowNumber);
-                    row.values = [
-                        idx + 1,
-                        item.nama_perangkat || '-',
-                        item.tipe || '-',
-                        item.ip_address || '-',
-                        item.lokasi || '-',
-                        item.info_port || '-',
-                        item.kode_otb || '-',
-                        item.status || '-'
-                    ];
-                    row.height = 22; // Tinggi baris data yang fleksibel dan proporsional
-
-                    row.eachCell((cell, colIndex) => {
-                        cell.font = { name: fontName, size: 10, color: { argb: 'FF1E293B' } };
-                        
-                        // Ratatengah untuk NO, TIPE, IP, dan STATUS
-                        if (colIndex === 1 || colIndex === 3 || colIndex === 4 || colIndex === 8) {
-                            cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                        } else {
-                            cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
-                        }
-
-                        // Warna belang antar baris (Zebra Striping)
-                        const bgArgb = idx % 2 === 0 ? 'FFFFFFFF' : 'FFF8FAFC';
-                        cell.fill = {
-                            type: 'pattern',
-                            pattern: 'solid',
-                            fgColor: { argb: bgArgb }
-                        };
-
-                        // Pewarnaan Kolom Status
-                        if (colIndex === 8) {
-                            const statusVal = String(item.status || '').toLowerCase();
-                            if (statusVal.includes('online')) {
-                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD1FAE5' } };
-                                cell.font = { name: fontName, size: 10, bold: true, color: { argb: 'FF065F46' } };
-                            } else if (statusVal.includes('offline')) {
-                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEE2E2' } };
-                                cell.font = { name: fontName, size: 10, bold: true, color: { argb: 'FF991B1B' } };
-                            } else if (statusVal.includes('warning')) {
-                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
-                                cell.font = { name: fontName, size: 10, bold: true, color: { argb: 'FF92400E' } };
-                            }
-                        }
-
-                        // Border tipis sekeliling sel
-                        cell.border = {
-                            top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-                            left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-                            bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-                            right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
-                        };
-                    });
-                });
-
-                // Penyesuaian Lebar Kolom (Column Width)
-                const columnWidths = [8, 28, 14, 18, 25, 22, 22, 14];
-                columnWidths.forEach((width, i) => {
-                    worksheet.getColumn(i + 1).width = width;
-                });
-
-                // Menghasilkan file Excel dan mendownload
-                const buffer = await workbook.xlsx.writeBuffer();
-                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                saveAs(blob, `Management_ISP_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
-
+                XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
+                XLSX.writeFile(wb, `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
                 showToast('Export Excel Template (.xlsx) Berhasil!', 'success');
-            } catch (error) {
-                console.error("Export Error:", error);
-                showToast('Gagal memproses file Excel: ' + error.message, 'error');
             }
         }
 
@@ -1090,8 +974,6 @@
         // ==============================================================
         // EWO MODULE
         // ==============================================================
-        let currentEwoData = []; // Store EWO data for export
-
         function toggleEWOModal() {
             const mod = document.getElementById('ewoModal');
             if(mod.classList.contains('hidden')) { animateModalOpen('ewoModal', 'ewoModalContent'); refreshEWOList(); } else animateModalClose('ewoModal', 'ewoModalContent');
@@ -1103,7 +985,6 @@
         }
 
         function renderEWOList(data) {
-            currentEwoData = data || []; // Update stored EWO data
             const container = document.getElementById('ewoList'); container.innerHTML = '';
             if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
 
@@ -1146,120 +1027,6 @@
                 setButtonState('submitEditEwoBtn', false);
                 if(res.success) { showToast(res.message, 'success'); closeEditEWO(); refreshEWOList(); } else showToast(res.message, 'error');
             }).withFailureHandler(err => { setButtonState('submitEditEwoBtn', false); showToast(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updated, session.email);
-        }
-
-        async function exportEWOToExcel() {
-            if (!currentEwoData || currentEwoData.length === 0) return showToast('Tidak ada data EWO untuk diexport!', 'error');
-
-            try {
-                showToast('Membangun file Excel EWO...', 'info');
-                const now = new Date();
-                const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
-
-                const workbook = new ExcelJS.Workbook();
-                workbook.creator = 'Netcore ISP System';
-                const worksheet = workbook.addWorksheet('Laporan_EWO');
-                const fontName = 'Calibri';
-
-                // Baris 1: Judul Utama
-                const titleRow = worksheet.getRow(1);
-                titleRow.values = ['LAPORAN EMERGENCY WORK ORDER (EWO) NETCORE'];
-                titleRow.height = 32;
-                worksheet.mergeCells('A1:D1');
-                const titleCell = worksheet.getCell('A1');
-                titleCell.font = { name: fontName, size: 16, bold: true, color: { argb: 'FF1E3A8A' } };
-                titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 2: Sub Judul
-                const subRow = worksheet.getRow(2);
-                subRow.values = [`Laporan Pekerjaan / Troubleshooting Jaringan`];
-                subRow.height = 20;
-                worksheet.mergeCells('A2:D2');
-                const subCell = worksheet.getCell('A2');
-                subCell.font = { name: fontName, size: 11, italic: true, color: { argb: 'FF475569' } };
-                subCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 3: Informasi Cetak & Total
-                const metaRow = worksheet.getRow(3);
-                metaRow.values = [`Tanggal Cetak: ${dateStr}  |  Total Data: ${currentEwoData.length} Tiket`];
-                metaRow.height = 18;
-                worksheet.mergeCells('A3:D3');
-                const metaCell = worksheet.getCell('A3');
-                metaCell.font = { name: fontName, size: 9, bold: true, color: { argb: 'FF64748B' } };
-                metaCell.alignment = { vertical: 'middle', horizontal: 'center' };
-
-                // Baris 4: Spasi Kosong
-                worksheet.getRow(4).height = 12;
-
-                // Baris 5: Header Tabel
-                const headers = ["NO", "NOMOR EWO", "DESKRIPSI PEKERJAAN", "STATUS"];
-                const headerRow = worksheet.getRow(5);
-                headerRow.values = headers;
-                headerRow.height = 26;
-
-                headerRow.eachCell((cell) => {
-                    cell.font = { name: fontName, size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
-                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } }; // Dark Slate
-                    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-                    cell.border = {
-                        top: { style: 'medium', color: { argb: 'FF0F172A' } },
-                        left: { style: 'thin', color: { argb: 'FF334155' } },
-                        bottom: { style: 'medium', color: { argb: 'FF0F172A' } },
-                        right: { style: 'thin', color: { argb: 'FF334155' } }
-                    };
-                });
-
-                // Isi Data
-                currentEwoData.forEach((item, idx) => {
-                    const rowNumber = idx + 6;
-                    const row = worksheet.getRow(rowNumber);
-                    row.values = [ idx + 1, item.no_ewo || '-', item.deskripsi || '-', item.status || '-' ];
-                    row.height = 22;
-
-                    row.eachCell((cell, colIndex) => {
-                        cell.font = { name: fontName, size: 10, color: { argb: 'FF1E293B' } };
-                        
-                        if (colIndex === 1 || colIndex === 2 || colIndex === 4) {
-                            cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                        } else {
-                            cell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
-                        }
-
-                        const bgArgb = idx % 2 === 0 ? 'FFFFFFFF' : 'FFF8FAFC';
-                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgArgb } };
-
-                        if (colIndex === 4) { // Kolom Status
-                            const statusVal = String(item.status || '').toLowerCase();
-                            if (statusVal.includes('done') && !statusVal.includes('not')) {
-                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD1FAE5' } };
-                                cell.font = { name: fontName, size: 10, bold: true, color: { argb: 'FF065F46' } };
-                            } else {
-                                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
-                                cell.font = { name: fontName, size: 10, bold: true, color: { argb: 'FF92400E' } };
-                            }
-                        }
-
-                        cell.border = {
-                            top: { style: 'thin', color: { argb: 'FFE2E8F0' } }, left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-                            bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
-                        };
-                    });
-                });
-
-                worksheet.getColumn(1).width = 8;  // NO
-                worksheet.getColumn(2).width = 25; // NOMOR EWO
-                worksheet.getColumn(3).width = 50; // DESKRIPSI
-                worksheet.getColumn(4).width = 20; // STATUS
-
-                const buffer = await workbook.xlsx.writeBuffer();
-                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                saveAs(blob, `Laporan_EWO_Netcore_${now.toISOString().slice(0, 10)}.xlsx`);
-
-                showToast('Export Excel EWO Berhasil!', 'success');
-            } catch (error) {
-                console.error("Export Error:", error);
-                showToast('Gagal mengekspor EWO: ' + error.message, 'error');
-            }
         }
 
         // ==============================================================
