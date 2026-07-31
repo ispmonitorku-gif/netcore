@@ -649,69 +649,6 @@
             setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
         }
 
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('Copied to clipboard: ' + text, 'info');
-            });
-        }
-
-        // ==============================================================
-        // AUTHENTICATION
-        // ==============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = localStorage.getItem('netcore_user');
-            const role = localStorage.getItem('netcore_role');
-            if (user && role) {
-                isOwner = role === 'OWNER';
-                document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('dashboardPage').classList.remove('hidden');
-                if(isOwner) document.getElementById('ownerRoleBadge').classList.remove('hidden');
-                refreshDashboardStats();
-            }
-        });
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
-            const errDiv = document.getElementById('loginError');
-            
-            setButtonState('loginBtn', true, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
-            errDiv.classList.add('hidden');
-
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('loginBtn', false);
-                if(res.success) {
-                    localStorage.setItem('netcore_user', res.email);
-                    localStorage.setItem('netcore_role', res.role);
-                    isOwner = res.role === 'OWNER';
-                    
-                    document.getElementById('loginPage').classList.add('hidden');
-                    document.getElementById('dashboardPage').classList.remove('hidden');
-                    if(isOwner) document.getElementById('ownerRoleBadge').classList.remove('hidden');
-                    showToast('Login Success!', 'success');
-                    refreshDashboardStats();
-                } else {
-                    errDiv.innerText = res.message;
-                    errDiv.classList.remove('hidden');
-                }
-            }).withFailureHandler(err => {
-                setButtonState('loginBtn', false);
-                errDiv.innerText = "Network Error: " + err.message;
-                errDiv.classList.remove('hidden');
-            }).verifyLogin(email, pass);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('netcore_user');
-            localStorage.removeItem('netcore_role');
-            isOwner = false;
-            document.getElementById('ownerRoleBadge').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('loginForm').reset();
-        }
-
         // ==============================================================
         // DASHBOARD & RECAP
         // ==============================================================
@@ -857,207 +794,319 @@
                     statusDotColor = 'bg-amber-500 shadow-[0_0_5px_#f59e0b]';
                 }
 
-                let actionBtns = '';
-                if(isOwner) {
-                    actionBtns = `
-                        <div class="flex items-center gap-2 mt-3 pt-3 border-t border-zinc-800">
-                            <button onclick="openEditModal('${item.nama_perangkat}', '${item.tipe}', '${item.ip_address}', '${item.lokasi}', '${item.status}', '${item.info_port}', '${item.kode_otb}')" class="flex-1 text-[10px] bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 py-1.5 rounded-lg border border-amber-500/20 transition flex items-center justify-center"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
-                            <button onclick="openDeleteModal('NODE', {nama_perangkat: '${item.nama_perangkat}', info_port: '${item.info_port}', kode_otb: '${item.kode_otb}'})" class="flex-1 text-[10px] bg-red-500/10 hover:bg-red-500/20 text-red-400 py-1.5 rounded-lg border border-red-500/20 transition flex items-center justify-center"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
-                        </div>
-                    `;
-                }
+                const ownerActions = isOwner ? `
+                    <div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50">
+                        <button onclick="openEditModal(${index})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                        <button onclick="confirmDeleteNode(${index})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
+                    </div>` : '';
 
-                const card = `
-                    <div class="bg-dark-900/60 p-4 rounded-2xl border-l-4 ${typeBorderColor} border border-zinc-700/50 hover:bg-dark-800/80 transition-colors shadow-lg relative group">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-xl ${typeColor} flex items-center justify-center text-sm border"><i class="fa-solid ${typeIcon}"></i></div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white tracking-wide">${item.nama_perangkat}</h4>
-                                    <div class="text-[9px] text-zinc-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-map-pin"></i> ${item.lokasi}</div>
-                                </div>
+                const cardHtml = `
+                    <div class="glass-card p-4 rounded-2xl relative group border-l-4 ${typeBorderColor} flex flex-col gap-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${item.nama_perangkat}</h4>
+                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${typeColor}">
+                                <i class="fa-solid ${typeIcon}"></i> ${item.tipe}
+                            </span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-1">
+                            <div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner">
+                                <i class="fa-solid fa-network-wired text-brand-500/70"></i> ${item.ip_address || '-'}
                             </div>
-                            <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg ${statusColor} border">
-                                <span class="w-1.5 h-1.5 rounded-full ${statusDotColor} animate-pulse"></span>
-                                <span class="text-[9px] font-bold uppercase tracking-wider">${item.status}</span>
+                            <div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${statusColor}">
+                                <span class="w-1.5 h-1.5 rounded-full animate-pulse ${statusDotColor}"></span> ${item.status}
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-2 text-[10px] mb-1">
-                            <div class="bg-dark-800/80 p-2 rounded-lg border border-zinc-700/30">
-                                <span class="block text-zinc-500 font-semibold mb-0.5">IP ADDRESS</span>
-                                <span class="text-white font-mono flex items-center justify-between group-hover:text-brand-400 transition-colors cursor-pointer" onclick="copyToClipboard('${item.ip_address}')">${item.ip_address} <i class="fa-solid fa-copy opacity-0 group-hover:opacity-100 transition-opacity"></i></span>
+                        <div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p>
+                                <p class="text-[11px] font-semibold text-white break-words">${item.lokasi || '-'}</p>
                             </div>
-                            <div class="bg-dark-800/80 p-2 rounded-lg border border-zinc-700/30">
-                                <span class="block text-zinc-500 font-semibold mb-0.5">TIPE</span>
-                                <span class="text-white">${item.tipe}</span>
-                            </div>
-                            <div class="bg-dark-800/80 p-2 rounded-lg border border-zinc-700/30">
-                                <span class="block text-zinc-500 font-semibold mb-0.5">PORT</span>
-                                <span class="text-accent-400 font-bold">${item.info_port}</span>
-                            </div>
-                            <div class="bg-dark-800/80 p-2 rounded-lg border border-zinc-700/30">
-                                <span class="block text-zinc-500 font-semibold mb-0.5">OTB</span>
-                                <span class="text-purple-400 font-bold">${item.kode_otb}</span>
+                            <div>
+                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p>
+                                <p class="text-[11px] font-semibold text-white break-words">${item.info_port || '-'}</p>
                             </div>
                         </div>
-                        ${actionBtns}
-                    </div>
-                `;
-                container.innerHTML += card;
+                        
+                        <div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1">
+                            <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
+                                <i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB
+                            </div>
+                            <div class="text-xs font-bold text-white break-words text-right font-mono">
+                                ${item.kode_otb || '-'}
+                            </div>
+                        </div>
+                        
+                        ${ownerActions}
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', cardHtml);
             });
         }
 
+        function exportTableToCSV() {
+            exportTableToExcelTemplate('csv');
+        }
+
+        function exportTableToExcelTemplate(format = 'xlsx') {
+            if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
+
+            // Susunan Template Laporan Resmi Netcore ISP
+            const templateRows = [
+                ["NETCORE ISP - LAPORAN DATABASE JARINGAN"],
+                [`Tanggal Cetak: ${dateStr}`],
+                [`Kategori Filter: ${currentFilter}`],
+                [`Total Data: ${lastSearchResult.length} Node Perangkat`],
+                [], // Baris kosong pemisah
+                ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
+            ];
+
+            lastSearchResult.forEach((item, index) => {
+                templateRows.push([
+                    index + 1,
+                    item.nama_perangkat || '-',
+                    item.tipe || '-',
+                    item.ip_address || '-',
+                    item.lokasi || '-',
+                    item.info_port || '-',
+                    item.kode_otb || '-',
+                    item.status || '-'
+                ]);
+            });
+
+            templateRows.push([]);
+            templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
+
+            if (format === 'csv' || typeof XLSX === 'undefined') {
+                let csvContent = "\uFEFF";
+                templateRows.forEach(row => {
+                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
+                    csvContent += line + "\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Export CSV Template Berhasil', 'success');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(templateRows);
+
+                // Mengatur lebar kolom agar rapi saat dibuka di MS Excel
+                ws['!cols'] = [
+                    { wch: 6 },  // NO
+                    { wch: 26 }, // NAMA PERANGKAT
+                    { wch: 12 }, // TIPE NODE
+                    { wch: 18 }, // IP ADDRESS
+                    { wch: 24 }, // LOKASI / AREA
+                    { wch: 22 }, // PORT INFO
+                    { wch: 22 }, // KODE OTB
+                    { wch: 14 }  // STATUS
+                ];
+
+                // Merge Cell Header Judul Laporan
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
+                    { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } },
+                    { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } },
+                    { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }
+                ];
+
+                XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
+                XLSX.writeFile(wb, `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
+                showToast('Export Excel Template (.xlsx) Berhasil!', 'success');
+            }
+        }
+
         // ==============================================================
-        // CRUD NODE (INPUT & EDIT)
+        // INPUT & EDIT DATA
         // ==============================================================
-        function toggleInputModal() {
-            const modal = document.getElementById('inputModal');
-            if(modal.classList.contains('hidden')) animateModalOpen('inputModal', 'inputModalContent');
-            else animateModalClose('inputModal', 'inputModalContent');
+        function toggleInputModal() { 
+            const mod = document.getElementById('inputModal');
+            if(mod.classList.contains('hidden')) animateModalOpen('inputModal', 'inputModalContent'); else animateModalClose('inputModal', 'inputModalContent');
         }
 
         function handleInputData(e) {
-            e.preventDefault();
-            setButtonState('submitInputBtn', true);
-            const dataObj = {
-                nama_perangkat: document.getElementById('inputNama').value,
-                tipe: document.getElementById('inputTipe').value,
-                ip_address: document.getElementById('inputIp').value,
-                lokasi: document.getElementById('inputLokasi').value,
-                info_port: document.getElementById('inputPort').value,
-                kode_otb: document.getElementById('inputOtb').value,
-                status: document.getElementById('inputStatus').value
-            };
-            const email = localStorage.getItem('netcore_user') || '';
+            e.preventDefault(); setButtonState('submitInputBtn', true, '<i class="fa-solid fa-cloud-arrow-up"></i> Save to Database');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const dataObj = { nama_perangkat: document.getElementById('inputNama').value, tipe: document.getElementById('inputTipe').value, ip_address: document.getElementById('inputIp').value || '-', lokasi: document.getElementById('inputLokasi').value, info_port: document.getElementById('inputPort').value || '-', kode_otb: document.getElementById('inputOtb').value || '-', status: document.getElementById('inputStatus').value };
 
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitInputBtn', false);
-                if(res.success) { showToast(res.message, 'success'); document.getElementById('manualInputForm').reset(); toggleInputModal(); refreshDashboardStats(); } 
+                if (res.success) { showToast(res.message, 'success'); document.getElementById('manualInputForm').reset(); toggleInputModal(); refreshDashboardStats(); triggerServerSearch(); } 
                 else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitInputBtn', false); showToast(err.message, 'error'); }).insertNetworkData(dataObj, email);
+            }).withFailureHandler(err => { setButtonState('submitInputBtn', false); showToast(err.message, 'error'); }).insertNetworkData(dataObj, session.email);
         }
 
-        function openEditModal(nama, tipe, ip, lokasi, status, port, otb) {
-            originalSelectedNode = { nama_perangkat: nama, info_port: port, kode_otb: otb };
-            document.getElementById('editNama').value = nama;
-            document.getElementById('editTipe').value = tipe;
-            document.getElementById('editIp').value = ip;
-            document.getElementById('editLokasi').value = lokasi;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editPort').value = port;
-            document.getElementById('editOtb').value = otb;
-            animateModalOpen('editModal', 'editModalContent');
+        function toggleEditModal() {
+            const mod = document.getElementById('editModal');
+            if(mod.classList.contains('hidden')) animateModalOpen('editModal', 'editModalContent'); else animateModalClose('editModal', 'editModalContent');
         }
 
-        function toggleEditModal() { animateModalClose('editModal', 'editModalContent'); }
+        function openEditModal(index) {
+            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data;
+            document.getElementById('editNama').value = data.nama_perangkat; document.getElementById('editTipe').value = data.tipe; document.getElementById('editIp').value = data.ip_address === '-' ? '' : data.ip_address; document.getElementById('editLokasi').value = data.lokasi; document.getElementById('editStatus').value = data.status; document.getElementById('editPort').value = data.info_port; document.getElementById('editOtb').value = data.kode_otb;
+            toggleEditModal();
+        }
 
         function handleUpdateData(e) {
-            e.preventDefault();
-            setButtonState('submitEditBtn', true);
-            const updatedData = {
-                nama_perangkat: document.getElementById('editNama').value,
-                tipe: document.getElementById('editTipe').value,
-                ip_address: document.getElementById('editIp').value,
-                lokasi: document.getElementById('editLokasi').value,
-                status: document.getElementById('editStatus').value,
-                info_port: document.getElementById('editPort').value,
-                kode_otb: document.getElementById('editOtb').value
-            };
-            const email = localStorage.getItem('netcore_user');
-            
+            e.preventDefault(); setButtonState('submitEditBtn', true, '<i class="fa-solid fa-save"></i> Apply Changes');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updatedData = { nama_perangkat: document.getElementById('editNama').value, tipe: document.getElementById('editTipe').value, ip_address: document.getElementById('editIp').value || '-', lokasi: document.getElementById('editLokasi').value, info_port: document.getElementById('editPort').value, kode_otb: document.getElementById('editOtb').value, status: document.getElementById('editStatus').value };
+
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditBtn', false);
                 if(res.success) { showToast(res.message, 'success'); toggleEditModal(); triggerServerSearch(); refreshDashboardStats(); } 
                 else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEditBtn', false); showToast(err.message, 'error'); }).updateNetworkData(originalSelectedNode, updatedData, email);
+            }).withFailureHandler(err => { setButtonState('submitEditBtn', false); showToast(err.message, 'error'); }).updateNetworkData(originalSelectedNode, updatedData, session.email);
         }
 
         // ==============================================================
-        // EWO (EMERGENCY WORK ORDER)
+        // EWO MODULE
         // ==============================================================
         function toggleEWOModal() {
-            const modal = document.getElementById('ewoModal');
-            if(modal.classList.contains('hidden')) { animateModalOpen('ewoModal', 'ewoModalContent'); loadEWOFromServer(); }
-            else animateModalClose('ewoModal', 'ewoModalContent');
+            const mod = document.getElementById('ewoModal');
+            if(mod.classList.contains('hidden')) { animateModalOpen('ewoModal', 'ewoModalContent'); refreshEWOList(); } else animateModalClose('ewoModal', 'ewoModalContent');
         }
 
-        function handleEWOInput(e) {
-            e.preventDefault();
-            setButtonState('submitEwoBtn', true);
-            const dataObj = { no_ewo: document.getElementById('noEwo').value, status: document.getElementById('statEwo').value, deskripsi: document.getElementById('deskEwo').value };
-            const email = localStorage.getItem('netcore_user');
-            
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEwoBtn', false);
-                if(res.success) { showToast(res.message, 'success'); document.getElementById('ewoInputForm').reset(); loadEWOFromServer(); } 
-                else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEwoBtn', false); showToast(err.message, 'error'); }).insertEWOData(dataObj, email);
-        }
-
-        function loadEWOFromServer() {
-            const list = document.getElementById('ewoList');
-            list.innerHTML = '<div class="text-center py-4 text-amber-500 text-xs animate-pulse">Loading EWO...</div>';
-            google.script.run.withSuccessHandler(data => { renderEWOList(data); }).withFailureHandler(err => { list.innerHTML = '<div class="text-center py-4 text-red-500 text-xs">Error loading EWO</div>'; }).getEWOData();
+        function refreshEWOList() {
+            const lst = document.getElementById('ewoList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading EWO...</div>';
+            google.script.run.withSuccessHandler(data => renderEWOList(data)).withFailureHandler(err => lst.innerHTML='Gagal memuat EWO').getEWOData();
         }
 
         function renderEWOList(data) {
-            const list = document.getElementById('ewoList'); list.innerHTML = '';
-            if(!data || data.length === 0) { list.innerHTML = '<div class="text-center text-zinc-500 text-xs">Tidak ada EWO yang aktif.</div>'; return; }
-            data.reverse().forEach(item => {
-                let statColor = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20';
-                let statIcon = item.status === 'Done' ? 'fa-check' : 'fa-spinner fa-spin';
-                
-                let ownerBtns = '';
-                if (isOwner) {
-                    ownerBtns = `
-                        <div class="flex gap-2 mt-2 pt-2 border-t border-zinc-700/50">
-                            <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}', '${item.status}')" class="text-[10px] text-amber-400 hover:text-amber-300 bg-amber-400/10 px-2 py-1 rounded"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button onclick="openDeleteModal('EWO', {no_ewo: '${item.no_ewo}', deskripsi: '${item.deskripsi}'})" class="text-[10px] text-red-400 hover:text-red-300 bg-red-400/10 px-2 py-1 rounded"><i class="fa-solid fa-trash"></i> Hapus</button>
-                        </div>
-                    `;
-                }
+            const container = document.getElementById('ewoList'); container.innerHTML = '';
+            if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
 
-                list.innerHTML += `
-                    <div class="bg-dark-800/50 p-3 rounded-xl border border-zinc-700/50 flex flex-col">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="text-xs font-bold text-white mb-0.5"><i class="fa-solid fa-hashtag text-amber-500 mr-1 text-[10px]"></i>${item.no_ewo}</div>
-                                <div class="text-[10px] text-zinc-400">${item.deskripsi}</div>
-                            </div>
-                            <div class="px-2 py-1 rounded-lg border ${statColor} text-[9px] font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0"><i class="fa-solid ${statIcon}"></i> ${item.status}</div>
-                        </div>
-                        ${ownerBtns}
-                    </div>
-                `;
+            data.forEach(item => {
+                const statClass = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                const ownerActions = isOwner ? `
+                    <div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2">
+                        <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button>
+                    </div>` : '';
+                const html = `
+                    <div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 ${item.status === 'Done' ? 'border-l-accent-500' : 'border-l-amber-500'}">
+                        <div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${item.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${statClass}">${item.status}</span></div>
+                        <p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${item.deskripsi}</p>
+                        ${ownerActions}
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', html);
             });
         }
 
-        function openEditEWO(no, desk, stat) {
-            originalSelectedEWO = { no_ewo: no, deskripsi: desk };
-            document.getElementById('editEwoNo').value = no;
-            document.getElementById('editEwoDesk').value = desk;
-            document.getElementById('editEwoStat').value = stat;
-            animateModalOpen('editEwoModal', 'editEwoModalContent');
+        function handleEWOInput(e) {
+            e.preventDefault(); setButtonState('submitEwoBtn', true, '<i class="fa-solid fa-plus"></i> Create EWO');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const obj = { no_ewo: document.getElementById('noEwo').value, deskripsi: document.getElementById('deskEwo').value, status: document.getElementById('statEwo').value };
+            
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEwoBtn', false);
+                if(res.success) { showToast(res.message, 'success'); document.getElementById('ewoInputForm').reset(); refreshEWOList(); }
+                else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEwoBtn', false); showToast(err.message, 'error'); }).insertEWOData(obj, session.email);
         }
-        function closeEditEWO() { animateModalClose('editEwoModal', 'editEwoModalContent'); }
 
+        function openEditEWO(no_ewo, deskripsi) { originalSelectedEWO = {no_ewo, deskripsi}; document.getElementById('editEwoNo').value = no_ewo; document.getElementById('editEwoDesk').value = deskripsi; animateModalOpen('editEwoModal', 'editEwoModalContent'); }
+        function closeEditEWO() { animateModalClose('editEwoModal', 'editEwoModalContent'); }
         function handleUpdateEWO(e) {
-            e.preventDefault();
-            setButtonState('submitEditEwoBtn', true);
-            const updatedData = { no_ewo: document.getElementById('editEwoNo').value, deskripsi: document.getElementById('editEwoDesk').value, status: document.getElementById('editEwoStat').value };
-            const email = localStorage.getItem('netcore_user');
+            e.preventDefault(); setButtonState('submitEditEwoBtn', true, '<i class="fa-solid fa-save"></i> Save EWO');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { no_ewo: document.getElementById('editEwoNo').value, deskripsi: document.getElementById('editEwoDesk').value, status: document.getElementById('editEwoStat').value };
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditEwoBtn', false);
-                if(res.success) { showToast(res.message, 'success'); closeEditEWO(); loadEWOFromServer(); } 
-                else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEditEwoBtn', false); showToast(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updatedData, email);
+                if(res.success) { showToast(res.message, 'success'); closeEditEWO(); refreshEWOList(); } else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEditEwoBtn', false); showToast(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updated, session.email);
         }
 
         // ==============================================================
-        // OTDR (UPLOAD, PAGINATION & EDIT)
+        // OTDR MODULE (MULTI UPLOAD & AUTO FOLDER)
         // ==============================================================
-        let selectedFilesForUpload = [];
+        function toggleOTDRModal() {
+            const mod = document.getElementById('otdrModal');
+            if(mod.classList.contains('hidden')) { animateModalOpen('otdrModal', 'otdrModalContent'); refreshOTDRList(1); } else animateModalClose('otdrModal', 'otdrModalContent');
+        }
+
+        function refreshOTDRList(page) {
+            const lst = document.getElementById('otdrList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading OTDR Data...</div>';
+            google.script.run.withSuccessHandler(res => {
+                currentOtdrPage = res.currentPage; totalOtdrPages = res.totalPages;
+                document.getElementById('otdrPageInfo').innerText = `Page ${currentOtdrPage} / ${totalOtdrPages}`;
+                document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1; document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
+                document.getElementById('selectAllOtdr').checked = false; renderOTDRList(res.data);
+            }).withFailureHandler(err => lst.innerHTML='Gagal memuat OTDR').getOTDRData(page);
+        }
+        function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
+
+        function toggleFolderContent(headerEl) {
+            const content = headerEl.nextElementSibling; const chevron = headerEl.querySelector('.chevron-icon'); const folderIcon = headerEl.querySelector('.folder-icon');
+            if (content.classList.contains('hidden')) { content.classList.remove('hidden'); chevron.classList.add('rotate-180'); folderIcon.classList.replace('fa-folder', 'fa-folder-open'); } 
+            else { content.classList.add('hidden'); chevron.classList.remove('rotate-180'); folderIcon.classList.replace('fa-folder-open', 'fa-folder'); }
+        }
+
+        function renderOTDRList(data) {
+            const lst = document.getElementById('otdrList');
+            if(!data || data.length === 0) { lst.innerHTML = '<div class="text-zinc-500 italic text-center py-4 text-xs">Belum ada file OTDR.</div>'; return; }
+            
+            let folders = {};
+            data.forEach(item => { let f = item.nama_folder || 'Umum'; if(!folders[f]) folders[f] = []; folders[f].push(item); });
+            
+            let html = '';
+            for(let folderName in folders) {
+                html += `<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30">
+                    <div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50">
+                        <span class="flex items-center truncate pr-2">
+                            <i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> <span class="truncate">${folderName}</span> 
+                            <span class="ml-3 text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 shrink-0">${folders[folderName].length} File</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 chevron-icon shrink-0"></i>
+                    </div>
+                    <div class="p-3 space-y-2 folder-content hidden transition-all duration-300">`;
+                
+                folders[folderName].forEach(item => {
+                    let ownerHTML = '';
+                    if(isOwner) {
+                        ownerHTML = `<div class="flex flex-col gap-1 ml-2 border-l border-zinc-700 pl-2 shrink-0">
+                            <button type="button" onclick="openEditOTDR('${item.nama_otb}', '${item.timestamp}', '${item.nama_folder}', '${item.lokasi}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                            <button type="button" onclick="confirmDeleteOTDR('${item.nama_otb}', '${item.timestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>`;
+                    }
+                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-bold text-white text-[11px] truncate mb-0.5"><i class="fa-solid fa-file-waveform text-purple-400 mr-1.5"></i>${item.nama_otb}</span>
+                                <span class="text-zinc-500 text-[9px] truncate"><i class="fa-solid fa-map-pin mr-1 opacity-70"></i>${item.lokasi}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="${item.file_url}" target="_blank" class="px-2.5 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold shadow-md whitespace-nowrap transition-colors"><i class="fa-solid fa-download"></i> SOR</a>
+                            ${ownerHTML}
+                        </div>
+                    </div>`;
+                });
+                html += `</div></div>`;
+            }
+            lst.innerHTML = html;
+        }
+
+        function toggleAllOTDR(cbx) { document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked); }
+        function downloadSelectedOTDR() {
+            const cbs = document.querySelectorAll('.otdr-checkbox:checked');
+            if(cbs.length === 0) return showToast('Pilih file dulu!', 'error');
+            cbs.forEach(cb => { if(cb.dataset.url && cb.dataset.url !== '#') window.open(cb.dataset.url, '_blank'); });
+            showToast(`${cbs.length} file sedang dibuka.`, 'success');
+        }
 
         function updateFileList(input) {
             const prompt = document.getElementById('fileUploadPrompt');
@@ -1066,255 +1115,159 @@
             if (input.files && input.files.length > 0) {
                 prompt.classList.add('hidden');
                 list.classList.remove('hidden');
-                list.innerHTML = '';
                 
-                selectedFilesForUpload = Array.from(input.files);
-                
-                selectedFilesForUpload.forEach((file, index) => {
-                    const size = (file.size / 1024).toFixed(1) + ' KB';
-                    list.innerHTML += `
-                        <div class="flex items-center justify-between p-2 bg-dark-900 rounded-lg border border-zinc-700/50 mb-2">
-                            <div class="flex items-center gap-2 overflow-hidden">
-                                <i class="fa-solid fa-file-code text-purple-400"></i>
-                                <div class="flex flex-col overflow-hidden">
-                                    <span class="text-xs text-white truncate w-32 md:w-48">${file.name}</span>
-                                    <span class="text-[9px] text-zinc-500">${size}</span>
-                                </div>
+                let html = `<div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 sticky top-0 bg-dark-800 pb-2 z-10 text-center w-full shadow-[0_4px_10px_rgba(24,24,27,1)]">${input.files.length} File Terpilih (Tap to change)</div>`;
+                html += `<div class="space-y-1.5 w-full pb-2">`;
+                Array.from(input.files).forEach(file => {
+                    const size = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
+                    html += `
+                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50">
+                            <div class="flex items-center gap-2 overflow-hidden w-full">
+                                <i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i>
+                                <span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${file.name}</span>
+                                <span class="text-[9px] text-zinc-500 shrink-0 ml-2 font-mono">${size}</span>
                             </div>
                         </div>
                     `;
                 });
+                html += `</div>`;
+                list.innerHTML = html;
             } else {
-                prompt.classList.remove('hidden');
                 list.classList.add('hidden');
-                selectedFilesForUpload = [];
+                list.innerHTML = '';
+                prompt.classList.remove('hidden');
             }
         }
 
-        const getBase64 = (file) => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-
-        function toggleOTDRModal() {
-            const modal = document.getElementById('otdrModal');
-            if (modal.classList.contains('hidden')) {
-                animateModalOpen('otdrModal', 'otdrModalContent');
-                loadOTDRFromServer(1);
-            } else {
-                animateModalClose('otdrModal', 'otdrModalContent');
-            }
-        }
-
-        async function handleOTDRInput(e) {
+        // Logic Multi Upload
+        function handleOTDRInput(e) {
             e.preventDefault();
-            if (selectedFilesForUpload.length === 0) {
-                showToast('Pilih minimal 1 file .sor', 'error'); return;
-            }
+            const fileInput = document.getElementById('fileOtdr');
+            if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
             
-            setButtonState('submitOtdrBtn', true, '<i class="fa-solid fa-upload"></i> Upload to Server');
+            const btn = document.getElementById('submitOtdrBtn');
+            const originalText = btn.innerHTML; btn.disabled = true;
             
-            const folder = document.getElementById('folderOtdr').value;
-            const otb = document.getElementById('otbOtdr').value;
-            const lokasi = document.getElementById('lokasiOtdr').value;
-            const email = localStorage.getItem('netcore_user') || '';
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const otbVal = document.getElementById('otbOtdr').value;
+            const lokasiVal = document.getElementById('lokasiOtdr').value;
+            
+            let folderVal = document.getElementById('folderOtdr').value.trim();
+            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
 
-            let successCount = 0;
-            
-            for (let i = 0; i < selectedFilesForUpload.length; i++) {
-                const file = selectedFilesForUpload[i];
-                try {
-                    const base64Data = await getBase64(file);
-                    const payload = {
-                        nama_folder: folder,
-                        nama_otb: otb,
-                        lokasi: lokasi,
-                        fileName: file.name,
-                        fileMimeType: file.type || 'application/octet-stream',
-                        fileData: base64Data,
-                        userEmail: email
-                    };
-                    
-                    await new Promise((resolve, reject) => {
-                        google.script.run.withSuccessHandler(res => {
-                            if (res.success) successCount++;
-                            resolve();
-                        }).withFailureHandler(err => reject(err)).uploadOTDRData(payload);
-                    });
-                } catch (error) { console.error("Error uploading file:", file.name, error); }
-            }
-            
-            setButtonState('submitOtdrBtn', false);
-            if (successCount > 0) {
-                showToast(`Berhasil upload ${successCount} file!`, 'success');
-                document.getElementById('otdrInputForm').reset();
-                document.getElementById('fileUploadPrompt').classList.remove('hidden');
-                document.getElementById('fileUploadList').classList.add('hidden');
-                selectedFilesForUpload = [];
-                loadOTDRFromServer(1);
-            } else { showToast('Gagal upload file', 'error'); }
-        }
-
-        function loadOTDRFromServer(page) {
-            const list = document.getElementById('otdrList');
-            list.innerHTML = '<div class="text-center py-4 text-purple-400 text-xs animate-pulse"><i class="fa-solid fa-circle-notch fa-spin"></i> Memuat Data OTDR...</div>';
-            
-            google.script.run.withSuccessHandler(res => {
-                renderOTDRList(res.data);
-                currentOtdrPage = res.currentPage;
-                totalOtdrPages = res.totalPages || 1;
-                document.getElementById('otdrPageInfo').innerText = `Page ${currentOtdrPage} of ${totalOtdrPages}`;
-                document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1;
-                document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
-            }).withFailureHandler(err => { list.innerHTML = '<div class="text-center py-4 text-red-400 text-xs">Gagal memuat data.</div>'; }).getOTDRData(page);
-        }
-
-        function renderOTDRList(data) {
-            const list = document.getElementById('otdrList');
-            list.innerHTML = '';
-            if (!data || data.length === 0) { list.innerHTML = '<div class="text-center py-4 text-zinc-500 text-xs">Tidak ada data OTDR.</div>'; return; }
-            
-            data.forEach((item, index) => {
-                const isOwnerStr = isOwner ? `
-                    <div class="flex gap-2 mt-2 pt-2 border-t border-zinc-700/50">
-                        <button onclick="openEditOTDR('${item.nama_otb}', '${item.nama_folder}', '${item.lokasi}', '${item.timestamp}')" class="flex-1 text-[10px] text-amber-400 hover:text-amber-300 bg-amber-400/10 px-2 py-1 rounded transition"><i class="fa-solid fa-pen"></i> Edit Detail</button>
-                        <button onclick="openDeleteModal('OTDR', {nama_otb: '${item.nama_otb}', timestamp: '${item.timestamp}'})" class="flex-1 text-[10px] text-red-400 hover:text-red-300 bg-red-400/10 px-2 py-1 rounded transition"><i class="fa-solid fa-trash"></i> Hapus</button>
-                    </div>
-                ` : '';
-
-                list.innerHTML += `
-                    <div class="bg-dark-800/50 p-3 rounded-xl border border-zinc-700/50 flex flex-col gap-1 hover:bg-dark-800/80 transition">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-start gap-2">
-                                <input type="checkbox" class="otdr-checkbox mt-1 w-3.5 h-3.5 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer" data-url="${item.file_url}" data-name="${item.nama_otb}.sor">
-                                <div>
-                                    <div class="text-xs font-bold text-white">${item.nama_otb}</div>
-                                    <div class="text-[10px] text-zinc-400"><i class="fa-solid fa-folder text-purple-400 mr-1"></i>${item.nama_folder} &bull; <i class="fa-solid fa-location-dot text-zinc-500 mx-1"></i>${item.lokasi}</div>
-                                    <div class="text-[9px] text-zinc-500 mt-0.5">${item.timestamp}</div>
-                                </div>
-                            </div>
-                            <a href="${item.file_url}" target="_blank" class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 hover:bg-purple-500/20 active:scale-95 transition-all">
-                                <i class="fa-solid fa-download text-xs"></i>
-                            </a>
-                        </div>
-                        ${isOwnerStr}
-                    </div>
-                `;
+            const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader(); reader.onload = ev => resolve(ev.target.result); reader.onerror = err => reject(err); reader.readAsDataURL(file);
             });
+            const uploadFilePromise = (dataObj) => new Promise((resolve, reject) => {
+                google.script.run.withSuccessHandler(res => { if(res.success) resolve(res); else reject(new Error(res.message)); })
+                .withFailureHandler(err => reject(err)).uploadOTDRData(dataObj);
+            });
+
+            (async function processUploads() {
+                let successCount = 0; let errorMsgs = [];
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    try {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah ${i + 1}/${fileInput.files.length}...`;
+                        const file = fileInput.files[i];
+                        const base64Data = await readFileAsBase64(file);
+                        const dataObj = { nama_folder: folderVal, nama_otb: otbVal, lokasi: lokasiVal, fileName: file.name, fileMimeType: file.type || 'application/octet-stream', fileData: base64Data, userEmail: session.email };
+                        await uploadFilePromise(dataObj); successCount++;
+                    } catch (err) { errorMsgs.push(`${fileInput.files[i].name}: ${err.message}`); }
+                }
+                btn.innerHTML = originalText; btn.disabled = false;
+                if (successCount > 0) { 
+                    showToast(`${successCount} file berhasil diunggah!`, 'success'); 
+                    document.getElementById('otdrInputForm').reset(); 
+                    updateFileList(document.getElementById('fileOtdr'));
+                    refreshOTDRList(1); 
+                }
+                if (errorMsgs.length > 0) showToast(`Gagal mengupload ${errorMsgs.length} file.`, 'error');
+            })();
         }
 
-        function changeOTDRPage(dir) {
-            let newPage = currentOtdrPage + dir;
-            if (newPage >= 1 && newPage <= totalOtdrPages) loadOTDRFromServer(newPage);
-        }
-
-        function toggleAllOTDR(checkbox) {
-            const checkboxes = document.querySelectorAll('.otdr-checkbox');
-            checkboxes.forEach(cb => cb.checked = checkbox.checked);
-        }
-
-        function downloadSelectedOTDR() {
-            const checkboxes = document.querySelectorAll('.otdr-checkbox:checked');
-            if (checkboxes.length === 0) { showToast('Pilih file yang akan didownload', 'info'); return; }
-            checkboxes.forEach((cb, index) => { setTimeout(() => { window.open(cb.dataset.url, '_blank'); }, index * 500); });
-            showToast(`Mendownload ${checkboxes.length} file...`, 'success');
-        }
-
-        function openEditOTDR(otb, folder, lokasi, timestamp) {
-            originalSelectedOTDR = { nama_otb: otb, timestamp: timestamp };
-            document.getElementById('editOtdrFolder').value = folder;
-            document.getElementById('editOtdrOtb').value = otb;
-            document.getElementById('editOtdrLokasi').value = lokasi;
-            animateModalOpen('editOtdrModal', 'editOtdrModalContent');
-        }
-
+        function openEditOTDR(otb, timestamp, folder, lokasi) { originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; document.getElementById('editOtdrOtb').value = otb; document.getElementById('editOtdrLokasi').value = lokasi; animateModalOpen('editOtdrModal', 'editOtdrModalContent'); }
         function closeEditOTDR() { animateModalClose('editOtdrModal', 'editOtdrModalContent'); }
-
         function handleUpdateOTDR(e) {
-            e.preventDefault();
-            setButtonState('submitEditOtdrBtn', true);
-            
-            const updatedData = {
-                nama_folder: document.getElementById('editOtdrFolder').value,
-                nama_otb: document.getElementById('editOtdrOtb').value,
-                lokasi: document.getElementById('editOtdrLokasi').value
-            };
-            const email = localStorage.getItem('netcore_user') || '';
-            
+            e.preventDefault(); setButtonState('submitEditOtdrBtn', true, '<i class="fa-solid fa-save"></i> Update Details');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditOtdrBtn', false);
-                if (res.success) { showToast(res.message, 'success'); closeEditOTDR(); loadOTDRFromServer(currentOtdrPage); } 
-                else { showToast(res.message, 'error'); }
-            }).withFailureHandler(err => { setButtonState('submitEditOtdrBtn', false); showToast(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updatedData, email);
+                if(res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEditOtdrBtn', false); showToast(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updated, session.email);
         }
 
         // ==============================================================
-        // GLOBAL DELETE ROUTINE (OWNER ONLY)
+        // DELETE GLOBAL
         // ==============================================================
-        function openDeleteModal(type, targetData) {
-            deleteTargetType = type;
-            if(type === 'NODE') { originalSelectedNode = targetData; document.getElementById('deleteContextType').innerText = 'Data Node'; }
-            else if (type === 'EWO') { originalSelectedEWO = targetData; document.getElementById('deleteContextType').innerText = 'Data EWO'; }
-            else if (type === 'OTDR') { originalSelectedOTDR = targetData; document.getElementById('deleteContextType').innerText = 'Data OTDR'; }
-            
-            const modal = document.getElementById('confirmDeleteModal');
-            const content = document.getElementById('confirmDeleteModalContent');
-            modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); });
+        function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
+        function confirmDeleteNode(index) {
+            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data; deleteTargetType = 'NODE'; document.getElementById('deleteContextType').innerText = `Node ${data.nama_perangkat}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
         }
-
-        function closeDeleteModal() {
-            const modal = document.getElementById('confirmDeleteModal');
-            const content = document.getElementById('confirmDeleteModalContent');
-            modal.classList.add('opacity-0'); content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        function confirmDeleteEWO(no_ewo, desk) {
+            originalSelectedEWO = {no_ewo: no_ewo, deskripsi: desk}; deleteTargetType = 'EWO'; document.getElementById('deleteContextType').innerText = `EWO ${no_ewo}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
         }
-
+        function confirmDeleteOTDR(otb, timestamp) {
+            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; deleteTargetType = 'OTDR'; document.getElementById('deleteContextType').innerText = `File OTB ${otb}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
         function executeDeleteData() {
-            setButtonState('confirmDeleteBtn', true);
-            const email = localStorage.getItem('netcore_user');
-            
-            let deleteFunc, targetData;
-            if (deleteTargetType === 'NODE') { deleteFunc = 'deleteNetworkData'; targetData = originalSelectedNode; } 
-            else if (deleteTargetType === 'EWO') { deleteFunc = 'deleteEWOData'; targetData = originalSelectedEWO; }
-            else if (deleteTargetType === 'OTDR') { deleteFunc = 'deleteOTDRData'; targetData = originalSelectedOTDR; }
-
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('confirmDeleteBtn', false);
-                if(res.success) {
-                    showToast(res.message, 'success'); closeDeleteModal();
-                    if(deleteTargetType === 'NODE') { triggerServerSearch(); refreshDashboardStats(); }
-                    else if(deleteTargetType === 'EWO') loadEWOFromServer();
-                    else if(deleteTargetType === 'OTDR') loadOTDRFromServer(currentOtdrPage);
-                } else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); showToast(err.message, 'error'); })[deleteFunc](targetData, email);
-        }
-
-        // ==============================================================
-        // EXPORT FEATURE
-        // ==============================================================
-        function exportTableToExcelTemplate(type) {
-            if(!lastSearchResult || lastSearchResult.length === 0) { showToast('Tidak ada data untuk di-export', 'info'); return; }
-            showToast(`Menyiapkan file ${type.toUpperCase()}...`, 'info');
-            
-            let excelData = [];
-            excelData.push(["Nama Perangkat", "Tipe", "IP Address", "Lokasi", "Status", "Port Info", "Kode OTB"]);
-            
-            lastSearchResult.forEach(row => {
-                excelData.push([row.nama_perangkat, row.tipe, row.ip_address, row.lokasi, row.status, row.info_port, row.kode_otb]);
-            });
-
-            try {
-                let wb = XLSX.utils.book_new();
-                let ws = XLSX.utils.aoa_to_sheet(excelData);
-                XLSX.utils.book_append_sheet(wb, ws, "Database Export");
-                let fileName = `Netcore_Export_${currentFilter}_${new Date().getTime()}.${type}`;
-                XLSX.writeFile(wb, fileName);
-            } catch (err) {
-                showToast('Export failed. Periksa library XLSX.', 'error');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            setButtonState('confirmDeleteBtn', true, 'Ya, Hapus');
+            if (deleteTargetType === 'NODE') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); triggerServerSearch(); refreshDashboardStats(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
+            } else if (deleteTargetType === 'EWO') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshEWOList(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
+            } else if (deleteTargetType === 'OTDR') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
             }
         }
+
+        // ==============================================================
+        // AUTHENTICATION
+        // ==============================================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const errBox = document.getElementById('loginError'); errBox.classList.add('hidden');
+            setButtonState('loginBtn', true, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+            const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPassword').value;
+
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                if (res.success) { localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role })); checkSession(); } 
+                else { errBox.innerText = res.message; errBox.classList.remove('hidden'); }
+            }).withFailureHandler(err => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                errBox.innerText = "Error Koneksi Server!"; errBox.classList.remove('hidden');
+            }).verifyLogin(email, pass);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('netcore_session'); document.getElementById('loginForm').reset(); document.getElementById('ownerRoleBadge').classList.add('hidden');
+            checkSession();
+        }
+
+        function checkSession() {
+            const session = localStorage.getItem('netcore_session');
+            if(session) {
+                document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboardPage').classList.remove('hidden');
+                const sData = JSON.parse(session); isOwner = sData.role === 'OWNER';
+                if(isOwner) document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                refreshDashboardStats();
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
 </html>
