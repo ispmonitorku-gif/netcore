@@ -224,7 +224,7 @@
         </div>
     </div>
 
-    <!-- Modals untuk Database, Register Node, dll (Tetap Original) -->
+    <!-- Modals untuk Database, Register Node, dll -->
     <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -345,7 +345,14 @@
                     <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/30"><i class="fa-solid fa-file-signature text-amber-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">Work Order (EWO)</h3>
                 </div>
-                <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                
+                <div class="flex items-center gap-2 md:gap-3">
+                    <button onclick="exportEWOToExcel('xlsx')" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> 
+                        <span class="hidden md:inline">Export Excel</span>
+                    </button>
+                    <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
                 <form id="ewoInputForm" onsubmit="handleEWOInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl">
@@ -547,7 +554,7 @@
 
     <script>
         // ==============================================================
-        // GITHUB PAGES FETCH WRAPPER & MOCK DATA (Dari File 1.html)
+        // GITHUB PAGES FETCH WRAPPER & MOCK DATA
         // ==============================================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec"; 
 
@@ -598,7 +605,7 @@
                     withFailureHandler: function(cb) { fCb = cb; return this; },
                     verifyLogin: (email, pass) => fetchAPI('verifyLogin', {email, password: pass}, sCb, fCb),
                     getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
-                    getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb), // Modifikasi Panggilan Tanpa Parameter Type
+                    getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb),
                     searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
                     insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
                     updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
@@ -611,7 +618,6 @@
                     uploadOTDRData: (dataObj) => fetchAPI('uploadOTDRData', {dataObj}, sCb, fCb),
                     updateOTDRData: (originalData, updatedData, email) => fetchAPI('updateOTDRData', {originalData, updatedData, email}, sCb, fCb),
                     deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb),
-                    // Endpoint tambahan folder
                     updateOTDRFolder: (oldFolderName, newFolderName, email) => fetchAPI('updateOTDRFolder', {oldFolderName, newFolderName, email}, sCb, fCb),
                     deleteOTDRFolder: (folderName, email) => fetchAPI('deleteOTDRFolder', {folderName, email}, sCb, fCb)
                 };
@@ -625,12 +631,13 @@
         let currentFilter = 'All';
         let searchTimeout = null;
         let lastSearchResult = []; 
+        let lastEwoResult = []; // Menyimpan data EWO terakhir untuk export
         
         let deleteTargetType = 'NODE';
         let originalSelectedNode = null; 
         let originalSelectedEWO = null;
         let originalSelectedOTDR = null;
-        let originalSelectedOTDRFolder = null; // Menampung target folder
+        let originalSelectedOTDRFolder = null; 
 
         let currentOtdrPage = 1;
         let totalOtdrPages = 1;
@@ -678,7 +685,7 @@
         }
 
         // ==============================================================
-        // DASHBOARD & RECAP (MODIFIED TO GROUP BY LOCATION)
+        // DASHBOARD & RECAP
         // ==============================================================
         function refreshDashboardStats() {
             const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
@@ -739,7 +746,6 @@
             }
         }
         
-        // Fungsi Toggle untuk Accordion per Lokasi
         function toggleLocAccordion(idx) {
             const body = document.getElementById('locBody_' + idx);
             const chev = document.getElementById('locChev_' + idx);
@@ -932,10 +938,6 @@
             });
         }
 
-        function exportTableToCSV() {
-            exportTableToExcelTemplate('csv');
-        }
-
         function exportTableToExcelTemplate(format = 'xlsx') {
             if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
 
@@ -1048,7 +1050,7 @@
         }
 
         // ==============================================================
-        // EWO MODULE
+        // EWO MODULE (ADDED EXPORT TO EXCEL)
         // ==============================================================
         function toggleEWOModal() {
             const mod = document.getElementById('ewoModal');
@@ -1061,6 +1063,7 @@
         }
 
         function renderEWOList(data) {
+            lastEwoResult = data || []; // Simpan data ke global variable untuk export
             const container = document.getElementById('ewoList'); container.innerHTML = '';
             if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
 
@@ -1079,6 +1082,68 @@
                     </div>`;
                 container.insertAdjacentHTML('beforeend', html);
             });
+        }
+
+        function exportEWOToExcel(format = 'xlsx') {
+            if (!lastEwoResult || lastEwoResult.length === 0) return showToast('Tidak ada data EWO untuk diexport!', 'error');
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
+
+            const templateRows = [
+                ["NETCORE ISP - LAPORAN EMERGENCY WORK ORDER (EWO)"],
+                [`Tanggal Cetak: ${dateStr}`],
+                [`Total Data: ${lastEwoResult.length} EWO`],
+                [], // Baris kosong pemisah
+                ["NO", "NOMOR EWO", "DESKRIPSI PEKERJAAN", "STATUS"]
+            ];
+
+            lastEwoResult.forEach((item, index) => {
+                templateRows.push([
+                    index + 1,
+                    item.no_ewo || '-',
+                    item.deskripsi || '-',
+                    item.status || '-'
+                ]);
+            });
+
+            templateRows.push([]);
+            templateRows.push(["--- Akhir Laporan EWO Netcore ISP ---"]);
+
+            if (format === 'csv' || typeof XLSX === 'undefined') {
+                let csvContent = "\uFEFF";
+                templateRows.forEach(row => {
+                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
+                    csvContent += line + "\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Laporan_EWO_${now.toISOString().slice(0, 10)}.csv`;
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Export CSV EWO Berhasil', 'success');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(templateRows);
+
+                ws['!cols'] = [
+                    { wch: 6 }, { wch: 20 }, { wch: 50 }, { wch: 15 }
+                ];
+
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },
+                    { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } },
+                    { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } }
+                ];
+
+                XLSX.utils.book_append_sheet(wb, ws, `Data_EWO`);
+                XLSX.writeFile(wb, `Laporan_EWO_${now.toISOString().slice(0, 10)}.xlsx`);
+                showToast('Export Excel EWO Berhasil!', 'success');
+            }
         }
 
         function handleEWOInput(e) {
@@ -1167,9 +1232,14 @@
                 folders[folderName].forEach(item => {
                     let ownerHTML = '';
                     if(isOwner) {
+                        let safeOtb = item.nama_otb.replace(/'/g, "\\'");
+                        let safeTimestamp = item.timestamp.replace(/'/g, "\\'");
+                        let safeFolder = (item.nama_folder || 'Umum').replace(/'/g, "\\'");
+                        let safeLokasi = item.lokasi.replace(/'/g, "\\'");
+
                         ownerHTML = `<div class="flex flex-col gap-1 ml-2 border-l border-zinc-700 pl-2 shrink-0">
-                            <button type="button" onclick="openEditOTDR('${item.nama_otb}', '${item.timestamp}', '${item.nama_folder}', '${item.lokasi}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button>
-                            <button type="button" onclick="confirmDeleteOTDR('${item.nama_otb}', '${item.timestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            <button type="button" onclick="openEditOTDR('${safeOtb}', '${safeTimestamp}', '${safeFolder}', '${safeLokasi}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                            <button type="button" onclick="confirmDeleteOTDR('${safeOtb}', '${safeTimestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
                         </div>`;
                     }
                     html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50">
