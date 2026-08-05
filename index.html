@@ -31,9 +31,8 @@
             }
         }
     </script>
-    
     <style>
-        @import url('https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         body { 
             font-family: 'Inter', sans-serif; 
@@ -50,33 +49,10 @@
             background-attachment: fixed;
         }
 
-        .glass { 
-            background: rgba(24, 24, 27, 0.6); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-        }
-        
-        .glass-card { 
-            background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
-        }
-        
-        .glass-input { 
-            background: rgba(9, 9, 11, 0.5); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(10px); 
-            transition: all 0.3s ease; 
-        }
-        
-        .glass-input:focus { 
-            border-color: rgba(59, 130, 246, 0.5); 
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); 
-            background: rgba(9, 9, 11, 0.8); 
-        }
+        .glass { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-card { background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .glass-input { background: rgba(9, 9, 11, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); transition: all 0.3s ease; }
+        .glass-input:focus { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background: rgba(9, 9, 11, 0.8); }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -91,10 +67,6 @@
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px); }
         .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
         .nav-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 15px); }
-        
-        /* Utility classes for animations */
-        .modal-show { opacity: 1 !important; pointer-events: auto !important; }
-        .modal-content-show { transform: translateY(0) !important; scale: 1 !important; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
@@ -102,7 +74,7 @@
     <div id="toastContainer" class="fixed top-safe pt-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
 
     <!-- Halaman Login -->
-    <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden transition-opacity duration-500">
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden">
         <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite]"></div>
         <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse]"></div>
         
@@ -144,7 +116,7 @@
     </div>
 
     <!-- Halaman Dashboard -->
-    <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe opacity-0 transition-opacity duration-500">
+    <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe">
         
         <!-- Header -->
         <div class="sticky top-0 z-40 pt-safe glass border-b-0 shadow-lg mb-6 w-full backdrop-blur-xl">
@@ -164,7 +136,7 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <button id="btnActivityLog" onclick="toggleActivityLogModal()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
+                    <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
                     <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50">
@@ -180,25 +152,7 @@
 
         <div class="px-5 md:px-8 w-full"> 
             
-            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full">
-                <!-- Data dummy untuk UI -->
-                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-brand-500">
-                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Total Nodes</h4>
-                    <span class="text-2xl font-bold text-white">124</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-accent-500">
-                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Online</h4>
-                    <span class="text-2xl font-bold text-white">118</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-red-500">
-                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Offline</h4>
-                    <span class="text-2xl font-bold text-white">4</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-amber-500">
-                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Warning</h4>
-                    <span class="text-2xl font-bold text-white">2</span>
-                </div>
-            </div>
+            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full"></div>
 
             <div class="mb-8 w-full">
                 <div class="glass-card p-5 md:p-6 rounded-3xl relative overflow-hidden">
@@ -206,9 +160,7 @@
                     
                     <div class="flex flex-row items-center justify-between mb-5 relative z-10 cursor-pointer" onclick="toggleRecapDropdown()">
                         <h3 class="text-white text-sm font-bold tracking-wide flex items-center">
-                            <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center mr-3 border border-brand-500/30">
-                                <i class="fa-solid fa-chart-column text-brand-400 text-xs"></i>
-                            </div>
+                            <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center mr-3 border border-brand-500/30"><i class="fa-solid fa-chart-column text-brand-400 text-xs"></i></div>
                             System Overview
                         </h3>
                         <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
@@ -217,20 +169,12 @@
                     </div>
                     
                     <div id="detailedStats" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 text-sm w-full relative z-10">
-                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
-                            <span class="text-zinc-400">OLT Devices</span><span class="text-white font-bold">45</span>
-                        </div>
-                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
-                            <span class="text-zinc-400">Switches</span><span class="text-white font-bold">52</span>
-                        </div>
-                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
-                            <span class="text-zinc-400">Backbone Links</span><span class="text-white font-bold">27</span>
-                        </div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
                     </div>
                     
-                    <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2">
-                        <p class="text-sm text-zinc-400">System is operating normally. All main hubs are synchronized.</p>
-                    </div>
+                    <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2"></div>
                 </div>
             </div>
 
@@ -291,7 +235,7 @@
     </div>
 
     <!-- Modals untuk Database -->
-    <div id="databaseModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             
@@ -332,9 +276,7 @@
                 <div class="text-[10px] text-zinc-500 pl-1">Showing max 50 recent records.</div>
                 
                 <div class="rounded-2xl relative flex-1 flex flex-col w-full h-full pb-10 bg-dark-800/30 border border-zinc-800/50 p-2 md:p-4 overflow-hidden">
-                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 md:space-y-0 content-start pb-8">
-                        <p class="text-zinc-500 text-sm w-full text-center mt-10">Data akan muncul di sini...</p>
-                    </div>
+                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 md:space-y-0 content-start pb-8"></div>
                     <div id="emptyState" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-zinc-500 h-full w-full bg-dark-900/80 backdrop-blur-sm z-10">
                         <div class="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4"><i class="fa-solid fa-ghost text-2xl opacity-50 text-brand-400"></i></div>
                         <h3 class="text-sm font-bold text-zinc-300 mb-1">No Records Found</h3>
@@ -345,7 +287,7 @@
     </div>
 
     <!-- Modal Register Node -->
-    <div id="inputModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
@@ -407,7 +349,7 @@
     </div>
 
     <!-- Modal EWO -->
-    <div id="ewoModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
@@ -450,13 +392,13 @@
                 <div class="flex items-center gap-2 mb-4 pl-1">
                     <i class="fa-solid fa-clock-rotate-left text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Recent History</h4>
                 </div>
-                <div id="ewoList" class="space-y-3 text-sm w-full text-zinc-500 text-center py-4">Tidak ada riwayat.</div>
+                <div id="ewoList" class="space-y-3 text-sm w-full"></div>
             </div>
         </div>
     </div>
 
     <!-- Modal OTDR -->
-    <div id="otdrModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
@@ -515,7 +457,7 @@
                     <label for="selectAllOtdr" class="text-xs text-zinc-400 cursor-pointer select-none font-medium">Select All on Page</label>
                 </div>
                 
-                <div id="otdrList" class="space-y-3 text-sm w-full min-h-[100px] text-zinc-500 text-center py-4">Belum ada file terunggah.</div>
+                <div id="otdrList" class="space-y-3 text-sm w-full min-h-[100px]"></div>
                 
                 <!-- Pagination -->
                 <div id="otdrPagination" class="flex justify-between items-center text-xs text-zinc-400 mt-6 glass-card p-2 rounded-xl">
@@ -528,10 +470,10 @@
     </div>
 
     <!-- Modals Edit Node -->
-    <div id="editModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
-                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> Edit Node</h3>
+                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> Edit Node (Owner)</h3>
                 <button onclick="toggleEditModal()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
@@ -550,7 +492,7 @@
     </div>
 
     <!-- Modal Edit EWO -->
-    <div id="editEwoModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
          <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3>
@@ -568,7 +510,7 @@
     </div>
 
     <!-- Modal Edit OTDR -->
-    <div id="editOtdrModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit OTDR File Data</h3>
@@ -587,7 +529,7 @@
     </div>
 
     <!-- Modal Edit OTDR Folder -->
-    <div id="editOtdrFolderModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-folder-pen"></i> Ubah Nama Folder</h3>
@@ -610,7 +552,7 @@
     </div>
 
     <!-- Confirm Delete Modal -->
-    <div id="confirmDeleteModal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300">
             <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
             <h3 class="text-white text-lg font-bold mb-2">Hapus <span id="deleteContextType">Data</span>?</h3>
@@ -623,237 +565,1036 @@
         </div>
     </div>
 
-    <!-- Modal Activity Log (Yang sebelumnya terpotong) -->
-    <div id="activityLogModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+    <!-- Modal Activity Log -->
+    <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-sm"></i></div>
-                    <h3 class="text-white text-base font-bold tracking-wide">Activity Logs</h3>
+                    <h3 class="text-white text-base font-bold tracking-wide">System Activity Log</h3>
                 </div>
-                <button onclick="toggleActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1 bg-dark-900">
-                <p class="text-zinc-500 text-sm text-center mt-10">Tidak ada log aktivitas hari ini.</p>
+            <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
+                <div id="activityLogContainer" class="space-y-3 w-full">
+                    <!-- Logs akan disuntikkan ke sini -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PETA GOOGLE MAP -->
+    <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
+        <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-map-location-dot text-emerald-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">Peta BBDM Moratelindo Inner</h3>
+                </div>
+                <button onclick="closeMapModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="p-0 bg-dark-900 flex-1 flex flex-col w-full relative">
+                <div class="w-full h-full bg-dark-800/50 flex flex-col items-center justify-center p-6 text-center">
+                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                        <i class="fa-solid fa-map-location-dot text-4xl text-emerald-400"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mb-2">Peta Jalur Backbone & Joint Box</h2>
+                    <p class="text-zinc-400 text-sm mb-8 max-w-md">End-to-end jalur backbone lengkap dengan titik koordinat Joint Box dan histori Fiber Cut.</p>
+                    
+                    <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-6 py-3.5 rounded-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-3 transition-all active:scale-95">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        /**
-         * FUNGSI UTILITAS & UI
-         */
+        // ==============================================================
+        // GITHUB PAGES FETCH WRAPPER & MOCK DATA
+        // ==============================================================
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec"; 
+
+        if (typeof google === 'undefined') {
+            console.log("Environment: Luar Apps Script (GitHub Pages)");
+            
+            // Mock Data
+            let mockNetworkData = [
+                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1/1", kode_otb: "OTB-STB-01", status: "Online" },
+                { nama_perangkat: "SW-DIS-MDN-01", tipe: "Switch", ip_address: "10.10.20.1", lokasi: "POP Sunggal", info_port: "Eth 1/1", kode_otb: "-", status: "Offline" }
+            ];
+            let mockEWOData = [{no_ewo: "EWO-2026-001", deskripsi: "Pengecekan FO", status: "Done"}];
+            let mockOTDRData = [{nama_folder: "Core Line", nama_otb: "OTB-01", lokasi: "POP A", file_url: "#", timestamp: "2026-07-23 08:35:08"}];
+
+            // Real Fetch Function to Apps Script API
+            const fetchAPI = async (action, payload, sCb, fCb) => {
+                if (!GAS_API_URL) return runMock(action, payload, sCb, fCb);
+                try {
+                    const response = await fetch(GAS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: action, payload: payload }),
+                        redirect: "follow"
+                    });
+                    const result = await response.json();
+                    if (result.error) { if(fCb) fCb(new Error(result.message)); } 
+                    else { if(sCb) sCb(result.data); }
+                } catch (error) { if(fCb) fCb(error); }
+            };
+
+            const runMock = (action, payload, sCb, fCb) => {
+                setTimeout(() => {
+                    try {
+                        let res;
+                        if(action === 'verifyLogin') { res = {success: true, role: (payload.email || "").includes("owner") ? "OWNER" : "ADMIN", email: payload.email}; } 
+                        else if(action === 'getDashboardStats') {
+                            res = { total: mockNetworkData.length, online: 1, offline: 1, warning: 0, olt: 1, switch: 1, backbone: 0 };
+                        }
+                        if(sCb) sCb(res);
+                    } catch(e) { if(fCb) fCb(e); }
+                }, 600);
+            };
+
+            const createRun = () => {
+                let sCb = null, fCb = null;
+                return {
+                    withSuccessHandler: function(cb) { sCb = cb; return this; },
+                    withFailureHandler: function(cb) { fCb = cb; return this; },
+                    verifyLogin: (email, pass) => fetchAPI('verifyLogin', {email, password: pass}, sCb, fCb),
+                    getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
+                    getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb),
+                    searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
+                    insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
+                    updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteNetworkData: (targetData, email) => fetchAPI('deleteNetworkData', {targetData, email}, sCb, fCb),
+                    getEWOData: () => fetchAPI('getEWOData', {}, sCb, fCb),
+                    insertEWOData: (dataObj, email) => fetchAPI('insertEWOData', {dataObj, email}, sCb, fCb),
+                    updateEWOData: (originalData, updatedData, email) => fetchAPI('updateEWOData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteEWOData: (targetData, email) => fetchAPI('deleteEWOData', {targetData, email}, sCb, fCb),
+                    getOTDRData: (page) => fetchAPI('getOTDRData', {page}, sCb, fCb),
+                    uploadOTDRData: (dataObj) => fetchAPI('uploadOTDRData', {dataObj}, sCb, fCb),
+                    updateOTDRData: (originalData, updatedData, email) => fetchAPI('updateOTDRData', {originalData, updatedData, email}, sCb, fCb),
+                    deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb),
+                    updateOTDRFolder: (oldFolderName, newFolderName, email) => fetchAPI('updateOTDRFolder', {oldFolderName, newFolderName, email}, sCb, fCb),
+                    deleteOTDRFolder: (folderName, email) => fetchAPI('deleteOTDRFolder', {folderName, email}, sCb, fCb),
+                    getActivityLogs: (email) => fetchAPI('getActivityLogs', {email}, sCb, fCb)
+                };
+            };
+            window.google = { script: { get run() { return createRun(); } } };
+        }
+
+        // ==============================================================
+        // STATE VARIABLES
+        // ==============================================================
+        let currentFilter = 'All';
+        let searchTimeout = null;
+        let lastSearchResult = []; 
+        let lastEwoResult = []; 
         
+        let deleteTargetType = 'NODE';
+        let originalSelectedNode = null; 
+        let originalSelectedEWO = null;
+        let originalSelectedOTDR = null;
+        let originalSelectedOTDRFolder = null; 
+
+        let currentOtdrPage = 1;
+        let totalOtdrPages = 1;
+        let isOwner = false;
+
+        // ==============================================================
+        // UI UTILITIES
+        // ==============================================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            const color = type === 'success' ? 'emerald' : (type === 'error' ? 'red' : 'brand');
-            const icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'triangle-exclamation' : 'info-circle');
+            const colors = { success: 'bg-dark-800 border-accent-500/50 text-accent-400', error: 'bg-dark-800 border-red-500/50 text-red-400', info: 'bg-dark-800 border-brand-500/50 text-brand-400' };
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+            toast.className = `flex items-center gap-3 p-3.5 rounded-2xl border backdrop-blur-md shadow-lg toast-enter ${colors[type]}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-xs font-semibold tracking-wide text-white">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        function setButtonState(btnId, isLoading, originalHtml) {
+            const btn = document.getElementById(btnId);
+            if(isLoading) {
+                btn.dataset.original = originalHtml || btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+                btn.disabled = true; btn.classList.add('opacity-70', 'cursor-not-allowed');
+            } else {
+                btn.innerHTML = btn.dataset.original || originalHtml;
+                btn.disabled = false; btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+
+        function animateModalOpen(modalId, contentId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(contentId);
+            modal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0'); if(content) content.classList.remove('translate-y-full');
+            });
+        }
+        function animateModalClose(modalId, contentId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(contentId);
+            modal.classList.add('opacity-0'); if(content) content.classList.add('translate-y-full');
+            setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+        }
+
+        // ==============================================================
+        // ACTIVITY LOGS FUNCTIONS
+        // ==============================================================
+        function openActivityLogModal() {
+            animateModalOpen('activityLogModal', 'activityLogModalContent');
+            const container = document.getElementById('activityLogContainer');
+            container.innerHTML = '<div class="text-center py-10 text-blue-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3"></i><p class="text-xs font-medium">Memuat log aktivitas server...</p></div>';
             
-            toast.className = `bg-dark-800/90 border border-${color}-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-4 rounded-2xl flex items-center gap-3 backdrop-blur-md toast-enter`;
-            toast.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-${color}-500/20 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-${icon} text-${color}-400"></i>
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            
+            google.script.run.withSuccessHandler(res => {
+                if (res.success) {
+                    renderActivityLogs(res.data);
+                } else {
+                    container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`;
+                }
+            }).withFailureHandler(err => {
+                container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">Error: ${err.message}</p></div>`;
+            }).getActivityLogs(session.email);
+        }
+
+        function closeActivityLogModal() {
+            animateModalClose('activityLogModal', 'activityLogModalContent');
+        }
+
+        function renderActivityLogs(data) {
+            const container = document.getElementById('activityLogContainer');
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-zinc-500"><i class="fa-solid fa-ghost text-3xl mb-3 opacity-50"></i><p class="text-xs">Belum ada aktivitas yang terekam.</p></div>';
+                return;
+            }
+
+            let html = '';
+            data.forEach(log => {
+                let actionColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+                if (log.action.includes('DELETE')) actionColor = 'text-red-400 bg-red-500/10 border-red-500/30';
+                else if (log.action.includes('UPDATE')) actionColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                else if (log.action.includes('INSERT') || log.action.includes('UPLOAD')) actionColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
+
+                html += `
+                <div class="bg-dark-800/50 p-3.5 rounded-2xl border border-zinc-800/80 flex flex-col gap-2 transition-all hover:bg-dark-800">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold border ${actionColor}">${log.action}</span>
+                            <span class="text-zinc-500 text-[10px] font-mono"><i class="fa-regular fa-clock"></i> ${log.timestamp}</span>
+                        </div>
+                        <span class="text-[9px] font-mono bg-dark-900 text-zinc-400 px-2 py-1 rounded border border-zinc-700/50 shrink-0"><i class="fa-regular fa-user mr-1"></i>${log.email}</span>
+                    </div>
+                    <p class="text-xs text-zinc-300">${log.description}</p>
                 </div>
-                <p class="text-sm text-white font-medium flex-1">${message}</p>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ==============================================================
+        // DASHBOARD & RECAP
+        // ==============================================================
+        function refreshDashboardStats() {
+            const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
+            if (typeof google !== 'undefined' && google.script) {
+                google.script.run.withSuccessHandler(stats => {
+                    renderDashboardStats(stats);
+                    if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Data Synced', 'success');
+                }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Failed to load stats', 'error'); }).getDashboardStats();
+            }
+        }
+
+        function renderDashboardStats(stats) {
+            if(!stats) return;
+            document.getElementById('summaryCards').innerHTML = `
+                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl border border-brand-500/30 shadow-neon-blue"><i class="fa-solid fa-server"></i></div>
+                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Total Nodes</p><h2 class="text-2xl font-black text-white">${stats.total}</h2></div>
+                </div>
+                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-accent-500/20 text-accent-400 flex items-center justify-center text-xl border border-accent-500/30 shadow-neon-green"><i class="fa-solid fa-wifi"></i></div>
+                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Online</p><h2 class="text-2xl font-black text-white">${stats.online}</h2></div>
+                </div>
+                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Warning</p><h2 class="text-2xl font-black text-white">${stats.warning}</h2></div>
+                </div>
+                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl border border-red-500/30"><i class="fa-solid fa-plug-circle-xmark"></i></div>
+                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Offline</p><h2 class="text-2xl font-black text-white">${stats.offline}</h2></div>
+                </div>
             `;
             
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.replace('toast-enter', 'toast-exit');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            document.getElementById('detailedStats').innerHTML = `
+                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-server text-purple-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">OLT Devices</span></div>
+                    <span class="text-lg font-black text-white">${stats.olt}</span>
+                </div>
+                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-random text-blue-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Switches</span></div>
+                    <span class="text-lg font-black text-white">${stats.switch}</span>
+                </div>
+                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
+                    <div class="flex items-center gap-3"><i class="fa-solid fa-route text-orange-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Backbones</span></div>
+                    <span class="text-lg font-black text-white">${stats.backbone}</span>
+                </div>
+            `;
         }
 
-        // Buka / Tutup Modal Universal
-        function openModal(modalId, contentId) {
-            const modal = document.getElementById(modalId);
-            const content = document.getElementById(contentId);
-            if(!modal || !content) return;
-            
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('modal-show');
-            setTimeout(() => {
-                content.classList.remove('translate-y-full');
-                content.classList.add('modal-content-show');
-            }, 10);
-        }
-
-        function closeModal(modalId, contentId) {
-            const modal = document.getElementById(modalId);
-            const content = document.getElementById(contentId);
-            if(!modal || !content) return;
-            
-            content.classList.remove('modal-content-show');
-            content.classList.add('translate-y-full');
-            setTimeout(() => {
-                modal.classList.remove('modal-show');
-                modal.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
-        }
-
-        /**
-         * EVENT HANDLERS DARI HTML
-         */
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            // Simulasi Login
-            document.getElementById('loginPage').classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                document.getElementById('loginPage').classList.add('hidden');
-                const dash = document.getElementById('dashboardPage');
-                dash.classList.remove('hidden');
-                setTimeout(() => dash.classList.remove('opacity-0'), 50);
-                showToast(`Welcome back, ${email.split('@')[0]}!`);
-            }, 500);
-        }
-
-        function handleLogout() {
-            const dash = document.getElementById('dashboardPage');
-            dash.classList.add('opacity-0');
-            setTimeout(() => {
-                dash.classList.add('hidden');
-                const login = document.getElementById('loginPage');
-                login.classList.remove('hidden');
-                setTimeout(() => login.classList.remove('opacity-0', 'pointer-events-none'), 50);
-            }, 500);
-        }
-
-        // Database Modal
-        function openDatabaseModal(filter) {
-            document.getElementById('databaseModalTitle').innerText = "Database: " + filter;
-            setModalFilter(filter);
-            openModal('databaseModal', 'databaseModalContent');
-        }
-        function closeDatabaseModal() { closeModal('databaseModal', 'databaseModalContent'); }
-        
-        function setModalFilter(filter) {
-            // Update UI filter button (Simulasi)
-            document.querySelectorAll('.modal-filter-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-500', 'text-white', 'shadow-neon-blue', 'border-brand-400/50');
-                btn.classList.add('bg-dark-800', 'text-zinc-400', 'border-zinc-700');
-            });
-            const activeBtn = document.getElementById('modal-btn-' + filter);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-dark-800', 'text-zinc-400', 'border-zinc-700');
-                activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-neon-blue', 'border-brand-400/50');
-            }
-        }
-
-        function triggerServerSearch() {
-            // Placeholder fungsi pencarian
-            const loading = document.getElementById('serverLoadingIndicator');
-            loading.classList.remove('hidden');
-            setTimeout(() => loading.classList.add('hidden'), 800);
-        }
-
-        function exportTableToExcelTemplate(type) { showToast(`Exporting to ${type.toUpperCase()}...`, 'success'); }
-
-        // Input Modal (Register Node)
-        function toggleInputModal() {
-            const modal = document.getElementById('inputModal');
-            if (modal.classList.contains('opacity-0')) openModal('inputModal', 'inputModalContent');
-            else closeModal('inputModal', 'inputModalContent');
-        }
-        function handleInputData(e) {
-            e.preventDefault();
-            showToast('Data Node berhasil ditambahkan!');
-            toggleInputModal();
-            e.target.reset();
-        }
-
-        // EWO Modal
-        function toggleEWOModal() {
-            const modal = document.getElementById('ewoModal');
-            if (modal.classList.contains('opacity-0')) openModal('ewoModal', 'ewoModalContent');
-            else closeModal('ewoModal', 'ewoModalContent');
-        }
-        function handleEWOInput(e) {
-            e.preventDefault();
-            showToast('EWO berhasil dibuat!');
-            e.target.reset();
-        }
-        function exportEWOToExcel(type) { showToast('Mengekspor EWO...'); }
-
-        // OTDR Modal
-        function toggleOTDRModal() {
-            const modal = document.getElementById('otdrModal');
-            if (modal.classList.contains('opacity-0')) openModal('otdrModal', 'otdrModalContent');
-            else closeModal('otdrModal', 'otdrModalContent');
-        }
-        function handleOTDRInput(e) {
-            e.preventDefault();
-            showToast('File SOR berhasil diunggah!');
-            e.target.reset();
-            document.getElementById('fileUploadPrompt').classList.remove('opacity-0');
-        }
-        function updateFileList(input) {
-            if (input.files && input.files.length > 0) {
-                document.getElementById('fileUploadPrompt').classList.add('opacity-0');
-                showToast(`${input.files.length} file dipilih.`, 'info');
-            }
-        }
-        function downloadSelectedOTDR() { showToast('Mengunduh file yang dipilih...'); }
-        function toggleAllOTDR(checkbox) { /* Logic pilih semua checkbox */ }
-        function changeOTDRPage(dir) { /* Logic pagination */ }
-
-        // Edit Node Modal
-        function toggleEditModal() {
-            const modal = document.getElementById('editModal');
-            if (modal.classList.contains('opacity-0')) openModal('editModal', 'editModalContent');
-            else closeModal('editModal', 'editModalContent');
-        }
-        function handleUpdateData(e) { e.preventDefault(); showToast('Node berhasil diperbarui!'); toggleEditModal(); }
-
-        // Edit EWO Modal
-        function closeEditEWO() { closeModal('editEwoModal', 'editEwoModalContent'); }
-        function handleUpdateEWO(e) { e.preventDefault(); showToast('EWO diperbarui!'); closeEditEWO(); }
-
-        // Edit OTDR Modal
-        function closeEditOTDR() { closeModal('editOtdrModal', 'editOtdrModalContent'); }
-        function handleUpdateOTDR(e) { e.preventDefault(); showToast('Info OTDR diperbarui!'); closeEditOTDR(); }
-
-        // Edit OTDR Folder Modal
-        function closeEditOTDRFolder() { closeModal('editOtdrFolderModal', 'editOtdrFolderModalContent'); }
-        function handleUpdateOTDRFolder(e) { e.preventDefault(); showToast('Nama folder diperbarui!'); closeEditOTDRFolder(); }
-
-        // Delete Modal
-        function closeDeleteModal() { document.getElementById('confirmDeleteModal').classList.remove('modal-show'); document.getElementById('confirmDeleteModal').classList.add('opacity-0', 'pointer-events-none'); }
-        function executeDeleteData() { showToast('Data dihapus.', 'error'); closeDeleteModal(); }
-
-        // Activity Log Modal (Perbaikan)
-        function toggleActivityLogModal() {
-            const modal = document.getElementById('activityLogModal');
-            if (modal.classList.contains('opacity-0')) openModal('activityLogModal', 'activityLogModalContent');
-            else closeModal('activityLogModal', 'activityLogModalContent');
-        }
-
-        // Peta Modal & Lainnya
-        function openMapModal() { showToast('Membuka integrasi peta Backbone...', 'info'); }
         function toggleRecapDropdown() {
             const panel = document.getElementById('recapDropdownPanel');
-            const icon = document.getElementById('recapChevron');
-            if (panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden');
-                setTimeout(() => { panel.classList.remove('opacity-0', 'translate-y-2'); icon.style.transform = 'rotate(180deg)'; }, 10);
+            const chevron = document.getElementById('recapChevron');
+            if(panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden'); chevron.classList.add('rotate-180');
+                setTimeout(() => panel.classList.remove('opacity-0', 'translate-y-2'), 10);
             } else {
-                panel.classList.add('opacity-0', 'translate-y-2');
-                icon.style.transform = 'rotate(0deg)';
+                panel.classList.add('opacity-0', 'translate-y-2'); chevron.classList.remove('rotate-180');
                 setTimeout(() => panel.classList.add('hidden'), 300);
             }
         }
         
-        function refreshDashboardStats() {
-            const icon = document.getElementById('syncIcon');
-            icon.classList.add('animate-spin');
-            showToast('Menyinkronkan data...');
-            setTimeout(() => icon.classList.remove('animate-spin'), 1000);
+        function toggleLocAccordion(idx) {
+            const body = document.getElementById('locBody_' + idx);
+            const chev = document.getElementById('locChev_' + idx);
+            if(body.classList.contains('hidden')) {
+                body.classList.remove('hidden'); chev.classList.add('rotate-180');
+            } else {
+                body.classList.add('hidden'); chev.classList.remove('rotate-180');
+            }
         }
 
+        function loadRecapFromServer() {
+            const panel = document.getElementById('recapDropdownPanel');
+            if(panel.classList.contains('hidden')) toggleRecapDropdown();
+            
+            panel.innerHTML = `<div class="text-center py-6 text-sm text-brand-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Memuat Rekapitulasi Lokasi...</div>`;
+            
+            google.script.run.withSuccessHandler(data => {
+                if(!data || data.length === 0) { panel.innerHTML = `<div class="text-center py-6 text-sm text-zinc-500">Tidak ada data rekap tersedia.</div>`; return; }
+                
+                let html = `<h4 class="text-xs font-bold text-zinc-300 mb-4 flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-brand-400"></i> System Overview Per Lokasi</h4>
+                <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1 scrollbar-hide">`;
+                
+                data.forEach((loc, index) => {
+                    let totalOLT = loc.OLT.length;
+                    let totalSwitch = loc.SWITCH.length;
+                    let totalBB = loc.BACKBONE.length;
+                    
+                    html += `
+                    <div class="bg-dark-900/60 rounded-xl border border-zinc-800/80 overflow-hidden">
+                        <div class="p-3 flex justify-between items-center cursor-pointer hover:bg-dark-800 transition-colors" onclick="toggleLocAccordion(${index})">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-accent-500"></i>
+                                <span class="font-bold text-white text-xs md:text-sm">${loc.lokasi}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 md:gap-2 text-[9px] md:text-[10px] font-semibold">
+                                ${totalOLT > 0 ? `<span class="bg-purple-500/20 text-purple-400 px-1.5 md:px-2 py-0.5 rounded border border-purple-500/30">${totalOLT} OLT</span>` : ''}
+                                ${totalSwitch > 0 ? `<span class="bg-blue-500/20 text-blue-400 px-1.5 md:px-2 py-0.5 rounded border border-blue-500/30">${totalSwitch} SW</span>` : ''}
+                                ${totalBB > 0 ? `<span class="bg-orange-500/20 text-orange-400 px-1.5 md:px-2 py-0.5 rounded border border-orange-500/30">${totalBB} BB</span>` : ''}
+                                <i id="locChev_${index}" class="fa-solid fa-chevron-down text-zinc-500 ml-1 transition-transform duration-300"></i>
+                            </div>
+                        </div>
+                        <div id="locBody_${index}" class="hidden bg-dark-800/40 p-3 border-t border-zinc-800/80 space-y-3">
+                    `;
+                    
+                    const renderDevs = (title, icon, color, list) => {
+                        if(!list || list.length === 0) return '';
+                        let out = `<div class="space-y-1.5">
+                            <div class="text-[10px] font-bold text-zinc-400 uppercase flex items-center gap-1.5"><i class="fa-solid ${icon} ${color}"></i> ${title} (${list.length} Unit)</div>`;
+                        list.forEach(dev => {
+                            out += `
+                            <div class="bg-dark-900/50 p-2.5 rounded-lg border border-zinc-800/60 flex justify-between items-center ml-1">
+                                <span class="text-[11px] font-bold text-zinc-200 truncate pr-2 w-1/2">${dev.nama}</span>
+                                <div class="flex gap-1.5 w-1/2 justify-end">
+                                    <span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-ethernet"></i> ${dev.total_port} Port</span>
+                                    <span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> ${dev.total_otb} OTB</span>
+                                </div>
+                            </div>`;
+                        });
+                        out += `</div>`;
+                        return out;
+                    };
+
+                    html += renderDevs('OLT', 'fa-server', 'text-purple-400', loc.OLT);
+                    html += renderDevs('Switch', 'fa-random', 'text-blue-400', loc.SWITCH);
+                    html += renderDevs('Backbone', 'fa-route', 'text-orange-400', loc.BACKBONE);
+                    
+                    if (totalOLT === 0 && totalSwitch === 0 && totalBB === 0) {
+                        html += `<div class="text-xs text-zinc-500 italic">Tidak ada perangkat.</div>`;
+                    }
+
+                    html += `</div></div>`;
+                });
+                
+                html += `</div>`; 
+                panel.innerHTML = html;
+            }).withFailureHandler(err => { panel.innerHTML = `<div class="text-center py-6 text-sm text-red-400">Gagal memuat rekap.</div>`; }).getRecapStats();
+        }
+
+        // ==============================================================
+        // DATABASE MODAL & SEARCH
+        // ==============================================================
+        function openDatabaseModal(type) {
+            setModalFilter(type);
+            animateModalOpen('databaseModal', 'databaseModalContent');
+        }
+        function closeDatabaseModal() { animateModalClose('databaseModal', 'databaseModalContent'); }
+        
+        function setModalFilter(type) {
+            currentFilter = type;
+            document.querySelectorAll('.modal-filter-btn').forEach(btn => { btn.className = 'modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all'; });
+            const activeBtn = document.getElementById(`modal-btn-${type}`);
+            if(activeBtn) activeBtn.className = 'modal-filter-btn shrink-0 bg-brand-500 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-neon-blue border border-brand-400/50';
+            triggerServerSearch();
+        }
+
+        function triggerServerSearch() {
+            clearTimeout(searchTimeout);
+            document.getElementById('serverLoadingIndicator').classList.remove('hidden');
+            searchTimeout = setTimeout(() => {
+                const filters = { type: currentFilter, nama: document.getElementById('searchNama').value, lokasi: document.getElementById('searchLokasi').value, port: document.getElementById('searchPort').value, otb: document.getElementById('searchOtb').value };
+                google.script.run.withSuccessHandler(data => { renderTable(data); document.getElementById('serverLoadingIndicator').classList.add('hidden'); })
+                .withFailureHandler(err => { showToast(err.message, 'error'); document.getElementById('serverLoadingIndicator').classList.add('hidden'); }).searchNetworkData(filters);
+            }, 600);
+        }
+
+        function renderTable(data) {
+            lastSearchResult = data;
+            const container = document.getElementById('data-list-container');
+            const emptyState = document.getElementById('emptyState');
+            container.innerHTML = '';
+            
+            if (!data || data.length === 0) { emptyState.classList.remove('hidden'); return; }
+            emptyState.classList.add('hidden');
+
+            data.forEach((item, index) => {
+                let typeBorderColor = 'border-l-purple-500';
+                let typeColor = 'text-purple-400 bg-purple-500/10 border-purple-500/30';
+                let typeIcon = 'fa-server';
+                
+                if(item.tipe === 'Switch') {
+                    typeBorderColor = 'border-l-blue-500';
+                    typeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+                    typeIcon = 'fa-random';
+                } else if(item.tipe === 'Backbone') {
+                    typeBorderColor = 'border-l-orange-500';
+                    typeColor = 'text-orange-400 bg-orange-500/10 border-orange-500/30';
+                    typeIcon = 'fa-route';
+                }
+                
+                let statusColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
+                let statusDotColor = 'bg-accent-500 shadow-[0_0_5px_#10b981]';
+                
+                if(item.status === 'Offline') {
+                    statusColor = 'text-red-400 bg-red-500/10 border-red-500/30';
+                    statusDotColor = 'bg-red-500 shadow-[0_0_5px_#ef4444]';
+                } else if(item.status === 'Warning') {
+                    statusColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                    statusDotColor = 'bg-amber-500 shadow-[0_0_5px_#f59e0b]';
+                }
+
+                const ownerActions = isOwner ? `
+                    <div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50">
+                        <button onclick="openEditModal(${index})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                        <button onclick="confirmDeleteNode(${index})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
+                    </div>` : '';
+
+                const cardHtml = `
+                    <div class="glass-card p-4 rounded-2xl relative group border-l-4 ${typeBorderColor} flex flex-col gap-3">
+                        <div class="flex justify-between items-start gap-2">
+                            <h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${item.nama_perangkat}</h4>
+                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${typeColor}">
+                                <i class="fa-solid ${typeIcon}"></i> ${item.tipe}
+                            </span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-1">
+                            <div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner">
+                                <i class="fa-solid fa-network-wired text-brand-500/70"></i> ${item.ip_address || '-'}
+                            </div>
+                            <div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${statusColor}">
+                                <span class="w-1.5 h-1.5 rounded-full animate-pulse ${statusDotColor}"></span> ${item.status}
+                            </div>
+                        </div>
+                        
+                        <div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p>
+                                <p class="text-[11px] font-semibold text-white break-words">${item.lokasi || '-'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p>
+                                <p class="text-[11px] font-semibold text-white break-words">${item.info_port || '-'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1">
+                            <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
+                                <i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB
+                            </div>
+                            <div class="text-xs font-bold text-white break-words text-right font-mono">
+                                ${item.kode_otb || '-'}
+                            </div>
+                        </div>
+                        
+                        ${ownerActions}
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function exportTableToExcelTemplate(format = 'xlsx') {
+            if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
+
+            const templateRows = [
+                ["NETCORE ISP - LAPORAN DATABASE JARINGAN"],
+                [`Tanggal Cetak: ${dateStr}`],
+                [`Kategori Filter: ${currentFilter}`],
+                [`Total Data: ${lastSearchResult.length} Node Perangkat`],
+                [], // Baris kosong pemisah
+                ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
+            ];
+
+            lastSearchResult.forEach((item, index) => {
+                templateRows.push([
+                    index + 1,
+                    item.nama_perangkat || '-',
+                    item.tipe || '-',
+                    item.ip_address || '-',
+                    item.lokasi || '-',
+                    item.info_port || '-',
+                    item.kode_otb || '-',
+                    item.status || '-'
+                ]);
+            });
+
+            templateRows.push([]);
+            templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
+
+            if (format === 'csv' || typeof XLSX === 'undefined') {
+                let csvContent = "\uFEFF";
+                templateRows.forEach(row => {
+                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
+                    csvContent += line + "\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Export CSV Template Berhasil', 'success');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(templateRows);
+
+                ws['!cols'] = [
+                    { wch: 6 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 14 }
+                ];
+
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
+                    { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } },
+                    { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } },
+                    { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }
+                ];
+
+                XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
+                XLSX.writeFile(wb, `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
+                showToast('Export Excel Template (.xlsx) Berhasil!', 'success');
+            }
+        }
+
+        // ==============================================================
+        // INPUT & EDIT DATA
+        // ==============================================================
+        function toggleInputModal() { 
+            const mod = document.getElementById('inputModal');
+            if(mod.classList.contains('hidden')) animateModalOpen('inputModal', 'inputModalContent'); else animateModalClose('inputModal', 'inputModalContent');
+        }
+
+        function handleInputData(e) {
+            e.preventDefault(); setButtonState('submitInputBtn', true, '<i class="fa-solid fa-cloud-arrow-up"></i> Save to Database');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const dataObj = { nama_perangkat: document.getElementById('inputNama').value, tipe: document.getElementById('inputTipe').value, ip_address: document.getElementById('inputIp').value || '-', lokasi: document.getElementById('inputLokasi').value, info_port: document.getElementById('inputPort').value || '-', kode_otb: document.getElementById('inputOtb').value || '-', status: document.getElementById('inputStatus').value };
+
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitInputBtn', false);
+                if (res.success) { showToast(res.message, 'success'); document.getElementById('manualInputForm').reset(); toggleInputModal(); refreshDashboardStats(); triggerServerSearch(); } 
+                else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitInputBtn', false); showToast(err.message, 'error'); }).insertNetworkData(dataObj, session.email);
+        }
+
+        function toggleEditModal() {
+            const mod = document.getElementById('editModal');
+            if(mod.classList.contains('hidden')) animateModalOpen('editModal', 'editModalContent'); else animateModalClose('editModal', 'editModalContent');
+        }
+
+        function openEditModal(index) {
+            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data;
+            document.getElementById('editNama').value = data.nama_perangkat; document.getElementById('editTipe').value = data.tipe; document.getElementById('editIp').value = data.ip_address === '-' ? '' : data.ip_address; document.getElementById('editLokasi').value = data.lokasi; document.getElementById('editStatus').value = data.status; document.getElementById('editPort').value = data.info_port; document.getElementById('editOtb').value = data.kode_otb;
+            toggleEditModal();
+        }
+
+        function handleUpdateData(e) {
+            e.preventDefault(); setButtonState('submitEditBtn', true, '<i class="fa-solid fa-save"></i> Apply Changes');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updatedData = { nama_perangkat: document.getElementById('editNama').value, tipe: document.getElementById('editTipe').value, ip_address: document.getElementById('editIp').value || '-', lokasi: document.getElementById('editLokasi').value, info_port: document.getElementById('editPort').value, kode_otb: document.getElementById('editOtb').value, status: document.getElementById('editStatus').value };
+
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEditBtn', false);
+                if(res.success) { showToast(res.message, 'success'); toggleEditModal(); triggerServerSearch(); refreshDashboardStats(); } 
+                else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEditBtn', false); showToast(err.message, 'error'); }).updateNetworkData(originalSelectedNode, updatedData, session.email);
+        }
+
+        // ==============================================================
+        // EWO MODULE 
+        // ==============================================================
+        function toggleEWOModal() {
+            const mod = document.getElementById('ewoModal');
+            if(mod.classList.contains('hidden')) { animateModalOpen('ewoModal', 'ewoModalContent'); refreshEWOList(); } else animateModalClose('ewoModal', 'ewoModalContent');
+        }
+
+        function refreshEWOList() {
+            const lst = document.getElementById('ewoList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading EWO...</div>';
+            google.script.run.withSuccessHandler(data => renderEWOList(data)).withFailureHandler(err => lst.innerHTML='Gagal memuat EWO').getEWOData();
+        }
+
+        function renderEWOList(data) {
+            lastEwoResult = data || []; // Simpan data ke global variable untuk export
+            const container = document.getElementById('ewoList'); container.innerHTML = '';
+            if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
+
+            data.forEach(item => {
+                const statClass = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                const ownerActions = isOwner ? `
+                    <div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2">
+                        <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button>
+                    </div>` : '';
+                const html = `
+                    <div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 ${item.status === 'Done' ? 'border-l-accent-500' : 'border-l-amber-500'}">
+                        <div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${item.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${statClass}">${item.status}</span></div>
+                        <p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${item.deskripsi}</p>
+                        ${ownerActions}
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function exportEWOToExcel(format = 'xlsx') {
+            if (!lastEwoResult || lastEwoResult.length === 0) return showToast('Tidak ada data EWO untuk diexport!', 'error');
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
+
+            const templateRows = [
+                ["NETCORE ISP - LAPORAN EMERGENCY WORK ORDER (EWO)"],
+                [`Tanggal Cetak: ${dateStr}`],
+                [`Total Data: ${lastEwoResult.length} EWO`],
+                [], // Baris kosong pemisah
+                ["NO", "NOMOR EWO", "DESKRIPSI PEKERJAAN", "STATUS"]
+            ];
+
+            lastEwoResult.forEach((item, index) => {
+                templateRows.push([
+                    index + 1,
+                    item.no_ewo || '-',
+                    item.deskripsi || '-',
+                    item.status || '-'
+                ]);
+            });
+
+            templateRows.push([]);
+            templateRows.push(["--- Akhir Laporan EWO Netcore ISP ---"]);
+
+            if (format === 'csv' || typeof XLSX === 'undefined') {
+                let csvContent = "\uFEFF";
+                templateRows.forEach(row => {
+                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
+                    csvContent += line + "\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Laporan_EWO_${now.toISOString().slice(0, 10)}.csv`;
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Export CSV EWO Berhasil', 'success');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(templateRows);
+
+                ws['!cols'] = [
+                    { wch: 6 }, { wch: 20 }, { wch: 50 }, { wch: 15 }
+                ];
+
+                ws['!merges'] = [
+                    { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },
+                    { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } },
+                    { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } }
+                ];
+
+                XLSX.utils.book_append_sheet(wb, ws, `Data_EWO`);
+                XLSX.writeFile(wb, `Laporan_EWO_${now.toISOString().slice(0, 10)}.xlsx`);
+                showToast('Export Excel EWO Berhasil!', 'success');
+            }
+        }
+
+        function handleEWOInput(e) {
+            e.preventDefault(); setButtonState('submitEwoBtn', true, '<i class="fa-solid fa-plus"></i> Create EWO');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const obj = { no_ewo: document.getElementById('noEwo').value, deskripsi: document.getElementById('deskEwo').value, status: document.getElementById('statEwo').value };
+            
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEwoBtn', false);
+                if(res.success) { showToast(res.message, 'success'); document.getElementById('ewoInputForm').reset(); refreshEWOList(); }
+                else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEwoBtn', false); showToast(err.message, 'error'); }).insertEWOData(obj, session.email);
+        }
+
+        function openEditEWO(no_ewo, deskripsi) { originalSelectedEWO = {no_ewo, deskripsi}; document.getElementById('editEwoNo').value = no_ewo; document.getElementById('editEwoDesk').value = deskripsi; animateModalOpen('editEwoModal', 'editEwoModalContent'); }
+        function closeEditEWO() { animateModalClose('editEwoModal', 'editEwoModalContent'); }
+        function handleUpdateEWO(e) {
+            e.preventDefault(); setButtonState('submitEditEwoBtn', true, '<i class="fa-solid fa-save"></i> Save EWO');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { no_ewo: document.getElementById('editEwoNo').value, deskripsi: document.getElementById('editEwoDesk').value, status: document.getElementById('editEwoStat').value };
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEditEwoBtn', false);
+                if(res.success) { showToast(res.message, 'success'); closeEditEWO(); refreshEWOList(); } else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEditEwoBtn', false); showToast(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updated, session.email);
+        }
+
+        // ==============================================================
+        // OTDR MODULE (MULTI UPLOAD & AUTO FOLDER)
+        // ==============================================================
+        function toggleOTDRModal() {
+            const mod = document.getElementById('otdrModal');
+            if(mod.classList.contains('hidden')) { animateModalOpen('otdrModal', 'otdrModalContent'); refreshOTDRList(1); } else animateModalClose('otdrModal', 'otdrModalContent');
+        }
+
+        function refreshOTDRList(page) {
+            const lst = document.getElementById('otdrList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading OTDR Data...</div>';
+            google.script.run.withSuccessHandler(res => {
+                currentOtdrPage = res.currentPage; totalOtdrPages = res.totalPages;
+                document.getElementById('otdrPageInfo').innerText = `Page ${currentOtdrPage} / ${totalOtdrPages}`;
+                document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1; document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
+                document.getElementById('selectAllOtdr').checked = false; renderOTDRList(res.data);
+            }).withFailureHandler(err => lst.innerHTML='Gagal memuat OTDR').getOTDRData(page);
+        }
+        function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
+
+        function toggleFolderContent(headerEl) {
+            const content = headerEl.nextElementSibling; const chevron = headerEl.querySelector('.chevron-icon'); const folderIcon = headerEl.querySelector('.folder-icon');
+            if (content.classList.contains('hidden')) { content.classList.remove('hidden'); chevron.classList.add('rotate-180'); folderIcon.classList.replace('fa-folder', 'fa-folder-open'); } 
+            else { content.classList.add('hidden'); chevron.classList.remove('rotate-180'); folderIcon.classList.replace('fa-folder-open', 'fa-folder'); }
+        }
+
+        function renderOTDRList(data) {
+            const lst = document.getElementById('otdrList');
+            if(!data || data.length === 0) { lst.innerHTML = '<div class="text-zinc-500 italic text-center py-4 text-xs">Belum ada file OTDR.</div>'; return; }
+            
+            let folders = {};
+            data.forEach(item => { let f = item.nama_folder || 'Umum'; if(!folders[f]) folders[f] = []; folders[f].push(item); });
+            
+            let html = '';
+            for(let folderName in folders) {
+                
+                let folderOwnerHTML = '';
+                if(isOwner) {
+                    let safeFolderName = folderName.replace(/'/g, "\\'");
+                    folderOwnerHTML = `
+                        <div class="flex items-center gap-2 mr-3 border-r border-zinc-700 pr-3 shrink-0">
+                            <button type="button" onclick="event.stopPropagation(); openEditOTDRFolder('${safeFolderName}')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-2 py-1 rounded text-[10px] font-bold border border-amber-500/30 transition-colors flex items-center gap-1 shadow-sm" title="Edit Folder"><i class="fa-solid fa-pen"></i> <span class="hidden sm:inline">Edit</span></button>
+                            <button type="button" onclick="event.stopPropagation(); confirmDeleteOTDRFolder('${safeFolderName}')" class="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-2 py-1 rounded text-[10px] font-bold border border-red-500/30 transition-colors flex items-center gap-1 shadow-sm" title="Hapus Folder"><i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Hapus</span></button>
+                        </div>
+                    `;
+                }
+
+                html += `<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30">
+                    <div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50">
+                        <span class="flex items-center truncate pr-2 flex-1">
+                            <i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> <span class="truncate">${folderName}</span> 
+                            <span class="ml-3 text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 shrink-0">${folders[folderName].length} File</span>
+                        </span>
+                        <div class="flex items-center shrink-0">
+                            ${folderOwnerHTML}
+                            <i class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 chevron-icon text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="p-3 space-y-2 folder-content hidden transition-all duration-300">`;
+                
+                folders[folderName].forEach(item => {
+                    let ownerHTML = '';
+                    if(isOwner) {
+                        let safeOtb = item.nama_otb.replace(/'/g, "\\'");
+                        let safeTimestamp = item.timestamp.replace(/'/g, "\\'");
+                        let safeFolder = (item.nama_folder || 'Umum').replace(/'/g, "\\'");
+                        let safeLokasi = item.lokasi.replace(/'/g, "\\'");
+
+                        ownerHTML = `<div class="flex flex-col gap-1 ml-2 border-l border-zinc-700 pl-2 shrink-0">
+                            <button type="button" onclick="openEditOTDR('${safeOtb}', '${safeTimestamp}', '${safeFolder}', '${safeLokasi}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                            <button type="button" onclick="confirmDeleteOTDR('${safeOtb}', '${safeTimestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>`;
+                    }
+                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
+                            <div class="flex flex-col min-w-0">
+                                <span class="font-bold text-white text-[11px] truncate mb-0.5"><i class="fa-solid fa-file-waveform text-purple-400 mr-1.5"></i>${item.nama_otb}</span>
+                                <span class="text-zinc-500 text-[9px] truncate"><i class="fa-solid fa-map-pin mr-1 opacity-70"></i>${item.lokasi}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="${item.file_url}" target="_blank" class="px-2.5 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold shadow-md whitespace-nowrap transition-colors"><i class="fa-solid fa-download"></i> SOR</a>
+                            ${ownerHTML}
+                        </div>
+                    </div>`;
+                });
+                html += `</div></div>`;
+            }
+            lst.innerHTML = html;
+        }
+
+        function toggleAllOTDR(cbx) { document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked); }
+        function downloadSelectedOTDR() {
+            const cbs = document.querySelectorAll('.otdr-checkbox:checked');
+            if(cbs.length === 0) return showToast('Pilih file dulu!', 'error');
+            cbs.forEach(cb => { if(cb.dataset.url && cb.dataset.url !== '#') window.open(cb.dataset.url, '_blank'); });
+            showToast(`${cbs.length} file sedang dibuka.`, 'success');
+        }
+
+        function updateFileList(input) {
+            const prompt = document.getElementById('fileUploadPrompt');
+            const list = document.getElementById('fileUploadList');
+            
+            if (input.files && input.files.length > 0) {
+                prompt.classList.add('hidden');
+                list.classList.remove('hidden');
+                
+                let html = `<div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 sticky top-0 bg-dark-800 pb-2 z-10 text-center w-full shadow-[0_4px_10px_rgba(24,24,27,1)]">${input.files.length} File Terpilih (Tap to change)</div>`;
+                html += `<div class="space-y-1.5 w-full pb-2">`;
+                Array.from(input.files).forEach(file => {
+                    const size = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
+                    html += `
+                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50">
+                            <div class="flex items-center gap-2 overflow-hidden w-full">
+                                <i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i>
+                                <span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${file.name}</span>
+                                <span class="text-[9px] text-zinc-500 shrink-0 ml-2 font-mono">${size}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                list.innerHTML = html;
+            } else {
+                list.classList.add('hidden');
+                list.innerHTML = '';
+                prompt.classList.remove('hidden');
+            }
+        }
+
+        function handleOTDRInput(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileOtdr');
+            if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
+            
+            const btn = document.getElementById('submitOtdrBtn');
+            const originalText = btn.innerHTML; btn.disabled = true;
+            
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const otbVal = document.getElementById('otbOtdr').value;
+            const lokasiVal = document.getElementById('lokasiOtdr').value;
+            
+            let folderVal = document.getElementById('folderOtdr').value.trim();
+            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
+
+            const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader(); reader.onload = ev => resolve(ev.target.result); reader.onerror = err => reject(err); reader.readAsDataURL(file);
+            });
+            const uploadFilePromise = (dataObj) => new Promise((resolve, reject) => {
+                google.script.run.withSuccessHandler(res => { if(res.success) resolve(res); else reject(new Error(res.message)); })
+                .withFailureHandler(err => reject(err)).uploadOTDRData(dataObj);
+            });
+
+            (async function processUploads() {
+                let successCount = 0; let errorMsgs = [];
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    try {
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah ${i + 1}/${fileInput.files.length}...`;
+                        const file = fileInput.files[i];
+                        const base64Data = await readFileAsBase64(file);
+                        const dataObj = { nama_folder: folderVal, nama_otb: otbVal, lokasi: lokasiVal, fileName: file.name, fileMimeType: file.type || 'application/octet-stream', fileData: base64Data, userEmail: session.email };
+                        await uploadFilePromise(dataObj); successCount++;
+                    } catch (err) { errorMsgs.push(`${fileInput.files[i].name}: ${err.message}`); }
+                }
+                btn.innerHTML = originalText; btn.disabled = false;
+                if (successCount > 0) { 
+                    showToast(`${successCount} file berhasil diunggah!`, 'success'); 
+                    document.getElementById('otdrInputForm').reset(); 
+                    updateFileList(document.getElementById('fileOtdr'));
+                    refreshOTDRList(1); 
+                }
+                if (errorMsgs.length > 0) showToast(`Gagal mengupload ${errorMsgs.length} file.`, 'error');
+            })();
+        }
+
+        function openEditOTDR(otb, timestamp, folder, lokasi) { originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; document.getElementById('editOtdrOtb').value = otb; document.getElementById('editOtdrLokasi').value = lokasi; animateModalOpen('editOtdrModal', 'editOtdrModalContent'); }
+        function closeEditOTDR() { animateModalClose('editOtdrModal', 'editOtdrModalContent'); }
+        function handleUpdateOTDR(e) {
+            e.preventDefault(); setButtonState('submitEditOtdrBtn', true, '<i class="fa-solid fa-save"></i> Update Details');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEditOtdrBtn', false);
+                if(res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+            }).withFailureHandler(err => { setButtonState('submitEditOtdrBtn', false); showToast(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updated, session.email);
+        }
+
+        function openEditOTDRFolder(folderName) { 
+            originalSelectedOTDRFolder = folderName; 
+            document.getElementById('editOtdrFolderNewName').value = folderName; 
+            animateModalOpen('editOtdrFolderModal', 'editOtdrFolderModalContent'); 
+        }
+        function closeEditOTDRFolder() { animateModalClose('editOtdrFolderModal', 'editOtdrFolderModalContent'); }
+        function handleUpdateOTDRFolder(e) {
+            e.preventDefault(); 
+            setButtonState('submitEditOtdrFolderBtn', true, '<i class="fa-solid fa-save"></i> Terapkan Nama Baru');
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const newFolderName = document.getElementById('editOtdrFolderNewName').value;
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('submitEditOtdrFolderBtn', false);
+                if(res.success) { showToast(res.message, 'success'); closeEditOTDRFolder(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+            }).withFailureHandler(err => { 
+                setButtonState('submitEditOtdrFolderBtn', false); showToast(err.message, 'error'); 
+            }).updateOTDRFolder(originalSelectedOTDRFolder, newFolderName, session.email);
+        }
+
+        // ==============================================================
+        // DELETE GLOBAL (NODE, EWO, OTDR FILE, OTDR FOLDER)
+        // ==============================================================
+        function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
+        function confirmDeleteNode(index) {
+            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data; deleteTargetType = 'NODE'; document.getElementById('deleteContextType').innerText = `Node ${data.nama_perangkat}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function confirmDeleteEWO(no_ewo, desk) {
+            originalSelectedEWO = {no_ewo: no_ewo, deskripsi: desk}; deleteTargetType = 'EWO'; document.getElementById('deleteContextType').innerText = `EWO ${no_ewo}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function confirmDeleteOTDR(otb, timestamp) {
+            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; deleteTargetType = 'OTDR_FILE'; 
+            document.getElementById('deleteContextType').innerText = `File OTB ${otb}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        function confirmDeleteOTDRFolder(folderName) {
+            originalSelectedOTDRFolder = folderName; deleteTargetType = 'OTDR_FOLDER'; 
+            document.getElementById('deleteContextType').innerText = `Folder ${folderName}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
+        }
+        
+        function executeDeleteData() {
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            setButtonState('confirmDeleteBtn', true, 'Ya, Hapus');
+            
+            if (deleteTargetType === 'NODE') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); triggerServerSearch(); refreshDashboardStats(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
+            } else if (deleteTargetType === 'EWO') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshEWOList(); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
+            } else if (deleteTargetType === 'OTDR_FILE') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
+            } else if (deleteTargetType === 'OTDR_FOLDER') {
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
+                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
+                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRFolder(originalSelectedOTDRFolder, session.email);
+            }
+        }
+
+        // ==============================================================
+        // AUTHENTICATION
+        // ==============================================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const errBox = document.getElementById('loginError'); errBox.classList.add('hidden');
+            setButtonState('loginBtn', true, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+            const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPassword').value;
+
+            google.script.run.withSuccessHandler(res => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                if (res.success) { localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role })); checkSession(); } 
+                else { errBox.innerText = res.message; errBox.classList.remove('hidden'); }
+            }).withFailureHandler(err => {
+                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
+                errBox.innerText = "Error Koneksi Server!"; errBox.classList.remove('hidden');
+            }).verifyLogin(email, pass);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('netcore_session'); document.getElementById('loginForm').reset(); document.getElementById('ownerRoleBadge').classList.add('hidden');
+            checkSession();
+        }
+
+        function checkSession() {
+            const session = localStorage.getItem('netcore_session');
+            if(session) {
+                document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboardPage').classList.remove('hidden');
+                const sData = JSON.parse(session); isOwner = sData.role === 'OWNER';
+                
+                if(isOwner) {
+                    document.getElementById('ownerRoleBadge').classList.remove('hidden');
+                    // Tampilkan tombol log activity untuk OWNER
+                    document.getElementById('btnActivityLog').classList.remove('hidden');
+                } else {
+                    document.getElementById('btnActivityLog').classList.add('hidden');
+                }
+                
+                refreshDashboardStats();
+            } else {
+                document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
+                document.getElementById('btnActivityLog').classList.add('hidden');
+            }
+        }
+
+        // ==============================================================
+        // MAP MODAL FUNCTION
+        // ==============================================================
+        function openMapModal() {
+            animateModalOpen('mapModal', 'mapModalContent');
+        }
+        function closeMapModal() {
+            animateModalClose('mapModal', 'mapModalContent');
+        }
+
+        window.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
 </html>
