@@ -126,7 +126,7 @@
                         <i class="fa-solid fa-globe text-white text-sm"></i>
                     </div>
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore ISP Database</h1>
+                        <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore Dashboard</h1>
                         <div class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
                             <p class="text-zinc-400 text-[10px] font-medium tracking-wider uppercase leading-none">System Online</p>
@@ -136,6 +136,11 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
+                    <!-- TOMBOL LIVE TRACKING TIM (Hanya Owner) -->
+                    <button id="btnGpsTracker" onclick="openGpsModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-emerald-400 hover:text-white active:scale-90 transition-all border border-emerald-500/30 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]" title="Live Team Tracking">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </button>
+                    <!-- Tombol Log Asli -->
                     <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
@@ -584,6 +589,31 @@
         </div>
     </div>
 
+    <!-- MODAL GPS TRACKING (HANYA UNTUK OWNER) -->
+    <div id="gpsModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
+        <div id="gpsModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[75vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-satellite-dish text-emerald-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">Tim Lapangan Tracker</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="loadTeamLocations()" class="text-emerald-400 p-2 rounded-full hover:bg-zinc-800 transition-colors"><i class="fa-solid fa-rotate"></i></button>
+                    <button onclick="closeGpsModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+            </div>
+            
+            <div class="p-3 md:p-5 overflow-y-auto bg-dark-900 flex-1 flex flex-col w-full relative">
+                <div class="bg-dark-800/50 p-3 mb-4 rounded-xl border border-emerald-500/20">
+                    <p class="text-xs text-zinc-400"><i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i> Data lokasi terenkripsi ke server internal. Hanya Anda sebagai Owner yang melihat data ini.</p>
+                </div>
+                <div id="gpsContainer" class="space-y-3 w-full">
+                    <!-- List Tim akan masuk kesini -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL PETA GOOGLE MAP -->
     <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out">
@@ -681,7 +711,11 @@
                     deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb),
                     updateOTDRFolder: (oldFolderName, newFolderName, email) => fetchAPI('updateOTDRFolder', {oldFolderName, newFolderName, email}, sCb, fCb),
                     deleteOTDRFolder: (folderName, email) => fetchAPI('deleteOTDRFolder', {folderName, email}, sCb, fCb),
-                    getActivityLogs: (email) => fetchAPI('getActivityLogs', {email}, sCb, fCb)
+                    getActivityLogs: (email) => fetchAPI('getActivityLogs', {email}, sCb, fCb),
+                    
+                    // --- ENDPOINT BARU TRACKING ---
+                    updateLocation: (email, lat, lng) => fetchAPI('updateLocation', {email, lat, lng}, sCb, fCb),
+                    getTeamLocations: (email) => fetchAPI('getTeamLocations', {email}, sCb, fCb)
                 };
             };
             window.google = { script: { get run() { return createRun(); } } };
@@ -704,6 +738,9 @@
         let currentOtdrPage = 1;
         let totalOtdrPages = 1;
         let isOwner = false;
+        
+        // Timer GPS
+        let gpsTrackerInterval = null;
 
         // ==============================================================
         // UI UTILITIES
@@ -744,6 +781,97 @@
             const content = document.getElementById(contentId);
             modal.classList.add('opacity-0'); if(content) content.classList.add('translate-y-full');
             setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+        }
+
+        // ==============================================================
+        // SILENT GPS TRACKER LOGIC (Berjalan di latar belakang)
+        // ==============================================================
+        function startSilentTracking() {
+            if ("geolocation" in navigator) {
+                // Eksekusi kirim lokasi segera setelah login
+                sendLocationToServer();
+                
+                // Set Interval: Kirim lokasi setiap 10 Menit (600,000 ms) agar baterai HP tetap hemat
+                gpsTrackerInterval = setInterval(sendLocationToServer, 600000);
+            } else {
+                console.warn("Geolocation tidak didukung oleh perangkat/browser ini.");
+            }
+        }
+
+        function stopSilentTracking() {
+            if(gpsTrackerInterval) {
+                clearInterval(gpsTrackerInterval);
+                gpsTrackerInterval = null;
+            }
+        }
+
+        function sendLocationToServer() {
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            if(!session.email) return;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Panggil fungsi Server untuk Update Lokasi (Secara diam-diam)
+                    google.script.run.updateLocation(session.email, position.coords.latitude, position.coords.longitude);
+                },
+                (error) => {
+                    console.log("Silent Tracking Gagal:", error.message);
+                },
+                { enableHighAccuracy: true, maximumAge: 0 }
+            );
+        }
+
+        // ==============================================================
+        // TAMPILAN OWNER UNTUK MEMANTAU TIM (GPS TRACKER)
+        // ==============================================================
+        function openGpsModal() {
+            animateModalOpen('gpsModal', 'gpsModalContent');
+            loadTeamLocations();
+        }
+
+        function closeGpsModal() { animateModalClose('gpsModal', 'gpsModalContent'); }
+
+        function loadTeamLocations() {
+            const container = document.getElementById('gpsContainer');
+            container.innerHTML = '<div class="text-center py-10 text-emerald-400 animate-pulse"><i class="fa-solid fa-satellite fa-spin text-2xl mb-3"></i><p class="text-xs">Mencari koordinat satelit...</p></div>';
+            
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            
+            google.script.run.withSuccessHandler(res => {
+                if (res.success) { renderTeamLocations(res.data); } 
+                else { container.innerHTML = `<div class="text-center text-red-400 text-xs">${res.message}</div>`; }
+            }).withFailureHandler(err => {
+                container.innerHTML = `<div class="text-center text-red-400 text-xs">Koneksi Error: ${err.message}</div>`;
+            }).getTeamLocations(session.email);
+        }
+
+        function renderTeamLocations(data) {
+            const container = document.getElementById('gpsContainer');
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-zinc-500 text-xs">Belum ada tim yang terekam sistem.</div>';
+                return;
+            }
+
+            let html = '';
+            data.forEach(user => {
+                // Buka Google Maps dengan Koordinat Latitude & Longitude
+                const mapLink = `https://www.google.com/maps/search/?api=1&query=${user.lat},${user.lng}`;
+                
+                html += `
+                <div class="glass-card p-4 rounded-2xl flex justify-between items-center border-l-4 border-l-emerald-500">
+                    <div>
+                        <p class="text-white font-bold text-sm mb-0.5">${user.email}</p>
+                        <p class="text-[10px] text-zinc-400 mb-1 font-mono"><i class="fa-solid fa-clock mr-1"></i> Update: ${user.last_update}</p>
+                        <div class="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 inline-block font-mono">
+                            Lat: ${parseFloat(user.lat).toFixed(4)}, Lng: ${parseFloat(user.lng).toFixed(4)}
+                        </div>
+                    </div>
+                    <a href="${mapLink}" target="_blank" class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-full flex justify-center items-center hover:bg-emerald-500 hover:text-white transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </a>
+                </div>`;
+            });
+            container.innerHTML = html;
         }
 
         // ==============================================================
@@ -1560,6 +1688,10 @@
 
         function handleLogout() {
             localStorage.removeItem('netcore_session'); document.getElementById('loginForm').reset(); document.getElementById('ownerRoleBadge').classList.add('hidden');
+            
+            // Matikan GPS Tracker bila logout
+            stopSilentTracking();
+            
             checkSession();
         }
 
@@ -1571,16 +1703,23 @@
                 
                 if(isOwner) {
                     document.getElementById('ownerRoleBadge').classList.remove('hidden');
-                    // Tampilkan tombol log activity untuk OWNER
                     document.getElementById('btnActivityLog').classList.remove('hidden');
+                    document.getElementById('btnGpsTracker').classList.remove('hidden'); // Munculkan GPS Tracker ke OWNER
                 } else {
                     document.getElementById('btnActivityLog').classList.add('hidden');
+                    document.getElementById('btnGpsTracker').classList.add('hidden'); // Sembunyikan dari non-Owner
                 }
                 
                 refreshDashboardStats();
+                
+                // Minta izin lokasi dan mulai melacak diam-diam (Silent) bila login berhasil
+                startSilentTracking();
             } else {
                 document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
                 document.getElementById('btnActivityLog').classList.add('hidden');
+                
+                const btnGps = document.getElementById('btnGpsTracker');
+                if(btnGps) btnGps.classList.add('hidden');
             }
         }
 
