@@ -115,6 +115,7 @@
         </div>
     </div>
 
+    <!-- Halaman Dashboard -->
     <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe">
         
         <!-- Header -->
@@ -135,7 +136,6 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <!-- ACTIVITY LOG BUTTON (Owner Only) -->
                     <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
@@ -207,7 +207,7 @@
                         <div><span class="block text-xs font-bold">Backbone</span><span class="text-[9px] text-zinc-500">Core Routes</span></div>
                     </button>
 
-                    <!-- TOMBOL MENU PETA BARU (DITAMBAHKAN DI SINI) -->
+                    <!-- TOMBOL MENU PETA BARU -->
                     <button onclick="openMapModal()" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
                         <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-map-location-dot text-emerald-400"></i></div>
                         <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Maps BBDM</span></div>
@@ -234,8 +234,7 @@
         </div>
     </div>
 
-    <!-- Modals untuk Database, Register Node, dll -->
-    <!-- (Semua modal ini tetap sama / original) -->
+    <!-- Modals untuk Database -->
     <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -287,7 +286,7 @@
         </div>
     </div>
 
-    <!-- Semua modal input, ewo, otdr, delete, edit tetap original ... -->
+    <!-- Modal Register Node -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -349,9 +348,8 @@
         </div>
     </div>
 
-    <!-- Modals lainnya... -->
+    <!-- Modal EWO -->
     <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <!-- Struktur EWO Modal Original -->
         <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
@@ -399,8 +397,8 @@
         </div>
     </div>
 
+    <!-- Modal OTDR -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <!-- Struktur OTDR Modal Original -->
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
@@ -471,7 +469,7 @@
         </div>
     </div>
 
-    <!-- Modals Edit Node, Edit EWO, dll tetap original... -->
+    <!-- Modals Edit Node -->
     <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -493,7 +491,7 @@
         </div>
     </div>
 
-    <!-- ... Sisa Modal Edit lainnya dipersingkat agar tidak merubah kode asli ... -->
+    <!-- Modal Edit EWO -->
     <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
          <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -511,7 +509,7 @@
         </div>
     </div>
 
-    <!-- ... Edit OTDR Modal ... -->
+    <!-- Modal Edit OTDR -->
     <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -530,7 +528,7 @@
         </div>
     </div>
 
-    <!-- ... Edit OTDR Folder Modal ... -->
+    <!-- Modal Edit OTDR Folder -->
     <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -567,7 +565,7 @@
         </div>
     </div>
 
-    <!-- MODAL ACTIVITY LOG (BARU) -->
+    <!-- Modal Activity Log -->
     <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -585,7 +583,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- MODAL PETA GOOGLE MAP -->
     <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out">
@@ -683,7 +681,6 @@
                     deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb),
                     updateOTDRFolder: (oldFolderName, newFolderName, email) => fetchAPI('updateOTDRFolder', {oldFolderName, newFolderName, email}, sCb, fCb),
                     deleteOTDRFolder: (folderName, email) => fetchAPI('deleteOTDRFolder', {folderName, email}, sCb, fCb),
-                    // [TAMBAHAN API UNTUK LOG]
                     getActivityLogs: (email) => fetchAPI('getActivityLogs', {email}, sCb, fCb)
                 };
             };
@@ -750,7 +747,7 @@
         }
 
         // ==============================================================
-        // ACTIVITY LOGS FUNCTIONS (TAMBAHAN)
+        // ACTIVITY LOGS FUNCTIONS
         // ==============================================================
         function openActivityLogModal() {
             animateModalOpen('activityLogModal', 'activityLogModalContent');
@@ -1090,11 +1087,10 @@
             templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
 
             if (format === 'csv' || typeof XLSX === 'undefined') {
-                let csvContent = "﻿";
+                let csvContent = "\uFEFF";
                 templateRows.forEach(row => {
                     const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
-                    csvContent += line + "
-";
+                    csvContent += line + "\n";
                 });
 
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1171,7 +1167,7 @@
         }
 
         // ==============================================================
-        // EWO MODULE (ADDED EXPORT TO EXCEL)
+        // EWO MODULE 
         // ==============================================================
         function toggleEWOModal() {
             const mod = document.getElementById('ewoModal');
@@ -1232,11 +1228,10 @@
             templateRows.push(["--- Akhir Laporan EWO Netcore ISP ---"]);
 
             if (format === 'csv' || typeof XLSX === 'undefined') {
-                let csvContent = "﻿";
+                let csvContent = "\uFEFF";
                 templateRows.forEach(row => {
                     const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
-                    csvContent += line + "
-";
+                    csvContent += line + "\n";
                 });
 
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1588,7 +1583,7 @@
                 document.getElementById('btnActivityLog').classList.add('hidden');
             }
         }
-        
+
         // ==============================================================
         // MAP MODAL FUNCTION
         // ==============================================================
