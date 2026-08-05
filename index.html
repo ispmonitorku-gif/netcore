@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta tag ini mengunci zoom default browser -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#09090b">
     <meta name="mobile-web-app-capable" content="yes">
@@ -32,8 +31,9 @@
             }
         }
     </script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec');
 
         body { 
             font-family: 'Inter', sans-serif; 
@@ -48,22 +48,35 @@
                 radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
                 radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
             background-attachment: fixed;
-            /* Mencegah default action dari browser saat touch */
-            touch-action: pan-y; 
         }
 
-        /* Wrapper untuk custom zoom */
-        #app-zoom-wrapper {
-            transform-origin: 0 0;
-            will-change: transform;
-            min-height: 100vh;
-            width: 100%;
+        .glass { 
+            background: rgba(24, 24, 27, 0.6); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
         }
-
-        .glass { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-card { background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
-        .glass-input { background: rgba(9, 9, 11, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); transition: all 0.3s ease; }
-        .glass-input:focus { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background: rgba(9, 9, 11, 0.8); }
+        
+        .glass-card { 
+            background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+        }
+        
+        .glass-input { 
+            background: rgba(9, 9, 11, 0.5); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            transition: all 0.3s ease; 
+        }
+        
+        .glass-input:focus { 
+            border-color: rgba(59, 130, 246, 0.5); 
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); 
+            background: rgba(9, 9, 11, 0.8); 
+        }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -78,372 +91,769 @@
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px); }
         .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
         .nav-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 15px); }
+        
+        /* Utility classes for animations */
+        .modal-show { opacity: 1 !important; pointer-events: auto !important; }
+        .modal-content-show { transform: translateY(0) !important; scale: 1 !important; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- Wrapper yang akan di-zoom dengan 2 jari -->
-    <div id="app-zoom-wrapper">
+    <div id="toastContainer" class="fixed top-safe pt-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
 
-        <div id="toastContainer" class="fixed top-safe pt-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
-
-        <!-- Halaman Login -->
-        <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden">
-            <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite]"></div>
-            <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse]"></div>
+    <!-- Halaman Login -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden transition-opacity duration-500">
+        <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite]"></div>
+        <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse]"></div>
+        
+        <div class="glass p-8 md:p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             
-            <div class="glass p-8 md:p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                
-                <div class="text-center mb-10">
-                    <div class="w-20 h-20 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] mb-6 transform rotate-3">
-                        <i class="fa-solid fa-fingerprint text-4xl text-white transform -rotate-3"></i>
+            <div class="text-center mb-10">
+                <div class="w-20 h-20 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] mb-6 transform rotate-3">
+                    <i class="fa-solid fa-fingerprint text-4xl text-white transform -rotate-3"></i>
+                </div>
+                <h2 class="text-3xl font-black tracking-tight text-white mb-1">NETCORE</h2>
+                <p class="text-xs font-medium text-zinc-400 tracking-widest uppercase">Secure ISP Portal</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-zinc-400 tracking-wide ml-1">Email ID</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand-400 transition-colors"></i>
+                        <input type="email" id="loginEmail" required placeholder="admin@netcore.co.id" class="w-full glass-input rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-zinc-600 outline-none">
                     </div>
-                    <h2 class="text-3xl font-black tracking-tight text-white mb-1">NETCORE</h2>
-                    <p class="text-xs font-medium text-zinc-400 tracking-widest uppercase">Secure ISP Portal</p>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-zinc-400 tracking-wide ml-1">Password</label>
+                    <div class="relative group">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand-400 transition-colors"></i>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full glass-input rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-zinc-600 outline-none">
+                    </div>
                 </div>
                 
-                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold text-zinc-400 tracking-wide ml-1">Email ID</label>
-                        <div class="relative group">
-                            <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand-400 transition-colors"></i>
-                            <input type="email" id="loginEmail" required placeholder="admin@netcore.co.id" class="w-full glass-input rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-zinc-600 outline-none">
+                <div id="loginError" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl text-center font-medium backdrop-blur-sm"></div>
+                
+                <button type="submit" id="loginBtn" class="w-full bg-white text-dark-900 hover:bg-zinc-200 active:scale-95 font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 mt-6">
+                    <span>Authenticate</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Halaman Dashboard -->
+    <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe opacity-0 transition-opacity duration-500">
+        
+        <!-- Header -->
+        <div class="sticky top-0 z-40 pt-safe glass border-b-0 shadow-lg mb-6 w-full backdrop-blur-xl">
+            <div class="flex justify-between items-center px-5 py-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-full flex items-center justify-center shadow-neon-blue">
+                        <i class="fa-solid fa-globe text-white text-sm"></i>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore Dashboard</h1>
+                        <div class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
+                            <p class="text-zinc-400 text-[10px] font-medium tracking-wider uppercase leading-none">System Online</p>
+                            <span id="ownerRoleBadge" class="hidden px-1.5 py-0.5 text-[8px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-black rounded-sm tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.3)]">OWNER</span>
                         </div>
                     </div>
-                    <div class="space-y-2">
-                        <label class="block text-xs font-semibold text-zinc-400 tracking-wide ml-1">Password</label>
-                        <div class="relative group">
-                            <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand-400 transition-colors"></i>
-                            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full glass-input rounded-xl py-3.5 pl-11 pr-4 text-sm text-white placeholder-zinc-600 outline-none">
-                        </div>
-                    </div>
-                    
-                    <div id="loginError" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl text-center font-medium backdrop-blur-sm"></div>
-                    
-                    <button type="submit" id="loginBtn" class="w-full bg-white text-dark-900 hover:bg-zinc-200 active:scale-95 font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 mt-6">
-                        <span>Authenticate</span>
-                        <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
+                </div>
+                
+                <div class="flex items-center gap-2 md:gap-3">
+                    <button id="btnActivityLog" onclick="toggleActivityLogModal()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
+                    <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50">
+                        <i id="syncIcon" class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button onclick="handleLogout()" class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-2 md:px-4 rounded-full transition-colors font-medium text-sm">
+                        <i class="fa-solid fa-power-off"></i> <span class="hidden md:inline">Keluar</span>
+                    </button>
+                </div>
+            </div>
+            <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-brand-500/50 to-transparent opacity-50"></div>
+        </div>
+
+        <div class="px-5 md:px-8 w-full"> 
+            
+            <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full">
+                <!-- Data dummy untuk UI -->
+                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-brand-500">
+                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Total Nodes</h4>
+                    <span class="text-2xl font-bold text-white">124</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-accent-500">
+                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Online</h4>
+                    <span class="text-2xl font-bold text-white">118</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-red-500">
+                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Offline</h4>
+                    <span class="text-2xl font-bold text-white">4</span>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-l-4 border-l-amber-500">
+                    <h4 class="text-xs text-zinc-400 uppercase tracking-wider mb-1">Warning</h4>
+                    <span class="text-2xl font-bold text-white">2</span>
+                </div>
+            </div>
+
+            <div class="mb-8 w-full">
+                <div class="glass-card p-5 md:p-6 rounded-3xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-transparent pointer-events-none"></div>
+                    
+                    <div class="flex flex-row items-center justify-between mb-5 relative z-10 cursor-pointer" onclick="toggleRecapDropdown()">
+                        <h3 class="text-white text-sm font-bold tracking-wide flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center mr-3 border border-brand-500/30">
+                                <i class="fa-solid fa-chart-column text-brand-400 text-xs"></i>
+                            </div>
+                            System Overview
+                        </h3>
+                        <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
+                            <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+                        </div>
+                    </div>
+                    
+                    <div id="detailedStats" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 text-sm w-full relative z-10">
+                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
+                            <span class="text-zinc-400">OLT Devices</span><span class="text-white font-bold">45</span>
+                        </div>
+                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
+                            <span class="text-zinc-400">Switches</span><span class="text-white font-bold">52</span>
+                        </div>
+                        <div class="bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 flex items-center px-4 justify-between">
+                            <span class="text-zinc-400">Backbone Links</span><span class="text-white font-bold">27</span>
+                        </div>
+                    </div>
+                    
+                    <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2">
+                        <p class="text-sm text-zinc-400">System is operating normally. All main hubs are synchronized.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8 w-full">
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <h3 class="text-white text-sm font-bold tracking-wide">Database Access</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <button onclick="openDatabaseModal('All')" class="col-span-2 md:col-span-1 bg-gradient-to-br from-brand-500 to-indigo-600 active:scale-95 text-white p-5 rounded-3xl font-bold transition-transform shadow-neon-blue flex flex-row md:flex-col items-center justify-between md:justify-center border border-white/10 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        <div class="flex items-center gap-4 md:flex-col md:gap-3">
+                            <div class="w-12 h-12 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center"><i class="fa-solid fa-layer-group text-2xl"></i></div>
+                            <div class="text-left md:text-center"><span class="block text-sm md:text-base">All Nodes</span><span class="text-[10px] text-white/70 font-normal">Complete Database</span></div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="openDatabaseModal('OLT')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-server text-purple-400"></i></div>
+                        <div><span class="block text-xs font-bold">Data OLT</span><span class="text-[9px] text-zinc-500">Optical Terminals</span></div>
+                    </button>
+                    
+                    <button onclick="openDatabaseModal('Switch')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-random text-blue-400"></i></div>
+                        <div><span class="block text-xs font-bold">Data Switch</span><span class="text-[9px] text-zinc-500">Network Switches</span></div>
+                    </button>
+                    
+                    <button onclick="openDatabaseModal('Backbone')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center border border-orange-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-route text-orange-400"></i></div>
+                        <div><span class="block text-xs font-bold">Backbone</span><span class="text-[9px] text-zinc-500">Core Routes</span></div>
+                    </button>
+
+                    <!-- TOMBOL MENU PETA BARU -->
+                    <button onclick="openMapModal()" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-map-location-dot text-emerald-400"></i></div>
+                        <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Maps BBDM</span></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 z-[90] nav-safe pt-2 md:hidden">
+            <div class="mx-4 bg-dark-800/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-3xl p-1 flex justify-between items-center relative">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-brand-400 transition-transform active:scale-90">
+                    <i class="fa-solid fa-house mb-1 text-lg"></i><span class="text-[10px] font-semibold tracking-wide">Home</span>
+                </button>
+                <button onclick="toggleInputModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-accent-400 transition-colors active:scale-90">
+                    <i class="fa-solid fa-square-plus mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">Add Node</span>
+                </button>
+                <button onclick="toggleEWOModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-amber-400 transition-colors active:scale-90">
+                    <i class="fa-solid fa-file-signature mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">EWO Form</span>
+                </button>
+                <button onclick="toggleOTDRModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-purple-400 transition-colors active:scale-90">
+                    <i class="fa-solid fa-chart-area mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">OTDR Data</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals untuk Database -->
+    <div id="databaseModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30"><i class="fa-solid fa-database text-brand-400 text-sm"></i></div>
+                    <h3 id="databaseModalTitle" class="text-white text-base font-bold tracking-wide">Database</h3>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div id="serverLoadingIndicator" class="hidden text-xs text-brand-400 font-bold animate-pulse flex items-center gap-1.5 bg-brand-500/10 px-2 py-1 rounded-full"><i class="fa-solid fa-cloud-arrow-down"></i> Syncing...</div>
+                    <button onclick="exportTableToExcelTemplate('xlsx')" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> 
+                        <span class="hidden md:inline">Export Excel</span>
+                    </button>
+                    <button onclick="exportTableToExcelTemplate('csv')" class="text-xs bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 active:scale-95 transition">
+                        <i class="fa-solid fa-file-csv"></i> 
+                        <span class="hidden md:inline">Export CSV</span>
+                    </button>
+                    <button onclick="closeDatabaseModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+            </div>
+            
+            <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col gap-4 md:gap-5 w-full relative">
+                <div class="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2 pb-2 shrink-0 w-full -mx-3 px-3 md:-mx-5 md:px-5">
+                    <button id="modal-btn-All" onclick="setModalFilter('All')" class="modal-filter-btn shrink-0 bg-brand-500 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-neon-blue border border-brand-400/50">All Nodes</button>
+                    <button id="modal-btn-OLT" onclick="setModalFilter('OLT')" class="modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all">OLT</button>
+                    <button id="modal-btn-Switch" onclick="setModalFilter('Switch')" class="modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all">Switch</button>
+                    <button id="modal-btn-Backbone" onclick="setModalFilter('Backbone')" class="modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all">Backbone</button>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full shrink-0">
+                    <div class="relative group"><i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i><input type="text" id="searchNama" oninput="triggerServerSearch()" placeholder="Search Name..." class="w-full glass-input rounded-xl pl-8 p-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-brand-500 transition"></div>
+                    <div class="relative group"><i class="fa-solid fa-location-dot absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i><input type="text" id="searchLokasi" oninput="triggerServerSearch()" placeholder="Location..." class="w-full glass-input rounded-xl pl-8 p-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-brand-500 transition"></div>
+                    <div class="relative group"><i class="fa-solid fa-ethernet absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i><input type="text" id="searchPort" oninput="triggerServerSearch()" placeholder="Port..." class="w-full glass-input rounded-xl pl-8 p-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-brand-500 transition"></div>
+                    <div class="relative group"><i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i><input type="text" id="searchOtb" oninput="triggerServerSearch()" placeholder="OTB..." class="w-full glass-input rounded-xl pl-8 p-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-brand-500 transition"></div>
+                </div>
+                <div class="text-[10px] text-zinc-500 pl-1">Showing max 50 recent records.</div>
+                
+                <div class="rounded-2xl relative flex-1 flex flex-col w-full h-full pb-10 bg-dark-800/30 border border-zinc-800/50 p-2 md:p-4 overflow-hidden">
+                    <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 md:space-y-0 content-start pb-8">
+                        <p class="text-zinc-500 text-sm w-full text-center mt-10">Data akan muncul di sini...</p>
+                    </div>
+                    <div id="emptyState" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-zinc-500 h-full w-full bg-dark-900/80 backdrop-blur-sm z-10">
+                        <div class="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4"><i class="fa-solid fa-ghost text-2xl opacity-50 text-brand-400"></i></div>
+                        <h3 class="text-sm font-bold text-zinc-300 mb-1">No Records Found</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Register Node -->
+    <div id="inputModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-accent-500/20 flex items-center justify-center border border-accent-500/30"><i class="fa-solid fa-server text-accent-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">Register Node</h3>
+                </div>
+                <button onclick="toggleInputModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900">
+                <form id="manualInputForm" onsubmit="handleInputData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-6">
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Device Name</label>
+                        <input type="text" id="inputNama" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="e.g. OLT-ZTE-MDN-05">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Node Type</label>
+                        <select id="inputTipe" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none">
+                            <option value="OLT" class="bg-dark-800">OLT</option><option value="Switch" class="bg-dark-800">Switch</option><option value="Backbone" class="bg-dark-800">Backbone</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">IP Address</label>
+                        <input type="text" id="inputIp" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="10.x.x.x">
+                    </div>
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location Area</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-map-pin absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                            <input type="text" id="inputLokasi" required class="w-full glass-input rounded-xl py-3.5 pl-10 pr-4 text-sm text-white focus:border-accent-500 outline-none" placeholder="POP Setiabudi">
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between">
+                            <span>Port Info</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span>
+                        </label>
+                        <textarea id="inputPort" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="PON 1, PON 2..."></textarea>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between">
+                            <span>OTB Code</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span>
+                        </label>
+                        <textarea id="inputOtb" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="OTB-01, OTB-02..."></textarea>
+                    </div>
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Initial Status</label>
+                        <select id="inputStatus" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none">
+                            <option value="Online" class="bg-dark-800 text-accent-400">Online</option><option value="Offline" class="bg-dark-800 text-red-400">Offline</option><option value="Warning" class="bg-dark-800 text-amber-400">Warning</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 pt-4">
+                        <button type="submit" id="submitInputBtn" class="w-full bg-accent-500 hover:bg-accent-400 text-dark-900 active:scale-95 font-bold py-4 rounded-xl transition shadow-neon-green flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Save to Database
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- Halaman Dashboard -->
-        <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe">
-            
-            <!-- Header -->
-            <div class="sticky top-0 z-40 pt-safe glass border-b-0 shadow-lg mb-6 w-full backdrop-blur-xl">
-                <div class="flex justify-between items-center px-5 py-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-full flex items-center justify-center shadow-neon-blue">
-                            <i class="fa-solid fa-globe text-white text-sm"></i>
-                        </div>
-                        <div class="flex flex-col justify-center">
-                            <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore Dashboard</h1>
-                            <div class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
-                                <p class="text-zinc-400 text-[10px] font-medium tracking-wider uppercase leading-none">System Online</p>
-                                <span id="ownerRoleBadge" class="hidden px-1.5 py-0.5 text-[8px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-black rounded-sm tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.3)]">OWNER</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center gap-2 md:gap-3">
-                        <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </button>
-                        <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50">
-                            <i id="syncIcon" class="fa-solid fa-rotate-right"></i>
-                        </button>
-                        <button onclick="handleLogout()" class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-2 md:px-4 rounded-full transition-colors font-medium text-sm">
-                            <i class="fa-solid fa-power-off"></i> <span class="hidden md:inline">Keluar</span>
-                        </button>
-                    </div>
+    <!-- Modal EWO -->
+    <div id="ewoModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center border border-amber-500/30"><i class="fa-solid fa-file-signature text-amber-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">Work Order (EWO)</h3>
                 </div>
-                <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-brand-500/50 to-transparent opacity-50"></div>
-            </div>
-
-            <div class="px-5 md:px-8 w-full"> 
                 
-                <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full"></div>
+                <div class="flex items-center gap-2 md:gap-3">
+                    <button onclick="exportEWOToExcel('xlsx')" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> 
+                        <span class="hidden md:inline">Export Excel</span>
+                    </button>
+                    <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
+                <form id="ewoInputForm" onsubmit="handleEWOInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">EWO Number</label>
+                            <input type="text" id="noEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="EWO-2026-001">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Status</label>
+                            <select id="statEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none appearance-none">
+                                <option value="Not Done" class="bg-dark-800">Not Done</option><option value="Done" class="bg-dark-800">Done</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Job Description</label>
+                            <input type="text" id="deskEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="Describe task...">
+                        </div>
+                    </div>
+                    <button type="submit" id="submitEwoBtn" class="w-full mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-plus"></i> Create EWO
+                    </button>
+                </form>
+                
+                <div class="flex items-center gap-2 mb-4 pl-1">
+                    <i class="fa-solid fa-clock-rotate-left text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Recent History</h4>
+                </div>
+                <div id="ewoList" class="space-y-3 text-sm w-full text-zinc-500 text-center py-4">Tidak ada riwayat.</div>
+            </div>
+        </div>
+    </div>
 
-                <div class="mb-8 w-full">
-                    <div class="glass-card p-5 md:p-6 rounded-3xl relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-transparent pointer-events-none"></div>
-                        
-                        <div class="flex flex-row items-center justify-between mb-5 relative z-10 cursor-pointer" onclick="toggleRecapDropdown()">
-                            <h3 class="text-white text-sm font-bold tracking-wide flex items-center">
-                                <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center mr-3 border border-brand-500/30"><i class="fa-solid fa-chart-column text-brand-400 text-xs"></i></div>
-                                System Overview
-                            </h3>
-                            <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
-                                <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+    <!-- Modal OTDR -->
+    <div id="otdrModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30"><i class="fa-solid fa-chart-area text-purple-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">OTDR Uploads</h3>
+                </div>
+                <button onclick="toggleOTDRModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
+                <form id="otdrInputForm" onsubmit="handleOTDRInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl border-purple-500/20">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Project/Folder Name</label>
+                            <input type="text" id="folderOtdr" class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="Optional: Auto-generated if empty">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">OTB Name</label>
+                            <input type="text" id="otbOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="OTB-STB-01">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location</label>
+                            <input type="text" id="lokasiOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="POP Area">
+                        </div>
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">.SOR File(s)</label>
+                            <div class="relative w-full border-2 border-dashed border-zinc-700 rounded-xl hover:border-purple-500 transition-colors bg-dark-800/50 flex flex-col items-center justify-center text-center overflow-hidden group min-h-[140px]">
+                                <input type="file" id="fileOtdr" accept=".sor" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
+                                
+                                <div id="fileUploadPrompt" class="flex flex-col items-center justify-center p-4 w-full h-full pointer-events-none z-10 transition-opacity duration-300">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                                    <span class="text-sm font-bold text-white mb-1">Tap to browse files</span>
+                                    <span class="text-xs text-zinc-500">Multiple .sor files allowed</span>
+                                </div>
+                                
+                                <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none">
+                                </div>
                             </div>
                         </div>
-                        
-                        <div id="detailedStats" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 text-sm w-full relative z-10">
-                            <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
-                            <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
-                            <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
-                        </div>
-                        
-                        <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2"></div>
                     </div>
+                    <button type="submit" id="submitOtdrBtn" class="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-upload"></i> Upload to Server
+                    </button>
+                </form>
+                
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-folder-tree text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">File Browser</h4></div>
+                    <button onclick="downloadSelectedOTDR()" class="bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95">
+                        <i class="fa-solid fa-download"></i> Download Selected
+                    </button>
                 </div>
-
-                <div class="mb-8 w-full">
-                    <div class="flex items-center justify-between mb-4 px-1">
-                        <h3 class="text-white text-sm font-bold tracking-wide">Database Access</h3>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                        <button onclick="openDatabaseModal('All')" class="col-span-2 md:col-span-1 bg-gradient-to-br from-brand-500 to-indigo-600 active:scale-95 text-white p-5 rounded-3xl font-bold transition-transform shadow-neon-blue flex flex-row md:flex-col items-center justify-between md:justify-center border border-white/10 relative overflow-hidden group">
-                            <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                            <div class="flex items-center gap-4 md:flex-col md:gap-3">
-                                <div class="w-12 h-12 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center"><i class="fa-solid fa-layer-group text-2xl"></i></div>
-                                <div class="text-left md:text-center"><span class="block text-sm md:text-base">All Nodes</span><span class="text-[10px] text-white/70 font-normal">Complete Database</span></div>
-                            </div>
-                        </button>
-                        
-                        <button onclick="openDatabaseModal('OLT')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
-                            <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-server text-purple-400"></i></div>
-                            <div><span class="block text-xs font-bold">Data OLT</span><span class="text-[9px] text-zinc-500">Optical Terminals</span></div>
-                        </button>
-                        
-                        <button onclick="openDatabaseModal('Switch')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
-                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-random text-blue-400"></i></div>
-                            <div><span class="block text-xs font-bold">Data Switch</span><span class="text-[9px] text-zinc-500">Network Switches</span></div>
-                        </button>
-                        
-                        <button onclick="openDatabaseModal('Backbone')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
-                            <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center border border-orange-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-route text-orange-400"></i></div>
-                            <div><span class="block text-xs font-bold">Backbone</span><span class="text-[9px] text-zinc-500">Core Routes</span></div>
-                        </button>
-
-                        <button onclick="openMapModal()" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
-                            <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-map-location-dot text-emerald-400"></i></div>
-                            <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Maps BBDM</span></div>
-                        </button>
-                    </div>
+                
+                <div class="flex items-center mb-3 px-2 glass-card py-2 rounded-lg border-zinc-800/50">
+                    <input type="checkbox" id="selectAllOtdr" onchange="toggleAllOTDR(this)" class="mr-3 w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer">
+                    <label for="selectAllOtdr" class="text-xs text-zinc-400 cursor-pointer select-none font-medium">Select All on Page</label>
                 </div>
-            </div>
-
-            <div class="fixed bottom-0 left-0 right-0 z-[90] nav-safe pt-2 md:hidden">
-                <div class="mx-4 bg-dark-800/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-3xl p-1 flex justify-between items-center relative">
-                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-brand-400 transition-transform active:scale-90">
-                        <i class="fa-solid fa-house mb-1 text-lg"></i><span class="text-[10px] font-semibold tracking-wide">Home</span>
-                    </button>
-                    <button onclick="toggleInputModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-accent-400 transition-colors active:scale-90">
-                        <i class="fa-solid fa-square-plus mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">Add Node</span>
-                    </button>
-                    <button onclick="toggleEWOModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-amber-400 transition-colors active:scale-90">
-                        <i class="fa-solid fa-file-signature mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">EWO Form</span>
-                    </button>
-                    <button onclick="toggleOTDRModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-purple-400 transition-colors active:scale-90">
-                        <i class="fa-solid fa-chart-area mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">OTDR Data</span>
-                    </button>
+                
+                <div id="otdrList" class="space-y-3 text-sm w-full min-h-[100px] text-zinc-500 text-center py-4">Belum ada file terunggah.</div>
+                
+                <!-- Pagination -->
+                <div id="otdrPagination" class="flex justify-between items-center text-xs text-zinc-400 mt-6 glass-card p-2 rounded-xl">
+                    <button id="otdrPrevBtn" onclick="changeOTDRPage(-1)" class="px-4 py-2 bg-dark-800 rounded-lg hover:bg-dark-700 disabled:opacity-30 transition border border-zinc-700">&lt; Prev</button>
+                    <span id="otdrPageInfo" class="font-medium px-3 py-1">Page 1 of 1</span>
+                    <button id="otdrNextBtn" onclick="changeOTDRPage(1)" class="px-4 py-2 bg-dark-800 rounded-lg hover:bg-dark-700 disabled:opacity-30 transition border border-zinc-700">Next &gt;</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Semua Modals -->
-        <!-- Modal Database -->
-        <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-            <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
-                <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
-                <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30"><i class="fa-solid fa-database text-brand-400 text-sm"></i></div>
-                        <h3 id="databaseModalTitle" class="text-white text-base font-bold tracking-wide">Database</h3>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="closeDatabaseModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
-                    </div>
-                </div>
-                <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1">
-                    <p class="text-zinc-500 text-sm text-center mt-10">Data Database...</p>
-                </div>
+    <!-- Modals Edit Node -->
+    <div id="editModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
+                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> Edit Node</h3>
+                <button onclick="toggleEditModal()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
+                <form id="manualEditForm" onsubmit="handleUpdateData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
+                    <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama Perangkat</label><input type="text" id="editNama" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Tipe Node</label><select id="editTipe" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none appearance-none"><option value="OLT" class="bg-dark-800">OLT</option><option value="Switch" class="bg-dark-800">Switch</option><option value="Backbone" class="bg-dark-800">Backbone</option></select></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">IP Address</label><input type="text" id="editIp" class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Area / Lokasi</label><input type="text" id="editLokasi" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Status Node</label><select id="editStatus" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none appearance-none"><option value="Online" class="bg-dark-800">Online</option><option value="Offline" class="bg-dark-800">Offline</option><option value="Warning" class="bg-dark-800">Warning</option></select></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Port Info</label><input type="text" id="editPort" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Kode OTB</label><input type="text" id="editOtb" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="md:col-span-2 pt-3"><button type="submit" id="submitEditBtn" class="w-full bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Apply Changes</button></div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Modal Register Node -->
-        <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-            <!-- Isi Modal Register Node -->
-        </div>
-
-        <!-- Modal EWO -->
-        <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-             <!-- Isi Modal EWO -->
-        </div>
-
-        <!-- Modal OTDR -->
-        <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-             <!-- Isi Modal OTDR -->
-        </div>
-
-        <!-- Modals Edit Node -->
-        <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-            <!-- Isi Modal Edit Node -->
-        </div>
-
-        <!-- Modal Edit EWO (Dari baris Anda yang terpotong) -->
-        <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-             <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
-                <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
-                    <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3>
-                    <button onclick="toggleEditEwoModal()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
-                    <p class="text-zinc-500 text-sm text-center">Form Edit EWO...</p>
-                </div>
+    <!-- Modal Edit EWO -->
+    <div id="editEwoModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+         <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
+                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3>
+                <button onclick="closeEditEWO()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
+                 <form id="editEwoForm" onsubmit="handleUpdateEWO(event)" class="space-y-4 pb-10">
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nomor EWO</label><input type="text" id="editEwoNo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Deskripsi Pekerjaan</label><input type="text" id="editEwoDesk" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Status</label><select id="editEwoStat" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none appearance-none"><option value="Not Done" class="bg-dark-800">Not Done</option><option value="Done" class="bg-dark-800">Done</option></select></div>
+                    <div class="pt-3"><button type="submit" id="submitEditEwoBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Save EWO</button></div>
+                </form>
             </div>
         </div>
+    </div>
 
-    </div> <!-- End of #app-zoom-wrapper -->
+    <!-- Modal Edit OTDR -->
+    <div id="editOtdrModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
+                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit OTDR File Data</h3>
+                <button onclick="closeEditOTDR()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
+                 <form id="editOtdrForm" onsubmit="handleUpdateOTDR(event)" class="space-y-4 pb-10">
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama Folder</label><input type="text" id="editOtdrFolder" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama OTB</label><input type="text" id="editOtdrOtb" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Lokasi Area</label><input type="text" id="editOtdrLokasi" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
+                    <div class="text-[10px] text-amber-500/70 italic mt-2"><i class="fa-solid fa-info-circle"></i> Catatan: File SOR tidak dapat diubah di mode ini. Anda harus menghapus dan mengupload ulang untuk mengganti file.</div>
+                    <div class="pt-3"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Update Details</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit OTDR Folder -->
+    <div id="editOtdrFolderModal" class="fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
+                <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-folder-pen"></i> Ubah Nama Folder</h3>
+                <button onclick="closeEditOTDRFolder()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
+                 <form id="editOtdrFolderForm" onsubmit="handleUpdateOTDRFolder(event)" class="space-y-4 pb-10">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama Folder Baru</label>
+                        <input type="text" id="editOtdrFolderNewName" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Masukkan nama baru">
+                    </div>
+                    <div class="pt-3">
+                        <button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-save"></i> Terapkan Nama Baru
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300">
+            <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
+            <h3 class="text-white text-lg font-bold mb-2">Hapus <span id="deleteContextType">Data</span>?</h3>
+            <p class="text-zinc-400 text-sm mb-8 leading-relaxed">Apakah Anda yakin ingin menghapus data ini secara permanen dari server? Tindakan ini tidak dapat dibatalkan.</p>
+            
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 hover:bg-dark-700 text-zinc-300 text-sm font-semibold py-3.5 rounded-xl transition active:scale-95 border border-zinc-700">Batal</button>
+                <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-3.5 rounded-xl transition active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)]">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Activity Log (Yang sebelumnya terpotong) -->
+    <div id="activityLogModal" class="fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none w-full h-full">
+        <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
+            <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-sm"></i></div>
+                    <h3 class="text-white text-base font-bold tracking-wide">Activity Logs</h3>
+                </div>
+                <button onclick="toggleActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-hide flex-1 bg-dark-900">
+                <p class="text-zinc-500 text-sm text-center mt-10">Tidak ada log aktivitas hari ini.</p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        /* 
-         ========================================================================
-         SISTEM CUSTOM PINCH-TO-ZOOM (2 JARI)
-         Fungsi ini mengabaikan zoom bawaan HP tapi mendeteksi sentuhan 2 jari
-         untuk melakukan zoom kustom dengan menggunakan CSS Transform, sehingga 
-         terasa seperti aplikasi native.
-         ========================================================================
-        */
+        /**
+         * FUNGSI UTILITAS & UI
+         */
         
-        const zoomWrapper = document.getElementById('app-zoom-wrapper');
-        let currentScale = 1;
-        let initialDistance = 0;
-        let scaleBeforePinch = 1;
-        
-        // Posisi X/Y (Pan)
-        let translateX = 0;
-        let translateY = 0;
-        let startX = 0;
-        let startY = 0;
-        let initialTranslateX = 0;
-        let initialTranslateY = 0;
-
-        // Untuk menghitung jarak antara 2 jari
-        function getDistance(touches) {
-            return Math.hypot(
-                touches[0].pageX - touches[1].pageX,
-                touches[0].pageY - touches[1].pageY
-            );
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const color = type === 'success' ? 'emerald' : (type === 'error' ? 'red' : 'brand');
+            const icon = type === 'success' ? 'check-circle' : (type === 'error' ? 'triangle-exclamation' : 'info-circle');
+            
+            toast.className = `bg-dark-800/90 border border-${color}-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)] p-4 rounded-2xl flex items-center gap-3 backdrop-blur-md toast-enter`;
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-${color}-500/20 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-${icon} text-${color}-400"></i>
+                </div>
+                <p class="text-sm text-white font-medium flex-1">${message}</p>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
-        // Apply Transform ke Wrapper
-        function updateTransform() {
-            // Batasi agar tidak bergeser jika scale = 1
-            if (currentScale <= 1) {
-                translateX = 0;
-                translateY = 0;
-            }
-            zoomWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+        // Buka / Tutup Modal Universal
+        function openModal(modalId, contentId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(contentId);
+            if(!modal || !content) return;
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('modal-show');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+                content.classList.add('modal-content-show');
+            }, 10);
         }
 
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                // Saat ada 2 jari -> Mode ZOOM
-                e.preventDefault(); // Matikan behavior bawaan browser
-                initialDistance = getDistance(e.touches);
-                scaleBeforePinch = currentScale;
-            } else if (e.touches.length === 1 && currentScale > 1) {
-                // Saat ada 1 jari dan sedang ter-zoom -> Mode PAN (Geser)
-                startX = e.touches[0].pageX;
-                startY = e.touches[0].pageY;
-                initialTranslateX = translateX;
-                initialTranslateY = translateY;
-            }
-        }, { passive: false });
+        function closeModal(modalId, contentId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(contentId);
+            if(!modal || !content) return;
+            
+            content.classList.remove('modal-content-show');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.remove('modal-show');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        }
 
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2) {
-                // Proses Zoom
-                e.preventDefault();
-                const currentDistance = getDistance(e.touches);
-                const scaleDiff = currentDistance / initialDistance;
-                
-                // Set Batasan Zoom (Minimal 1x, Maksimal 5x)
-                let newScale = scaleBeforePinch * scaleDiff;
-                currentScale = Math.min(Math.max(1, newScale), 5);
-                
-                updateTransform();
-            } else if (e.touches.length === 1 && currentScale > 1) {
-                // Proses Panning (Geser layar saat sedang di-zoom)
-                e.preventDefault();
-                const currentX = e.touches[0].pageX;
-                const currentY = e.touches[0].pageY;
-                
-                translateX = initialTranslateX + (currentX - startX);
-                translateY = initialTranslateY + (currentY - startY);
-                
-                updateTransform();
-            }
-        }, { passive: false });
+        /**
+         * EVENT HANDLERS DARI HTML
+         */
 
-        window.addEventListener('touchend', (e) => {
-            // Jika jari dilepas, dan layar tidak di zoom, reset transformasi
-            if (e.touches.length < 2 && currentScale <= 1) {
-                currentScale = 1;
-                translateX = 0;
-                translateY = 0;
-                updateTransform();
-            }
-        });
-
-
-        /* 
-         ========================================================================
-         PLACEHOLDER FUNGSI DUMMY UNTUK UI
-         Agar tombol-tombol pada HTML di atas tidak error saat di-klik
-         ========================================================================
-        */
-        
         function handleLogin(e) {
             e.preventDefault();
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            document.getElementById('dashboardPage').classList.add('block');
+            const email = document.getElementById('loginEmail').value;
+            // Simulasi Login
+            document.getElementById('loginPage').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                document.getElementById('loginPage').classList.add('hidden');
+                const dash = document.getElementById('dashboardPage');
+                dash.classList.remove('hidden');
+                setTimeout(() => dash.classList.remove('opacity-0'), 50);
+                showToast(`Welcome back, ${email.split('@')[0]}!`);
+            }, 500);
         }
 
         function handleLogout() {
-            document.getElementById('dashboardPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('block');
-            document.getElementById('loginPage').classList.remove('hidden');
+            const dash = document.getElementById('dashboardPage');
+            dash.classList.add('opacity-0');
+            setTimeout(() => {
+                dash.classList.add('hidden');
+                const login = document.getElementById('loginPage');
+                login.classList.remove('hidden');
+                setTimeout(() => login.classList.remove('opacity-0', 'pointer-events-none'), 50);
+            }, 500);
         }
 
-        function closeDatabaseModal() {
-            const modal = document.getElementById('databaseModal');
-            const content = document.getElementById('databaseModalContent');
-            content.classList.add('translate-y-full');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
+        // Database Modal
         function openDatabaseModal(filter) {
-            const modal = document.getElementById('databaseModal');
-            const content = document.getElementById('databaseModalContent');
-            modal.classList.remove('hidden');
-            modal.classList.add('opacity-100');
-            setTimeout(() => content.classList.remove('translate-y-full'), 10);
             document.getElementById('databaseModalTitle').innerText = "Database: " + filter;
+            setModalFilter(filter);
+            openModal('databaseModal', 'databaseModalContent');
+        }
+        function closeDatabaseModal() { closeModal('databaseModal', 'databaseModalContent'); }
+        
+        function setModalFilter(filter) {
+            // Update UI filter button (Simulasi)
+            document.querySelectorAll('.modal-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-500', 'text-white', 'shadow-neon-blue', 'border-brand-400/50');
+                btn.classList.add('bg-dark-800', 'text-zinc-400', 'border-zinc-700');
+            });
+            const activeBtn = document.getElementById('modal-btn-' + filter);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-dark-800', 'text-zinc-400', 'border-zinc-700');
+                activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-neon-blue', 'border-brand-400/50');
+            }
         }
 
-        function toggleEditEwoModal() {
-            const modal = document.getElementById('editEwoModal');
-            if(modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
+        function triggerServerSearch() {
+            // Placeholder fungsi pencarian
+            const loading = document.getElementById('serverLoadingIndicator');
+            loading.classList.remove('hidden');
+            setTimeout(() => loading.classList.add('hidden'), 800);
+        }
+
+        function exportTableToExcelTemplate(type) { showToast(`Exporting to ${type.toUpperCase()}...`, 'success'); }
+
+        // Input Modal (Register Node)
+        function toggleInputModal() {
+            const modal = document.getElementById('inputModal');
+            if (modal.classList.contains('opacity-0')) openModal('inputModal', 'inputModalContent');
+            else closeModal('inputModal', 'inputModalContent');
+        }
+        function handleInputData(e) {
+            e.preventDefault();
+            showToast('Data Node berhasil ditambahkan!');
+            toggleInputModal();
+            e.target.reset();
+        }
+
+        // EWO Modal
+        function toggleEWOModal() {
+            const modal = document.getElementById('ewoModal');
+            if (modal.classList.contains('opacity-0')) openModal('ewoModal', 'ewoModalContent');
+            else closeModal('ewoModal', 'ewoModalContent');
+        }
+        function handleEWOInput(e) {
+            e.preventDefault();
+            showToast('EWO berhasil dibuat!');
+            e.target.reset();
+        }
+        function exportEWOToExcel(type) { showToast('Mengekspor EWO...'); }
+
+        // OTDR Modal
+        function toggleOTDRModal() {
+            const modal = document.getElementById('otdrModal');
+            if (modal.classList.contains('opacity-0')) openModal('otdrModal', 'otdrModalContent');
+            else closeModal('otdrModal', 'otdrModalContent');
+        }
+        function handleOTDRInput(e) {
+            e.preventDefault();
+            showToast('File SOR berhasil diunggah!');
+            e.target.reset();
+            document.getElementById('fileUploadPrompt').classList.remove('opacity-0');
+        }
+        function updateFileList(input) {
+            if (input.files && input.files.length > 0) {
+                document.getElementById('fileUploadPrompt').classList.add('opacity-0');
+                showToast(`${input.files.length} file dipilih.`, 'info');
+            }
+        }
+        function downloadSelectedOTDR() { showToast('Mengunduh file yang dipilih...'); }
+        function toggleAllOTDR(checkbox) { /* Logic pilih semua checkbox */ }
+        function changeOTDRPage(dir) { /* Logic pagination */ }
+
+        // Edit Node Modal
+        function toggleEditModal() {
+            const modal = document.getElementById('editModal');
+            if (modal.classList.contains('opacity-0')) openModal('editModal', 'editModalContent');
+            else closeModal('editModal', 'editModalContent');
+        }
+        function handleUpdateData(e) { e.preventDefault(); showToast('Node berhasil diperbarui!'); toggleEditModal(); }
+
+        // Edit EWO Modal
+        function closeEditEWO() { closeModal('editEwoModal', 'editEwoModalContent'); }
+        function handleUpdateEWO(e) { e.preventDefault(); showToast('EWO diperbarui!'); closeEditEWO(); }
+
+        // Edit OTDR Modal
+        function closeEditOTDR() { closeModal('editOtdrModal', 'editOtdrModalContent'); }
+        function handleUpdateOTDR(e) { e.preventDefault(); showToast('Info OTDR diperbarui!'); closeEditOTDR(); }
+
+        // Edit OTDR Folder Modal
+        function closeEditOTDRFolder() { closeModal('editOtdrFolderModal', 'editOtdrFolderModalContent'); }
+        function handleUpdateOTDRFolder(e) { e.preventDefault(); showToast('Nama folder diperbarui!'); closeEditOTDRFolder(); }
+
+        // Delete Modal
+        function closeDeleteModal() { document.getElementById('confirmDeleteModal').classList.remove('modal-show'); document.getElementById('confirmDeleteModal').classList.add('opacity-0', 'pointer-events-none'); }
+        function executeDeleteData() { showToast('Data dihapus.', 'error'); closeDeleteModal(); }
+
+        // Activity Log Modal (Perbaikan)
+        function toggleActivityLogModal() {
+            const modal = document.getElementById('activityLogModal');
+            if (modal.classList.contains('opacity-0')) openModal('activityLogModal', 'activityLogModalContent');
+            else closeModal('activityLogModal', 'activityLogModalContent');
+        }
+
+        // Peta Modal & Lainnya
+        function openMapModal() { showToast('Membuka integrasi peta Backbone...', 'info'); }
+        function toggleRecapDropdown() {
+            const panel = document.getElementById('recapDropdownPanel');
+            const icon = document.getElementById('recapChevron');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                setTimeout(() => { panel.classList.remove('opacity-0', 'translate-y-2'); icon.style.transform = 'rotate(180deg)'; }, 10);
             } else {
-                modal.classList.add('hidden');
+                panel.classList.add('opacity-0', 'translate-y-2');
+                icon.style.transform = 'rotate(0deg)';
+                setTimeout(() => panel.classList.add('hidden'), 300);
             }
         }
         
-        // Tambahkan fungsi-fungsi lain yang dipanggil di HTML (opsional sesuai kebutuhan sistem asli Anda)
-        function toggleInputModal() {}
-        function toggleEWOModal() {}
-        function toggleOTDRModal() {}
-        function openMapModal() {}
+        function refreshDashboardStats() {
+            const icon = document.getElementById('syncIcon');
+            icon.classList.add('animate-spin');
+            showToast('Menyinkronkan data...');
+            setTimeout(() => icon.classList.remove('animate-spin'), 1000);
+        }
+
     </script>
 </body>
 </html>
