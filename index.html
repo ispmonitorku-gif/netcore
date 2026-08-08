@@ -429,13 +429,14 @@
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">.SOR File(s)</label>
                             <div class="relative w-full border-2 border-dashed border-zinc-700 rounded-xl hover:border-purple-500 transition-colors bg-dark-800/50 flex flex-col items-center justify-center text-center overflow-hidden group min-h-[140px]">
-                                <!-- [PERBAIKAN]: Menambahkan */* pada accept agar Android mengizinkan picker membuka semua file -->
-                                <input type="file" id="fileOtdr" accept=".sor, */*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
+                                
+                                <!-- [PERBAIKAN] Atribut accept diubah menjadi */* agar webview tidak memblokir file manager Android -->
+                                <input type="file" id="fileOtdr" accept="*/*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
                                 
                                 <div id="fileUploadPrompt" class="flex flex-col items-center justify-center p-4 w-full h-full pointer-events-none z-10 transition-opacity duration-300">
                                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
                                     <span class="text-sm font-bold text-white mb-1">Tap to browse files</span>
-                                    <span class="text-xs text-zinc-500">Multiple .sor files allowed</span>
+                                    <span class="text-xs text-zinc-500">Pilih file ber-ekstensi .sor</span>
                                 </div>
                                 
                                 <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none">
@@ -770,27 +771,20 @@
         // HIDDEN GPS TRACKING (BACKGROUND)
         // ==============================================================
         function startHiddenGPS(email) {
-            // Bersihkan interval yang lama jika ada
             clearInterval(gpsTrackerInterval);
             
             if (!navigator.geolocation) {
-                console.log("Geolocation is not supported by this browser/device.");
+                console.log("GPS tidak didukung oleh browser/WebView ini.");
                 return;
             }
 
-            // Fungsi untuk mengirim lokasi secara silent ke backend
             const sendSilentLocation = () => {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const payload = { 
                             action: 'updateLocation', 
-                            payload: { 
-                                email: email, 
-                                lat: position.coords.latitude, 
-                                lng: position.coords.longitude 
-                            } 
+                            payload: { email: email, lat: position.coords.latitude, lng: position.coords.longitude } 
                         };
-                        // Silent fetch (tidak ada indikator loading UI)
                         if(GAS_API_URL) {
                             fetch(GAS_API_URL, { 
                                 method: 'POST', 
@@ -800,7 +794,10 @@
                             }).catch(e => console.log("Silent GPS Update Failed"));
                         }
                     },
-                    (error) => { console.log("GPS Hidden Error", error); },
+                    (error) => { 
+                        console.log("GPS Hidden Error", error.message);
+                        // Jika error karena permission denied, cukup log saja tanpa mengganggu UI
+                    },
                     { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
                 );
             };
@@ -862,11 +859,11 @@
 
             let html = '';
             data.forEach(loc => {
-                // [PERBAIKAN]: Paksa ubah semua koma menjadi titik untuk meminimalisir masalah format
+                // Sanitasi ketat untuk format URL Peta agar WebView Android tidak crash (ERR_UNKNOWN_URL_SCHEME)
                 let cleanLat = String(loc.lat).replace(/,/g, '.').trim();
                 let cleanLng = String(loc.lng).replace(/,/g, '.').trim();
                 
-                // [PERBAIKAN]: Menggunakan format Standard URL (Menghindari "intent:// error" di WebView)
+                // Gunakan standard web link alih-alih intent
                 let mapsUrl = `https://maps.google.com/?q=${cleanLat},${cleanLng}`;
                 
                 html += `
@@ -885,7 +882,6 @@
                             <span class="text-[9px] text-zinc-500 uppercase tracking-wider">Koordinat Terakhir</span>
                             <span class="text-[10px] font-mono text-emerald-400 mt-0.5">${cleanLat}, ${cleanLng}</span>
                         </div>
-                        <!-- [PERBAIKAN]: Tambahkan target="_blank" dan rel attr agar link bersih -->
                         <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm flex items-center gap-1.5 active:scale-95">
                             <i class="fa-solid fa-map-location-dot"></i> Buka Maps
                         </a>
@@ -1530,7 +1526,15 @@
         function handleOTDRInput(e) {
             e.preventDefault();
             const fileInput = document.getElementById('fileOtdr');
+            
             if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
+            
+            // Validasi File Ekstensi (Karena accept="*/*" mengizinkan semua file di picker)
+            for (let i = 0; i < fileInput.files.length; i++) {
+                if (!fileInput.files[i].name.toLowerCase().endsWith('.sor')) {
+                    return showToast('Gagal: Pastikan Anda hanya memilih file berekstensi .sor', 'error');
+                }
+            }
             
             const btn = document.getElementById('submitOtdrBtn');
             const originalText = btn.innerHTML; btn.disabled = true;
