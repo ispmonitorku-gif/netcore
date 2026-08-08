@@ -136,7 +136,6 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <!-- Tombol Tracker Team (Hanya Owner) -->
                     <button id="btnTeamTracker" onclick="openTrackerModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-emerald-400 hover:text-white active:scale-90 transition-all border border-emerald-500/30 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]" title="Team Location Tracker">
                         <i class="fa-solid fa-location-crosshairs"></i>
                     </button>
@@ -237,7 +236,7 @@
         </div>
     </div>
 
-    <!-- Modals Database ... (Kode asli tetap sama) -->
+    <!-- Modals Database -->
     <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -289,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Modal Input, EWO, OTDR, Edit ... (Kode asli tetap sama agar rapi) -->
+    <!-- Modal Input -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -430,7 +429,8 @@
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">.SOR File(s)</label>
                             <div class="relative w-full border-2 border-dashed border-zinc-700 rounded-xl hover:border-purple-500 transition-colors bg-dark-800/50 flex flex-col items-center justify-center text-center overflow-hidden group min-h-[140px]">
-                                <input type="file" id="fileOtdr" accept=".sor" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
+                                <!-- [PERBAIKAN]: Menambahkan */* pada accept agar Android mengizinkan picker membuka semua file -->
+                                <input type="file" id="fileOtdr" accept=".sor, */*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
                                 
                                 <div id="fileUploadPrompt" class="flex flex-col items-center justify-center p-4 w-full h-full pointer-events-none z-10 transition-opacity duration-300">
                                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
@@ -472,7 +472,7 @@
         </div>
     </div>
 
-    <!-- Modals Edit (tetap sama) -->
+    <!-- Modals Edit -->
     <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -862,8 +862,12 @@
 
             let html = '';
             data.forEach(loc => {
-                // [PERBAIKAN]: Gunakan format Universal Google Maps URL
-                let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}`;
+                // [PERBAIKAN]: Paksa ubah semua koma menjadi titik untuk meminimalisir masalah format
+                let cleanLat = String(loc.lat).replace(/,/g, '.').trim();
+                let cleanLng = String(loc.lng).replace(/,/g, '.').trim();
+                
+                // [PERBAIKAN]: Menggunakan format Standard URL (Menghindari "intent:// error" di WebView)
+                let mapsUrl = `https://maps.google.com/?q=${cleanLat},${cleanLng}`;
                 
                 html += `
                 <div class="bg-dark-800/50 p-4 rounded-2xl border border-zinc-800/80 flex flex-col gap-3 transition-all hover:bg-dark-800">
@@ -879,10 +883,10 @@
                     <div class="flex justify-between items-center">
                         <div class="flex flex-col">
                             <span class="text-[9px] text-zinc-500 uppercase tracking-wider">Koordinat Terakhir</span>
-                            <span class="text-[10px] font-mono text-emerald-400 mt-0.5">${loc.lat}, ${loc.lng}</span>
+                            <span class="text-[10px] font-mono text-emerald-400 mt-0.5">${cleanLat}, ${cleanLng}</span>
                         </div>
-                        <!-- [PERBAIKAN]: Ubah target="_blank" menjadi target="_top" agar ramah WebView -->
-                        <a href="${mapsUrl}" target="_top" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm flex items-center gap-1.5 active:scale-95">
+                        <!-- [PERBAIKAN]: Tambahkan target="_blank" dan rel attr agar link bersih -->
+                        <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm flex items-center gap-1.5 active:scale-95">
                             <i class="fa-solid fa-map-location-dot"></i> Buka Maps
                         </a>
                     </div>
@@ -943,7 +947,7 @@
         }
 
         // ==============================================================
-        // DASHBOARD & RECAP (tetap sama)
+        // DASHBOARD & RECAP 
         // ==============================================================
         function refreshDashboardStats() {
             const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
@@ -1083,7 +1087,7 @@
         }
 
         // ==============================================================
-        // DATABASE MODAL & SEARCH (tetap sama)
+        // DATABASE MODAL & SEARCH 
         // ==============================================================
         function openDatabaseModal(type) {
             setModalFilter(type);
@@ -1681,7 +1685,7 @@
                 if(isOwner) {
                     document.getElementById('ownerRoleBadge').classList.remove('hidden');
                     document.getElementById('btnActivityLog').classList.remove('hidden');
-                    document.getElementById('btnTeamTracker').classList.remove('hidden'); // Tampilkan tombol GPS Tracker
+                    document.getElementById('btnTeamTracker').classList.remove('hidden'); 
                 } else {
                     document.getElementById('btnActivityLog').classList.add('hidden');
                     document.getElementById('btnTeamTracker').classList.add('hidden');
