@@ -73,7 +73,6 @@
 
     <div id="toastContainer" class="fixed top-safe pt-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
 
-    <!-- Halaman Login -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden">
         <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite]"></div>
         <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse]"></div>
@@ -115,7 +114,6 @@
         </div>
     </div>
 
-    <!-- Halaman Dashboard -->
     <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe">
         
         <!-- Header -->
@@ -237,7 +235,7 @@
         </div>
     </div>
 
-    <!-- Modals Database ... (Kode asli tetap sama) -->
+    <!-- Modals Database -->
     <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -289,7 +287,7 @@
         </div>
     </div>
 
-    <!-- Modal Input, EWO, OTDR, Edit ... (Kode asli tetap sama agar rapi) -->
+    <!-- Modal Input -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
@@ -472,7 +470,7 @@
         </div>
     </div>
 
-    <!-- Modals Edit (tetap sama) -->
+    <!-- Modals Edit -->
     <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -493,6 +491,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
          <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -509,6 +508,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -526,6 +526,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -547,6 +548,7 @@
             </div>
         </div>
     </div>
+    
     <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300">
             <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
@@ -596,7 +598,7 @@
             <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
                 <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-4 text-xs text-emerald-400 flex gap-2 items-start">
                     <i class="fa-solid fa-info-circle mt-0.5"></i>
-                    <p>Posisi diperbarui otomatis setiap 3 menit saat tim login di aplikasi. Menampilkan lokasi terakhir masing-masing akun.</p>
+                    <p>Posisi diperbarui otomatis setiap 3 menit saat tim login di aplikasi. Menampilkan lokasi terakhir masing-masing akun secara Live.</p>
                 </div>
                 <div id="trackerContainer" class="space-y-3 w-full">
                     <!-- Data Tracker disuntikkan ke sini -->
@@ -643,12 +645,6 @@
         if (typeof google === 'undefined') {
             console.log("Environment: Luar Apps Script (GitHub Pages)");
             
-            let mockNetworkData = [
-                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1/1", kode_otb: "OTB-STB-01", status: "Online" }
-            ];
-            let mockEWOData = [{no_ewo: "EWO-2026-001", deskripsi: "Pengecekan FO", status: "Done"}];
-            let mockOTDRData = [{nama_folder: "Core Line", nama_otb: "OTB-01", lokasi: "POP A", file_url: "#", timestamp: "2026-07-23 08:35:08"}];
-
             const fetchAPI = async (action, payload, sCb, fCb) => {
                 if (!GAS_API_URL) return runMock(action, payload, sCb, fCb);
                 try {
@@ -722,9 +718,6 @@
         let totalOtdrPages = 1;
         let isOwner = false;
 
-        // GPS Tracker variables
-        let gpsTrackerInterval = null;
-
         // ==============================================================
         // UI UTILITIES
         // ==============================================================
@@ -767,56 +760,87 @@
         }
 
         // ==============================================================
-        // HIDDEN GPS TRACKING (BACKGROUND)
+        // HIDDEN GPS TRACKING ENGINE (AUTO RETRY & ANTI CACHE)
         // ==============================================================
-        function startHiddenGPS(email) {
-            // Bersihkan interval yang lama jika ada
-            clearInterval(gpsTrackerInterval);
-            
-            if (!navigator.geolocation) {
-                console.log("Geolocation is not supported by this browser/device.");
-                return;
-            }
+        let gpsWatchId = null;
+        let lastGpsSentTime = 0;
+        let gpsRetryTimeout = null;
+        let currentWatchEmail = null;
 
-            // Fungsi untuk mengirim lokasi secara silent ke backend
-            const sendSilentLocation = () => {
-                navigator.geolocation.getCurrentPosition(
+        function startHiddenGPS(email) {
+            try {
+                stopHiddenGPS();
+                currentWatchEmail = email;
+                
+                if (!navigator.geolocation) {
+                    console.log("Geolocation is not supported by this device.");
+                    return;
+                }
+
+                // Pengaturan khusus untuk WebView agar akurat
+                const options = {
+                    enableHighAccuracy: true, 
+                    maximumAge: 0, 
+                    timeout: 20000 // Beri waktu device 20 detik mencari sinyal
+                };
+
+                gpsWatchId = navigator.geolocation.watchPosition(
                     (position) => {
-                        const payload = { 
-                            action: 'updateLocation', 
-                            payload: { 
-                                email: email, 
-                                lat: position.coords.latitude, 
-                                lng: position.coords.longitude 
-                            } 
-                        };
-                        // Silent fetch (tidak ada indikator loading UI)
-                        if(GAS_API_URL) {
-                            fetch(GAS_API_URL, { 
-                                method: 'POST', 
-                                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                                body: JSON.stringify(payload),
-                                redirect: "follow"
-                            }).catch(e => console.log("Silent GPS Update Failed"));
+                        // Hapus status retry karena sinyal didapat
+                        if(gpsRetryTimeout) { 
+                            clearTimeout(gpsRetryTimeout); 
+                            gpsRetryTimeout = null; 
+                        }
+                        
+                        const now = Date.now();
+                        // 180000 ms = 3 Menit limit pengiriman ke server
+                        if (now - lastGpsSentTime >= 180000 || lastGpsSentTime === 0) {
+                            lastGpsSentTime = now;
+                            const payload = { 
+                                action: 'updateLocation', 
+                                payload: { 
+                                    email: currentWatchEmail, 
+                                    lat: position.coords.latitude, 
+                                    lng: position.coords.longitude 
+                                } 
+                            };
+                            
+                            if(GAS_API_URL) {
+                                fetch(GAS_API_URL, { 
+                                    method: 'POST', 
+                                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                                    body: JSON.stringify(payload),
+                                    redirect: "follow"
+                                }).catch(e => console.log("Silent GPS Update Failed:", e));
+                            }
                         }
                     },
-                    (error) => { console.log("GPS Hidden Error", error); },
-                    { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
+                    (error) => {
+                        console.log("GPS Watch Error: ", error.message);
+                        // JIKA GAGAL ATAU TIMEOUT: Ulangi pancing hardware 15 detik kemudian
+                        if(gpsRetryTimeout) clearTimeout(gpsRetryTimeout);
+                        gpsRetryTimeout = setTimeout(() => {
+                            if(currentWatchEmail) startHiddenGPS(currentWatchEmail);
+                        }, 15000); 
+                    },
+                    options
                 );
-            };
-
-            // Kirim lokasi saat baru login
-            sendSilentLocation();
-            
-            // Atur interval setiap 3 menit (180000 ms)
-            gpsTrackerInterval = setInterval(sendSilentLocation, 180000);
+            } catch (err) {
+                console.log("Error init GPS: ", err);
+            }
         }
 
         function stopHiddenGPS() {
-            if (gpsTrackerInterval) {
-                clearInterval(gpsTrackerInterval);
-                gpsTrackerInterval = null;
+            if (gpsWatchId !== null && navigator.geolocation) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
             }
+            if(gpsRetryTimeout) {
+                clearTimeout(gpsRetryTimeout);
+                gpsRetryTimeout = null;
+            }
+            currentWatchEmail = null;
+            lastGpsSentTime = 0;
         }
 
         // ==============================================================
@@ -940,7 +964,7 @@
         }
 
         // ==============================================================
-        // DASHBOARD & RECAP (tetap sama)
+        // DASHBOARD & RECAP
         // ==============================================================
         function refreshDashboardStats() {
             const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
@@ -1080,7 +1104,7 @@
         }
 
         // ==============================================================
-        // DATABASE MODAL & SEARCH (tetap sama)
+        // DATABASE MODAL & SEARCH
         // ==============================================================
         function openDatabaseModal(type) {
             setModalFilter(type);
@@ -1704,4 +1728,440 @@
         window.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
+<!-- =============================================================
+     BACKEND GOOGLE APPS SCRIPT CODE (GAS)
+     Diletakkan di akhir file agar tidak merusak layout WebView
+     ============================================================= -->
+<!-- 
+function doGet(e) {
+  try {
+    return HtmlService.createTemplateFromFile('Index')
+      .evaluate()
+      .setTitle('ISP_Netcore_Dashboard')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+  } catch (error) {
+    return ContentService.createTextOutput("Backend API is Running... (Gunakan frontend Github Pages)");
+  }
+}
+
+function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error("Payload kosong atau format request tidak valid.");
+    }
+
+    const body = JSON.parse(e.postData.contents);
+    const action = body.action;
+    const payload = body.payload || {};
+    let resultData;
+
+    switch (action) {
+      case 'verifyLogin': resultData = verifyLogin(payload.email, payload.password); break;
+      case 'getDashboardStats': resultData = getDashboardStats(); break;
+      case 'getRecapStats': resultData = getRecapStats(); break;
+      case 'searchNetworkData': resultData = searchNetworkData(payload.filters); break;
+      case 'insertNetworkData': resultData = insertNetworkData(payload.dataObj, payload.email); break;
+      case 'updateNetworkData': resultData = updateNetworkData(payload.originalData, payload.updatedData, payload.email); break;
+      case 'deleteNetworkData': resultData = deleteNetworkData(payload.targetData, payload.email); break;
+      case 'insertEWOData': resultData = insertEWOData(payload.dataObj, payload.email); break;
+      case 'getEWOData': resultData = getEWOData(); break;
+      case 'updateEWOData': resultData = updateEWOData(payload.originalData, payload.updatedData, payload.email); break;
+      case 'deleteEWOData': resultData = deleteEWOData(payload.targetData, payload.email); break;
+      case 'uploadOTDRData': resultData = uploadOTDRData(payload.dataObj); break;
+      case 'getOTDRData': resultData = getOTDRData(payload.page); break;
+      case 'updateOTDRData': resultData = updateOTDRData(payload.originalData, payload.updatedData, payload.email); break;
+      case 'deleteOTDRData': resultData = deleteOTDRData(payload.targetData, payload.email); break;
+      case 'updateOTDRFolder': resultData = updateOTDRFolder(payload.oldFolderName, payload.newFolderName, payload.email); break;
+      case 'deleteOTDRFolder': resultData = deleteOTDRFolder(payload.folderName, payload.email); break;
+      case 'getActivityLogs': resultData = getActivityLogs(payload.email); break;
+      case 'updateLocation': resultData = updateLocation(payload.email, payload.lat, payload.lng); break;
+      case 'getLocations': resultData = getLocations(payload.email); break;
+      default: throw new Error("Aksi tidak dikenal: " + action);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ error: false, data: resultData })).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ error: true, message: error.message })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doOptions(e) { return ContentService.createTextOutput(JSON.stringify({ status: "OK" })).setMimeType(ContentService.MimeType.JSON); }
+
+function updateLocation(email, lat, lng) {
+  if (!email || !lat || !lng) return { success: false, message: "Invalid payload" };
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName("GPS_Logs");
+    if (!sheet) { sheet = ss.insertSheet("GPS_Logs"); sheet.appendRow(["Email", "Latitude", "Longitude", "Timestamp"]); sheet.getRange("A1:D1").setFontWeight("bold").setBackground("#10b981").setFontColor("white"); }
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    const data = sheet.getDataRange().getValues();
+    let foundRow = -1;
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0]).toLowerCase().trim() === String(email).toLowerCase().trim()) { foundRow = i + 1; break; } }
+    if (foundRow > 0) { sheet.getRange(foundRow, 2, 1, 3).setValues([[lat, lng, timestamp]]); } else { sheet.appendRow([email, lat, lng, timestamp]); }
+    return { success: true };
+  } catch (e) { return { success: false, message: e.message }; }
+}
+
+function getLocations(userEmail) {
+  try {
+    const role = checkUserRole(userEmail);
+    if (role !== "OWNER") { return { success: false, message: "Akses ditolak." }; }
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("GPS_Logs");
+    if (!sheet) return { success: true, data: [] };
+    const data = sheet.getDataRange().getDisplayValues();
+    if (data.length <= 1) return { success: true, data: [] };
+    let list = data.slice(1).map(row => ({ email: String(row[0] || ''), lat: String(row[1] || ''), lng: String(row[2] || ''), timestamp: String(row[3] || '') }));
+    return { success: true, data: list };
+  } catch (e) { return { success: false, message: e.message }; }
+}
+
+function logActivity(email, action, description) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName("Activity_Log");
+    if (!sheet) { sheet = ss.insertSheet("Activity_Log"); sheet.appendRow(["Timestamp", "User Email", "Role", "Action", "Description"]); sheet.getRange("A1:E1").setFontWeight("bold").setBackground("#374151").setFontColor("white"); }
+    const role = checkUserRole(email);
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    sheet.appendRow([timestamp, email, role, action, description]);
+  } catch (e) { console.log(e.message); }
+}
+
+function getActivityLogs(userEmail) {
+  try {
+    const role = checkUserRole(userEmail);
+    if (role !== "OWNER") { return { success: false, message: "Akses ditolak." }; }
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Activity_Log");
+    if (!sheet) return { success: true, data: [] };
+    const data = sheet.getDataRange().getDisplayValues();
+    if (data.length <= 1) return { success: true, data: [] };
+    let list = data.slice(1).map(row => ({ timestamp: String(row[0] || ''), email: String(row[1] || ''), role: String(row[2] || ''), action: String(row[3] || ''), description: String(row[4] || '') })).reverse(); 
+    return { success: true, data: list.slice(0, 100) };
+  } catch (e) { return { success: false, message: e.message }; }
+}
+
+function getDashboardStats() {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
+    if (!sheet) return { total: 0, total_port: 0, online: 0, offline: 0, warning: 0, olt: 0, switch: 0, backbone: 0 };
+    const data = sheet.getDataRange().getValues();
+    let uniqueDevices = new Map();
+    let stats = { total: 0, total_port: 0, online: 0, offline: 0, warning: 0, olt: 0, switch: 0, backbone: 0 };
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i]; let nama = String(row[0] || '').trim(); if (!nama) continue; 
+      let tipe = String(row[1] || '').toUpperCase().trim(); let status = String(row[6] || '').toLowerCase().trim();
+      stats.total_port++;
+      if (status.includes('online')) stats.online++; else if (status.includes('offline')) stats.offline++; else if (status.includes('warning')) stats.warning++;
+      if (!uniqueDevices.has(nama)) { uniqueDevices.set(nama, true); stats.total++; if (tipe === 'OLT') stats.olt++; else if (tipe === 'SWITCH') stats.switch++; else if (tipe === 'BACKBONE') stats.backbone++; }
+    }
+    return stats;
+  } catch (error) { throw new Error(error.message); }
+}
+
+function getRecapStats() {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
+    if (!sheet) return [];
+    const data = sheet.getDataRange().getValues();
+    let locationMap = {}; 
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i]; let nama = String(row[0] || '').trim(); if (!nama) continue;
+      let tipe = String(row[1] || '').toUpperCase().trim(); if (tipe !== 'OLT' && tipe !== 'SWITCH') tipe = 'BACKBONE';
+      let lokasi = String(row[3] || '').trim() || 'Unknown Location'; let port = String(row[4] || '').trim(); let otb = String(row[5] || '').trim();
+      if (!locationMap[lokasi]) { locationMap[lokasi] = { OLT: {}, SWITCH: {}, BACKBONE: {} }; }
+      if (!locationMap[lokasi][tipe][nama]) { locationMap[lokasi][tipe][nama] = { ports: new Set(), otbs: new Set() }; }
+      port.split(',').forEach(p => { if (p.trim() !== "" && p.trim() !== "-") locationMap[lokasi][tipe][nama].ports.add(p.trim()); });
+      otb.split(',').forEach(o => { if (o.trim() !== "" && o.trim() !== "-") locationMap[lokasi][tipe][nama].otbs.add(o.trim()); });
+    }
+    let resultList = [];
+    for (let loc in locationMap) {
+       let locData = { lokasi: loc, OLT: [], SWITCH: [], BACKBONE: [] };
+       ['OLT', 'SWITCH', 'BACKBONE'].forEach(t => { for(let dev in locationMap[loc][t]) { locData[t].push({ nama: dev, total_port: locationMap[loc][t][dev].ports.size, total_otb: locationMap[loc][t][dev].otbs.size }); } locData[t].sort((a,b) => b.total_port - a.total_port); });
+       resultList.push(locData);
+    }
+    resultList.sort((a,b) => a.lokasi.localeCompare(b.lokasi));
+    return resultList;
+  } catch (error) { throw new Error(error.message); }
+}
+
+function searchNetworkData(filters) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
+    if (!sheet) return [];
+    const data = sheet.getDataRange().getDisplayValues();
+    if (data.length <= 1) return [];
+    const MAX_RESULTS_FOR_MOBILE = 50; let result = [];
+    let fType = (!filters.type || filters.type === 'All') ? '' : String(filters.type).toUpperCase();
+    let fNama = String(filters.nama || '').toLowerCase().trim(); let fLokasi = String(filters.lokasi || '').toLowerCase().trim(); let fPort = String(filters.port || '').toLowerCase().trim(); let fOtb = String(filters.otb || '').toLowerCase().trim();
+    for (let i = 1; i < data.length; i++) {
+      let row = data[i]; if (!row[0] || row[0] === "") continue; 
+      let t = String(row[1] || '').toUpperCase(); if (fType !== '' && t !== fType) continue;
+      let match = true;
+      if (fNama !== '' && !String(row[0] || '').toLowerCase().includes(fNama)) match = false;
+      if (match && fLokasi !== '' && !String(row[3] || '').toLowerCase().includes(fLokasi)) match = false;
+      if (match && fPort !== '' && !String(row[4] || '').toLowerCase().includes(fPort)) match = false;
+      if (match && fOtb !== '' && !String(row[5] || '').toLowerCase().includes(fOtb)) match = false;
+      if (match) {
+        result.push({ nama_perangkat: String(row[0] || '').trim(), tipe: String(row[1] || '').trim(), ip_address: String(row[2] || '').trim(), lokasi: String(row[3] || '').trim(), info_port: String(row[4] || '').trim(), kode_otb: String(row[5] || '').trim(), status: String(row[6] || '').trim() });
+        if (result.length >= MAX_RESULTS_FOR_MOBILE) break;
+      }
+    }
+    return result;
+  } catch (error) { throw new Error(error.message); }
+}
+
+function verifyLogin(email, password) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet(); let sheet = ss.getSheetByName("Users");
+    if (!sheet) { sheet = ss.insertSheet("Users"); sheet.appendRow(["Email", "Password", "Nama Lengkap", "Role"]); sheet.appendRow(["ispowner@gmail.com", "owner123", "Pemilik Utama ISP", "OWNER"]); }
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      if (String(data[i][0]).toLowerCase().trim() === String(email).toLowerCase().trim() && String(data[i][1]).trim() === String(password).trim()) {
+        let userRole = data[i][3] ? String(data[i][3]).toUpperCase().trim() : "USER";
+        logActivity(String(email).toLowerCase(), "LOGIN", "Pengguna berhasil masuk ke sistem.");
+        return { success: true, message: "Login Berhasil", role: userRole, email: String(email).toLowerCase() };
+      }
+    }
+    return { success: false, message: "Email atau Password tidak cocok!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function checkUserRole(email) {
+  if (!email) return "USER";
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Users");
+    if (!sheet) return "USER";
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0]).toLowerCase().trim() === String(email).toLowerCase().trim()) return data[i][3] ? String(data[i][3]).toUpperCase().trim() : "USER"; }
+    return "USER";
+  } catch (e) { return "USER"; }
+}
+
+function insertNetworkData(dataObj, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "ADMIN" && userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const ss = SpreadsheetApp.getActiveSpreadsheet(); let sheet = ss.getSheetByName("Database");
+    if (!sheet) { sheet = ss.insertSheet("Database"); sheet.appendRow(["Nama Perangkat", "Tipe", "IP Address", "Lokasi", "Port Info", "Kode OTB", "Status", "Timestamp"]); sheet.getRange("A1:H1").setFontWeight("bold").setBackground("#3b82f6").setFontColor("white"); }
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    let ports = (dataObj.info_port || "").split(',').map(s => s.trim()).filter(s => s !== "");
+    let otbs = (dataObj.kode_otb || "").split(',').map(s => s.trim()).filter(s => s !== "");
+    if (ports.length === 0) ports = ["-"]; if (otbs.length === 0) otbs = ["-"];
+    let maxRows = Math.max(ports.length, otbs.length); let rowsToInsert = [];
+    for (let i = 0; i < maxRows; i++) {
+      let currentPort = ports[i] !== undefined ? ports[i] : (ports.length === 1 ? ports[0] : "-");
+      let currentOtb = otbs[i] !== undefined ? otbs[i] : (otbs.length === 1 ? otbs[0] : "-");
+      rowsToInsert.push([dataObj.nama_perangkat, dataObj.tipe, dataObj.ip_address, dataObj.lokasi, currentPort, currentOtb, dataObj.status, timestamp]);
+    }
+    sheet.insertRowsAfter(1, rowsToInsert.length); sheet.getRange(2, 1, rowsToInsert.length, 8).setValues(rowsToInsert);
+    logActivity(userEmail, "INSERT_NODE", `Menambahkan Perangkat baru: ${dataObj.nama_perangkat} (${dataObj.tipe}) di lokasi ${dataObj.lokasi}.`);
+    return { success: true, message: `${rowsToInsert.length} baris data perangkat berhasil diregistrasi!` };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function updateNetworkData(originalData, updatedData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
+    if (!sheet) return { success: false, message: "Database tidak ditemukan di server!" };
+    const data = sheet.getDataRange().getValues(); let targetRowIndex = -1;
+    for (let i = 1; i < data.length; i++) {
+      if (String(data[i][0]).trim() === String(originalData.nama_perangkat).trim() && String(data[i][4]).trim() === String(originalData.info_port).trim() && String(data[i][5]).trim() === String(originalData.kode_otb).trim()) { targetRowIndex = i + 1; break; }
+    }
+    if (targetRowIndex === -1) return { success: false, message: "Data tidak ditemukan." };
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    sheet.getRange(targetRowIndex, 1, 1, 8).setValues([[updatedData.nama_perangkat, updatedData.tipe, updatedData.ip_address, updatedData.lokasi, updatedData.info_port, updatedData.kode_otb, updatedData.status, timestamp]]);
+    logActivity(userEmail, "UPDATE_NODE", `Mengubah informasi perangkat: ${updatedData.nama_perangkat}.`);
+    return { success: true, message: "Data Node berhasil diubah!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function deleteNetworkData(targetData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
+    if (!sheet) return { success: false, message: "Database tidak ditemukan!" };
+    const data = sheet.getDataRange().getValues(); let targetRowIndex = -1;
+    for (let i = 1; i < data.length; i++) {
+      if (String(data[i][0]).trim() === String(targetData.nama_perangkat).trim() && String(data[i][4]).trim() === String(targetData.info_port).trim() && String(data[i][5]).trim() === String(targetData.kode_otb).trim()) { targetRowIndex = i + 1; break; }
+    }
+    if (targetRowIndex === -1) return { success: false, message: "Gagal menghapus: Perangkat tidak ditemukan." };
+    sheet.deleteRow(targetRowIndex); 
+    logActivity(userEmail, "DELETE_NODE", `Menghapus permanen perangkat: ${targetData.nama_perangkat}.`);
+    return { success: true, message: "Data Node berhasil dihapus permanen!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function insertEWOData(dataObj, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "ADMIN" && userRole !== "OWNER") return { success: false, message: "Akses Ditolak." };
+    const ss = SpreadsheetApp.getActiveSpreadsheet(); let sheet = ss.getSheetByName("EWO_Database");
+    if (!sheet) { sheet = ss.insertSheet("EWO_Database"); sheet.appendRow(["No EWO", "Deskripsi", "Status", "Timestamp"]); sheet.getRange("A1:D1").setFontWeight("bold").setBackground("#10b981").setFontColor("white"); }
+    const data = sheet.getDataRange().getDisplayValues(); const newEwoNo = String(dataObj.no_ewo).trim().toLowerCase();
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0] || '').trim().toLowerCase() === newEwoNo) { return { success: false, message: `Gagal: Nomor EWO "${dataObj.no_ewo}" sudah terdaftar!` }; } }
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    sheet.appendRow([dataObj.no_ewo, dataObj.deskripsi, dataObj.status, timestamp]);
+    logActivity(userEmail, "INSERT_EWO", `Membuat EWO Baru dengan No: ${dataObj.no_ewo}.`);
+    return { success: true, message: "EWO berhasil disimpan!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function getEWOData() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("EWO_Database");
+  if (!sheet) return [];
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return [];
+  let list = data.slice(1).map(row => ({ no_ewo: String(row[0] || ''), deskripsi: String(row[1] || ''), status: String(row[2] || '') }));
+  return list.length > 50 ? list.slice(-50) : list; 
+}
+
+function updateEWOData(originalData, updatedData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("EWO_Database");
+    if (!sheet) return { success: false, message: "Database EWO tidak ditemukan!" };
+    const data = sheet.getDataRange().getValues(); let targetRowIndex = -1;
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0]).trim() === String(originalData.no_ewo).trim() && String(data[i][1]).trim() === String(originalData.deskripsi).trim()) { targetRowIndex = i + 1; break; } }
+    if (targetRowIndex === -1) return { success: false, message: "Data EWO tidak ditemukan." };
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    sheet.getRange(targetRowIndex, 1, 1, 4).setValues([[ updatedData.no_ewo, updatedData.deskripsi, updatedData.status, timestamp ]]);
+    logActivity(userEmail, "UPDATE_EWO", `Mengubah EWO: ${updatedData.no_ewo}.`);
+    return { success: true, message: "Data EWO berhasil diperbarui!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function deleteEWOData(targetData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("EWO_Database");
+    if (!sheet) return { success: false, message: "Database EWO tidak ditemukan!" };
+    const data = sheet.getDataRange().getValues(); let targetRowIndex = -1;
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0]).trim() === String(targetData.no_ewo).trim() && String(data[i][1]).trim() === String(targetData.deskripsi).trim()) { targetRowIndex = i + 1; break; } }
+    if (targetRowIndex === -1) return { success: false, message: "Data EWO tidak ditemukan." };
+    sheet.deleteRow(targetRowIndex); 
+    logActivity(userEmail, "DELETE_EWO", `Menghapus EWO: ${targetData.no_ewo}.`);
+    return { success: true, message: "Data EWO berhasil dihapus!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function uploadOTDRData(formObject) {
+  try {
+    const userRole = checkUserRole(formObject.userEmail);
+    if (userRole !== "ADMIN" && userRole !== "OWNER") return { success: false, message: "Akses Ditolak." };
+    let rawBase64 = formObject.fileData || "";
+    if (rawBase64.includes(",")) rawBase64 = rawBase64.split(",")[1];
+    if (!rawBase64) throw new Error("Data file kosong.");
+    const mainFolderName = "OTDR_Files";
+    let mainFolder, mainFolders = DriveApp.getFoldersByName(mainFolderName);
+    if (mainFolders.hasNext()) mainFolder = mainFolders.next(); else mainFolder = DriveApp.createFolder(mainFolderName);
+    let folderInput = formObject.nama_folder ? formObject.nama_folder.trim() : "";
+    if (!folderInput || folderInput === "Umum") folderInput = `OTDR - ${formObject.lokasi} - ${formObject.nama_otb}`;
+    let targetFolder, subFolders = mainFolder.getFoldersByName(folderInput);
+    if (subFolders.hasNext()) targetFolder = subFolders.next(); else targetFolder = mainFolder.createFolder(folderInput);
+    const blob = Utilities.newBlob(Utilities.base64Decode(rawBase64), formObject.fileMimeType || 'application/octet-stream', formObject.fileName);
+    const file = targetFolder.createFile(blob);
+    const ss = SpreadsheetApp.getActiveSpreadsheet(); let sheet = ss.getSheetByName("OTDR_Database");
+    if (!sheet) { sheet = ss.insertSheet("OTDR_Database"); sheet.getRange("A1:E1").setValues([["Nama Folder", "Nama OTB", "Lokasi", "File SOR URL", "Timestamp"]]).setFontWeight("bold").setBackground("#a855f7").setFontColor("white"); }
+    const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm:ss");
+    sheet.appendRow([folderInput, formObject.nama_otb, formObject.lokasi, file.getUrl(), timestamp]);
+    logActivity(formObject.userEmail, "UPLOAD_OTDR", `Mengunggah file OTDR: ${formObject.fileName}.`);
+    return { success: true, message: `File OTDR "${formObject.fileName}" berhasil diupload!` };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function getOTDRData(page) {
+  try {
+    const targetPage = page || 1; const pageSize = 50;
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("OTDR_Database");
+    if (!sheet) return { data: [], totalPages: 0, currentPage: targetPage };
+    const data = sheet.getDataRange().getDisplayValues();
+    if (data.length <= 1) return { data: [], totalPages: 0, currentPage: targetPage };
+    let list = data.slice(1).map(row => {
+      if (row.length >= 5 && row[4] !== undefined && row[4] !== "") { return { nama_folder: String(row[0] || 'Umum'), nama_otb: String(row[1] || ''), lokasi: String(row[2] || ''), file_url: String(row[3] || ''), timestamp: String(row[4] || '') }; }
+      else { return { nama_folder: 'Umum', nama_otb: String(row[0] || ''), lokasi: String(row[1] || ''), file_url: String(row[2] || ''), timestamp: String(row[3] || '') }; }
+    }).reverse(); 
+    return { data: list.slice((targetPage - 1) * pageSize, ((targetPage - 1) * pageSize) + pageSize), totalPages: Math.ceil(list.length / pageSize) || 1, currentPage: targetPage };
+  } catch (error) { throw new Error(error.message); }
+}
+
+function updateOTDRData(originalData, updatedData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("OTDR_Database");
+    if (!sheet) return { success: false, message: "Database OTDR tidak ditemukan!" };
+    const data = sheet.getDataRange().getDisplayValues(); let targetRowIndex = -1; let is5Cols = sheet.getLastColumn() >= 5;
+    for (let i = 1; i < data.length; i++) {
+      let rowTimestamp = is5Cols ? String(data[i][4] || '').trim() : String(data[i][3] || '').trim();
+      let rowOtb = is5Cols ? String(data[i][1] || '').trim() : String(data[i][0] || '').trim();
+      if (rowOtb === String(originalData.nama_otb).trim() && rowTimestamp === String(originalData.timestamp).trim()) { targetRowIndex = i + 1; break; }
+    }
+    if (targetRowIndex === -1) return { success: false, message: "Data OTDR tidak ditemukan." };
+    if (is5Cols) { sheet.getRange(targetRowIndex, 1, 1, 3).setValues([[ updatedData.nama_folder || 'Umum', updatedData.nama_otb, updatedData.lokasi ]]); }
+    else { sheet.getRange(targetRowIndex, 1, 1, 2).setValues([[ updatedData.nama_otb, updatedData.lokasi ]]); }
+    return { success: true, message: "Data OTDR berhasil diperbarui!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function deleteOTDRData(targetData, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("OTDR_Database");
+    if (!sheet) return { success: false, message: "Database OTDR tidak ditemukan!" };
+    const data = sheet.getDataRange().getDisplayValues(); let targetRowIndex = -1; let fileUrl = ""; let is5Cols = sheet.getLastColumn() >= 5;
+    for (let i = 1; i < data.length; i++) {
+      let rowTimestamp = is5Cols ? String(data[i][4] || '').trim() : String(data[i][3] || '').trim(); let rowOtb = is5Cols ? String(data[i][1] || '').trim() : String(data[i][0] || '').trim();
+      if (rowOtb === String(targetData.nama_otb).trim() && rowTimestamp === String(targetData.timestamp).trim()) { targetRowIndex = i + 1; fileUrl = is5Cols ? String(data[i][3] || '') : String(data[i][2] || ''); break; }
+    }
+    if (targetRowIndex === -1) return { success: false, message: "Data tidak ditemukan." };
+    sheet.deleteRow(targetRowIndex); 
+    if (fileUrl) { let idMatch = fileUrl.match(/[-\w]{25,}/); if (idMatch) { try { DriveApp.getFileById(idMatch[0]).setTrashed(true); } catch (e) {} } }
+    return { success: true, message: "Data OTDR berhasil dihapus!" };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function updateOTDRFolder(oldFolderName, newFolderName, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("OTDR_Database");
+    if (!sheet) return { success: false, message: "Database OTDR tidak ditemukan!" };
+    const data = sheet.getDataRange().getValues(); let is5Cols = sheet.getLastColumn() >= 5;
+    if (!is5Cols) return { success: false, message: "Format lama." };
+    let updatedCount = 0;
+    for (let i = 1; i < data.length; i++) { if (String(data[i][0]).trim() === String(oldFolderName).trim()) { sheet.getRange(i + 1, 1).setValue(newFolderName); updatedCount++; } }
+    const mainFolders = DriveApp.getFoldersByName("OTDR_Files");
+    if (mainFolders.hasNext()) { const mainFolder = mainFolders.next(); const targetFolders = mainFolder.getFoldersByName(oldFolderName); while (targetFolders.hasNext()) { try { targetFolders.next().setName(newFolderName); } catch (e) {} } }
+    return { success: true, message: `Nama folder diubah.` };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+
+function deleteOTDRFolder(folderName, userEmail) {
+  try {
+    const userRole = checkUserRole(userEmail);
+    if (userRole !== "OWNER") return { success: false, message: "AKSES DITOLAK." };
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("OTDR_Database");
+    if (!sheet) return { success: false, message: "Database OTDR tidak ditemukan!" };
+    const data = sheet.getDataRange().getValues(); let is5Cols = sheet.getLastColumn() >= 5;
+    if (!is5Cols) return { success: false, message: "Format lama." };
+    let deletedCount = 0;
+    for (let i = data.length - 1; i >= 1; i--) {
+      if (String(data[i][0]).trim() === String(folderName).trim()) {
+        let fileUrl = String(data[i][3] || '');
+        if (fileUrl) { let idMatch = fileUrl.match(/[-\w]{25,}/); if (idMatch) { try { DriveApp.getFileById(idMatch[0]).setTrashed(true); } catch (e) {} } }
+        sheet.deleteRow(i + 1); deletedCount++;
+      }
+    }
+    const mainFolders = DriveApp.getFoldersByName("OTDR_Files");
+    if (mainFolders.hasNext()) { const mainFolder = mainFolders.next(); const targetFolders = mainFolder.getFoldersByName(folderName); while (targetFolders.hasNext()) { try { targetFolders.next().setTrashed(true); } catch (e) {} } }
+    return { success: true, message: `Folder dihapus.` };
+  } catch (error) { return { success: false, message: error.message }; }
+}
+-->
 </html>
