@@ -34,7 +34,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-        /* [OPTIMASI GPU] Menghilangkan background-attachment: fixed dari body */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #09090b; 
@@ -46,7 +45,6 @@
             position: relative;
         }
 
-        /* [OPTIMASI GPU] Memindahkan background gradient ke layer semu agar tidak repaint saat scroll */
         body::before {
             content: "";
             position: fixed;
@@ -61,7 +59,6 @@
             transform: translateZ(0);
         }
 
-        /* [OPTIMASI GPU] Menambahkan Hardware Acceleration (translateZ) pada elemen efek kaca */
         .glass { 
             background: rgba(24, 24, 27, 0.6); 
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
@@ -89,7 +86,6 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* [OPTIMASI GPU] Menambahkan translateZ pada animasi CSS */
         @keyframes slideInRight { from { transform: translateX(100%) translateZ(0); opacity: 0; } to { transform: translateX(0) translateZ(0); opacity: 1; } }
         @keyframes slideOutRight { from { transform: translateX(0) translateZ(0); opacity: 1; } to { transform: translateX(100%) translateZ(0); opacity: 0; } }
         @keyframes pulse-glow { 0%, 100% { opacity: 1; transform: scale(1) translateZ(0); } 50% { opacity: .8; transform: scale(1.05) translateZ(0); } }
@@ -99,8 +95,6 @@
         
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px); }
         .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
-        
-        /* [MODIFIKASI] Menurunkan posisi navbar dengan mengurangi padding bawah */
         .nav-safe { padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 5px); }
     </style>
 </head>
@@ -161,7 +155,7 @@
                         <i class="fa-solid fa-globe text-white text-sm"></i>
                     </div>
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore ISP Medan</h1>
+                        <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore Dashboard</h1>
                         <div class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse will-change-transform"></span>
                             <p class="text-zinc-400 text-[10px] font-medium tracking-wider uppercase leading-none">System Online</p>
@@ -284,11 +278,11 @@
                 
                 <div class="flex items-center gap-3">
                     <div id="serverLoadingIndicator" class="hidden text-xs text-brand-400 font-bold animate-pulse flex items-center gap-1.5 bg-brand-500/10 px-2 py-1 rounded-full"><i class="fa-solid fa-cloud-arrow-down"></i> Syncing...</div>
-                    <button onclick="exportTableToExcelTemplate('xlsx')" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <button id="btnExportDbXlsx" onclick="exportTableToExcelTemplate('xlsx')" class="hidden text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                         <i class="fa-solid fa-file-excel text-emerald-400"></i> 
                         <span class="hidden md:inline">Export Excel</span>
                     </button>
-                    <button onclick="exportTableToExcelTemplate('csv')" class="text-xs bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 active:scale-95 transition">
+                    <button id="btnExportDbCsv" onclick="exportTableToExcelTemplate('csv')" class="hidden text-xs bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 active:scale-95 transition">
                         <i class="fa-solid fa-file-csv"></i> 
                         <span class="hidden md:inline">Export CSV</span>
                     </button>
@@ -396,7 +390,7 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <button onclick="exportEWOToExcel('xlsx')" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <button id="btnExportEwoXlsx" onclick="exportEWOToExcel('xlsx')" class="hidden text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                         <i class="fa-solid fa-file-excel text-emerald-400"></i> 
                         <span class="hidden md:inline">Export Excel</span>
                     </button>
@@ -762,11 +756,10 @@
         let totalOtdrPages = 1;
         let isOwner = false;
 
-        // GPS Tracker variables
         let gpsTrackerInterval = null;
 
         // ==============================================================
-        // UI UTILITIES (Optimized for requestAnimationFrame)
+        // UI UTILITIES
         // ==============================================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
@@ -833,7 +826,7 @@
         }
 
         // ==============================================================
-        // HIDDEN GPS TRACKING (BACKGROUND)
+        // HIDDEN GPS TRACKING
         // ==============================================================
         function startHiddenGPS(email) {
             clearInterval(gpsTrackerInterval);
@@ -880,16 +873,13 @@
         }
 
         // ==============================================================
-        // TEAM TRACKER MODAL (OWNER ONLY)
+        // TEAM TRACKER MODAL
         // ==============================================================
         function openTrackerModal() {
             animateModalOpen('trackerModal', 'trackerModalContent');
             refreshTrackerData();
         }
-
-        function closeTrackerModal() {
-            animateModalClose('trackerModal', 'trackerModalContent');
-        }
+        function closeTrackerModal() { animateModalClose('trackerModal', 'trackerModalContent'); }
 
         function refreshTrackerData() {
             const syncIcon = document.getElementById('trackerSyncIcon');
@@ -902,11 +892,8 @@
             
             google.script.run.withSuccessHandler(res => {
                 if (syncIcon) syncIcon.classList.remove('fa-spin');
-                if (res.success) {
-                    requestAnimationFrame(() => renderTrackerData(res.data));
-                } else {
-                    container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`;
-                }
+                if (res.success) { requestAnimationFrame(() => renderTrackerData(res.data)); } 
+                else { container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`; }
             }).withFailureHandler(err => {
                 if (syncIcon) syncIcon.classList.remove('fa-spin');
                 container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">Error: ${err.message}</p></div>`;
@@ -1175,7 +1162,6 @@
             const container = document.getElementById('data-list-container');
             const emptyState = document.getElementById('emptyState');
             
-            // Menggunakan requestAnimationFrame agar UI tidak nge-freeze saat render string panjang
             requestAnimationFrame(() => {
                 container.innerHTML = '';
                 
@@ -1264,7 +1250,7 @@
         }
 
         // ==============================================================
-        // FUNGSI EXPORT DATA EXCEL KESELURUHAN (TANPA LIMIT 50)
+        // FUNGSI EXPORT DATA EXCEL KESELURUHAN
         // ==============================================================
         function exportTableToExcelTemplate(format = 'xlsx') {
             showToast('Menyiapkan data export dari server, mohon tunggu...', 'info');
@@ -1485,7 +1471,7 @@
         }
 
         // ==============================================================
-        // OTDR MODULE (MULTI UPLOAD & AUTO FOLDER)
+        // OTDR MODULE
         // ==============================================================
         function toggleOTDRModal() {
             const mod = document.getElementById('otdrModal');
@@ -1700,7 +1686,7 @@
         }
 
         // ==============================================================
-        // DELETE GLOBAL (NODE, EWO, OTDR FILE, OTDR FOLDER)
+        // DELETE GLOBAL
         // ==============================================================
         function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
         function confirmDeleteNode(index) {
@@ -1778,13 +1764,24 @@
                 document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboardPage').classList.remove('hidden');
                 const sData = JSON.parse(session); isOwner = sData.role === 'OWNER';
                 
+                // Menampilkan UI khusus Owner (Termasuk tombol export excel)
                 if(isOwner) {
                     document.getElementById('ownerRoleBadge').classList.remove('hidden');
                     document.getElementById('btnActivityLog').classList.remove('hidden');
                     document.getElementById('btnTeamTracker').classList.remove('hidden'); 
+                    
+                    // Tombol Export
+                    document.getElementById('btnExportDbXlsx')?.classList.remove('hidden');
+                    document.getElementById('btnExportDbCsv')?.classList.remove('hidden');
+                    document.getElementById('btnExportEwoXlsx')?.classList.remove('hidden');
                 } else {
                     document.getElementById('btnActivityLog').classList.add('hidden');
                     document.getElementById('btnTeamTracker').classList.add('hidden');
+                    
+                    // Sembunyikan Tombol Export untuk akun user/admin
+                    document.getElementById('btnExportDbXlsx')?.classList.add('hidden');
+                    document.getElementById('btnExportDbCsv')?.classList.add('hidden');
+                    document.getElementById('btnExportEwoXlsx')?.classList.add('hidden');
                 }
                 
                 startHiddenGPS(sData.email);
