@@ -431,7 +431,6 @@
                             <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">.SOR File(s)</label>
                             <div class="relative w-full border-2 border-dashed border-zinc-700 rounded-xl hover:border-purple-500 transition-colors bg-dark-800/50 flex flex-col items-center justify-center text-center overflow-hidden group min-h-[140px]">
                                 
-                                <!-- [PERBAIKAN] Atribut accept diubah menjadi */* agar webview tidak memblokir file manager Android -->
                                 <input type="file" id="fileOtdr" accept="*/*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
                                 
                                 <div id="fileUploadPrompt" class="flex flex-col items-center justify-center p-4 w-full h-full pointer-events-none z-10 transition-opacity duration-300">
@@ -495,6 +494,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
          <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -511,6 +511,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -528,6 +529,7 @@
             </div>
         </div>
     </div>
+    
     <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
         <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
@@ -549,6 +551,7 @@
             </div>
         </div>
     </div>
+    
     <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full">
         <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300">
             <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
@@ -686,6 +689,10 @@
                     getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
                     getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb),
                     searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
+                    
+                    // [PENAMBAHAN] ROUTE MOCK UNTUK EXPORT TANPA LIMIT
+                    getAllNetworkDataForExport: (filters) => fetchAPI('getAllNetworkDataForExport', {filters}, sCb, fCb),
+                    
                     insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
                     updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
                     deleteNetworkData: (targetData, email) => fetchAPI('deleteNetworkData', {targetData, email}, sCb, fCb),
@@ -1196,62 +1203,83 @@
             });
         }
 
+        // ==============================================================
+        // [PENAMBAHAN] FUNGSI EXPORT DATA EXCEL KESELURUHAN (TANPA LIMIT 50)
+        // ==============================================================
         function exportTableToExcelTemplate(format = 'xlsx') {
-            if (!lastSearchResult || lastSearchResult.length === 0) return showToast('Tidak ada data untuk diexport!', 'error');
+            showToast('Menyiapkan data export dari server, mohon tunggu...', 'info');
+            
+            // Ambil parameter filter saat ini agar data yang di-export sesuai dengan tab yang sedang aktif
+            const filters = { 
+                type: currentFilter, 
+                nama: document.getElementById('searchNama').value, 
+                lokasi: document.getElementById('searchLokasi').value, 
+                port: document.getElementById('searchPort').value, 
+                otb: document.getElementById('searchOtb').value 
+            };
+            
+            // Tembak API baru yang mengambil SEMUA data tanpa limit
+            google.script.run.withSuccessHandler(fullData => {
+                if (!fullData || fullData.length === 0) {
+                    return showToast('Tidak ada data untuk diexport!', 'error');
+                }
 
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
 
-            const templateRows = [
-                ["NETCORE ISP - LAPORAN DATABASE JARINGAN"],
-                [`Tanggal Cetak: ${dateStr}`],
-                [`Kategori Filter: ${currentFilter}`],
-                [`Total Data: ${lastSearchResult.length} Node Perangkat`],
-                [], 
-                ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
-            ];
+                const templateRows = [
+                    ["NETCORE ISP - LAPORAN KESELURUHAN DATABASE JARINGAN"],
+                    [`Tanggal Cetak: ${dateStr}`],
+                    [`Kategori Filter: ${currentFilter}`],
+                    [`Total Data Diexport: ${fullData.length} Node Perangkat`],
+                    [], 
+                    ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
+                ];
 
-            lastSearchResult.forEach((item, index) => {
-                templateRows.push([
-                    index + 1,
-                    item.nama_perangkat || '-',
-                    item.tipe || '-',
-                    item.ip_address || '-',
-                    item.lokasi || '-',
-                    item.info_port || '-',
-                    item.kode_otb || '-',
-                    item.status || '-'
-                ]);
-            });
-
-            templateRows.push([]);
-            templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
-
-            if (format === 'csv' || typeof XLSX === 'undefined') {
-                let csvContent = "\uFEFF";
-                templateRows.forEach(row => {
-                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
-                    csvContent += line + "\n";
+                fullData.forEach((item, index) => {
+                    templateRows.push([
+                        index + 1,
+                        item.nama_perangkat || '-',
+                        item.tipe || '-',
+                        item.ip_address || '-',
+                        item.lokasi || '-',
+                        item.info_port || '-',
+                        item.kode_otb || '-',
+                        item.status || '-'
+                    ]);
                 });
 
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                showToast('Export CSV Template Berhasil', 'success');
-            } else {
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.aoa_to_sheet(templateRows);
-                ws['!cols'] = [{ wch: 6 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 14 }];
-                ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } }, { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } }, { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }];
-                XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
-                XLSX.writeFile(wb, `Template_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
-                showToast('Export Excel Template (.xlsx) Berhasil!', 'success');
-            }
+                templateRows.push([]);
+                templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
+
+                if (format === 'csv' || typeof XLSX === 'undefined') {
+                    let csvContent = "\uFEFF";
+                    templateRows.forEach(row => {
+                        const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
+                        csvContent += line + "\n";
+                    });
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `Data_Full_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast(`Export ${fullData.length} Data CSV Berhasil`, 'success');
+                } else {
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet(templateRows);
+                    ws['!cols'] = [{ wch: 6 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 14 }];
+                    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } }, { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } }, { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }];
+                    XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
+                    XLSX.writeFile(wb, `Data_Full_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
+                    showToast(`Export ${fullData.length} Data Excel (.xlsx) Berhasil!`, 'success');
+                }
+            }).withFailureHandler(err => {
+                showToast('Gagal menarik data dari server: ' + err.message, 'error');
+            }).getAllNetworkDataForExport(filters);
         }
 
         // ==============================================================
@@ -1675,7 +1703,7 @@
             localStorage.removeItem('netcore_session'); 
             document.getElementById('loginForm').reset(); 
             document.getElementById('ownerRoleBadge').classList.add('hidden');
-            stopHiddenGPS(); // Hentikan GPS Tracker saat logout
+            stopHiddenGPS(); 
             checkSession();
         }
 
@@ -1688,13 +1716,12 @@
                 if(isOwner) {
                     document.getElementById('ownerRoleBadge').classList.remove('hidden');
                     document.getElementById('btnActivityLog').classList.remove('hidden');
-                    document.getElementById('btnTeamTracker').classList.remove('hidden'); // Tampilkan tombol GPS Tracker
+                    document.getElementById('btnTeamTracker').classList.remove('hidden'); 
                 } else {
                     document.getElementById('btnActivityLog').classList.add('hidden');
                     document.getElementById('btnTeamTracker').classList.add('hidden');
                 }
                 
-                // Mulai pelacakan GPS tersembunyi
                 startHiddenGPS(sData.email);
 
                 refreshDashboardStats();
