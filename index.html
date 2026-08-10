@@ -6,103 +6,37 @@
     <meta name="theme-color" content="#09090b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <title>Netcore | ISP Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: { 900: '#09090b', 800: '#18181b', 700: '#27272a' },
-                        brand: { 500: '#3b82f6', 400: '#60a5fa' },
-                        accent: { 500: '#10b981', 400: '#34d399' }
-                    },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    boxShadow: {
-                        'neon-blue': '0 0 15px rgba(59, 130, 246, 0.5)',
-                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.5)',
-                        'neon-purple': '0 0 15px rgba(168, 85, 247, 0.5)',
-                    }
-                }
-            }
-        }
+        tailwind.config={theme:{extend:{colors:{dark:{900:'#09090b',800:'#18181b',700:'#27272a'},brand:{500:'#3b82f6',400:'#60a5fa'},accent:{500:'#10b981',400:'#34d399'}},fontFamily:{sans:['Inter','sans-serif']},boxShadow:{'neon-blue':'0 0 15px rgba(59, 130, 246, 0.5)','neon-green':'0 0 15px rgba(16, 185, 129, 0.5)','neon-purple':'0 0 15px rgba(168, 85, 247, 0.5)'}}}}
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #09090b; 
-            color: #f4f4f5; 
-            -webkit-tap-highlight-color: transparent; 
-            overscroll-behavior-y: none; 
-            overflow-x: hidden; 
-            width: 100vw;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -999;
-            background-color: #09090b;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
-            pointer-events: none;
-            transform: translateZ(0);
-        }
-
-        .glass { 
-            background: rgba(24, 24, 27, 0.6); 
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            transform: translateZ(0); -webkit-transform: translateZ(0);
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
-        }
-        .glass-card { 
-            background: linear-gradient(135deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.8) 100%); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
-            transform: translateZ(0); -webkit-transform: translateZ(0);
-            backface-visibility: hidden; -webkit-backface-visibility: hidden;
-        }
-        .glass-input { 
-            background: rgba(9, 9, 11, 0.5); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s ease; 
-            transform: translateZ(0); -webkit-transform: translateZ(0);
-        }
-        .glass-input:focus { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); background: rgba(9, 9, 11, 0.8); }
-
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        @keyframes slideInRight { from { transform: translateX(100%) translateZ(0); opacity: 0; } to { transform: translateX(0) translateZ(0); opacity: 1; } }
-        @keyframes slideOutRight { from { transform: translateX(0) translateZ(0); opacity: 1; } to { transform: translateX(100%) translateZ(0); opacity: 0; } }
-        @keyframes pulse-glow { 0%, 100% { opacity: 1; transform: scale(1) translateZ(0); } 50% { opacity: .8; transform: scale(1.05) translateZ(0); } }
-
-        .toast-enter { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; will-change: transform, opacity; }
-        .toast-exit { animation: slideOutRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; will-change: transform, opacity; }
-        
-        .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 120px); }
-        .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
-        .nav-safe { padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 5px); }
+        body{font-family:'Inter',sans-serif;background-color:#09090b;color:#f4f4f5;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none;overflow-x:hidden;width:100vw;position:relative;}
+        body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-999;background-color:#09090b;background-image:radial-gradient(at 0% 0%,hsla(253,16%,7%,1) 0,transparent 50%),radial-gradient(at 50% 0%,hsla(225,39%,30%,0.1) 0,transparent 50%),radial-gradient(at 100% 0%,hsla(339,49%,30%,0.05) 0,transparent 50%);pointer-events:none;transform:translateZ(0);}
+        .glass{background:rgba(24,24,27,0.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);transform:translateZ(0);-webkit-transform:translateZ(0);backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+        .glass-card{background:linear-gradient(135deg,rgba(39,39,42,0.4) 0%,rgba(24,24,27,0.8) 100%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.05);box-shadow:0 8px 32px 0 rgba(0,0,0,0.3);transform:translateZ(0);-webkit-transform:translateZ(0);backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+        .glass-input{background:rgba(9,9,11,0.5);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:all 0.3s ease;transform:translateZ(0);-webkit-transform:translateZ(0);}
+        .glass-input:focus{border-color:rgba(59,130,246,0.5);box-shadow:0 0 0 2px rgba(59,130,246,0.2);background:rgba(9,9,11,0.8);}
+        .scrollbar-hide::-webkit-scrollbar{display:none;}
+        .scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none;}
+        @keyframes slideInRight{from{transform:translateX(100%) translateZ(0);opacity:0;}to{transform:translateX(0) translateZ(0);opacity:1;}}
+        @keyframes slideOutRight{from{transform:translateX(0) translateZ(0);opacity:1;}to{transform:translateX(100%) translateZ(0);opacity:0;}}
+        @keyframes pulse-glow{0%,100%{opacity:1;transform:scale(1) translateZ(0);}50%{opacity:.8;transform:scale(1.05) translateZ(0);}}
+        .toast-enter{animation:slideInRight 0.3s cubic-bezier(0.16,1,0.3,1) forwards;will-change:transform,opacity;}
+        .toast-exit{animation:slideOutRight 0.3s cubic-bezier(0.16,1,0.3,1) forwards;will-change:transform,opacity;}
+        .pb-safe{padding-bottom:calc(env(safe-area-inset-bottom,20px) + 120px);}
+        .pt-safe{padding-top:env(safe-area-inset-top,0px);}
+        .nav-safe{padding-bottom:calc(env(safe-area-inset-bottom,12px) + 5px);}
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
 
     <div id="toastContainer" class="fixed top-safe pt-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none w-[90%] md:w-80 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto"></div>
 
-    <!-- Halaman Login -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-6 w-full relative overflow-hidden">
         <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-brand-500/20 rounded-full blur-[80px] -z-10 animate-[pulse-glow_8s_ease-in-out_infinite] will-change-transform"></div>
         <div class="absolute bottom-[10%] right-[10%] w-72 h-72 bg-accent-500/10 rounded-full blur-[80px] -z-10 animate-[pulse-glow_10s_ease-in-out_infinite_reverse] will-change-transform"></div>
@@ -146,7 +80,6 @@
 
     <!-- Halaman Dashboard -->
     <div id="dashboardPage" class="hidden min-h-screen relative w-full max-w-[1400px] mx-auto pb-safe">
-        
         <!-- Header -->
         <div class="sticky top-0 z-40 pt-safe glass border-b-0 shadow-lg mb-6 w-full backdrop-blur-xl">
             <div class="flex justify-between items-center px-5 py-4">
@@ -183,7 +116,6 @@
         </div>
 
         <div class="px-5 md:px-8 w-full"> 
-            
             <div id="summaryCards" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 w-full"></div>
 
             <div class="mb-8 w-full">
@@ -279,12 +211,10 @@
                 <div class="flex items-center gap-3">
                     <div id="serverLoadingIndicator" class="hidden text-xs text-brand-400 font-bold animate-pulse flex items-center gap-1.5 bg-brand-500/10 px-2 py-1 rounded-full"><i class="fa-solid fa-cloud-arrow-down"></i> Syncing...</div>
                     <button id="btnExportDbXlsx" onclick="exportTableToExcelTemplate('xlsx')" class="hidden text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                        <i class="fa-solid fa-file-excel text-emerald-400"></i> 
-                        <span class="hidden md:inline">Export Excel</span>
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> <span class="hidden md:inline">Export Excel</span>
                     </button>
                     <button id="btnExportDbCsv" onclick="exportTableToExcelTemplate('csv')" class="hidden text-xs bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 active:scale-95 transition">
-                        <i class="fa-solid fa-file-csv"></i> 
-                        <span class="hidden md:inline">Export CSV</span>
+                        <i class="fa-solid fa-file-csv"></i> <span class="hidden md:inline">Export CSV</span>
                     </button>
                     <button onclick="closeDatabaseModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
@@ -330,50 +260,14 @@
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900">
                 <form id="manualInputForm" onsubmit="handleInputData(event)" class="grid grid-cols-1 md:grid-cols-2 gap-5 pb-6">
-                    <div class="space-y-1.5 md:col-span-2">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Device Name</label>
-                        <input type="text" id="inputNama" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="e.g. OLT-ZTE-MDN-05">
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Node Type</label>
-                        <select id="inputTipe" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none">
-                            <option value="OLT" class="bg-dark-800">OLT</option><option value="Switch" class="bg-dark-800">Switch</option><option value="Backbone" class="bg-dark-800">Backbone</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">IP Address</label>
-                        <input type="text" id="inputIp" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="10.x.x.x">
-                    </div>
-                    <div class="space-y-1.5 md:col-span-2">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location Area</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-map-pin absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                            <input type="text" id="inputLokasi" required class="w-full glass-input rounded-xl py-3.5 pl-10 pr-4 text-sm text-white focus:border-accent-500 outline-none" placeholder="POP Setiabudi">
-                        </div>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between">
-                            <span>Port Info</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span>
-                        </label>
-                        <textarea id="inputPort" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="PON 1, PON 2..."></textarea>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between">
-                            <span>OTB Code</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span>
-                        </label>
-                        <textarea id="inputOtb" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="OTB-01, OTB-02..."></textarea>
-                    </div>
-                    <div class="space-y-1.5 md:col-span-2">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Initial Status</label>
-                        <select id="inputStatus" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none">
-                            <option value="Online" class="bg-dark-800 text-accent-400">Online</option><option value="Offline" class="bg-dark-800 text-red-400">Offline</option><option value="Warning" class="bg-dark-800 text-amber-400">Warning</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-2 pt-4">
-                        <button type="submit" id="submitInputBtn" class="w-full bg-accent-500 hover:bg-accent-400 text-dark-900 active:scale-95 font-bold py-4 rounded-xl transition shadow-neon-green flex items-center justify-center gap-2 text-sm will-change-transform">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Save to Database
-                        </button>
-                    </div>
+                    <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Device Name</label><input type="text" id="inputNama" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="e.g. OLT-ZTE-MDN-05"></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Node Type</label><select id="inputTipe" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none"><option value="OLT" class="bg-dark-800">OLT</option><option value="Switch" class="bg-dark-800">Switch</option><option value="Backbone" class="bg-dark-800">Backbone</option></select></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">IP Address</label><input type="text" id="inputIp" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none" placeholder="10.x.x.x"></div>
+                    <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location Area</label><div class="relative"><i class="fa-solid fa-map-pin absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i><input type="text" id="inputLokasi" required class="w-full glass-input rounded-xl py-3.5 pl-10 pr-4 text-sm text-white focus:border-accent-500 outline-none" placeholder="POP Setiabudi"></div></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between"><span>Port Info</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span></label><textarea id="inputPort" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="PON 1, PON 2..."></textarea></div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1 flex justify-between"><span>OTB Code</span><span class="text-[9px] text-accent-400/70 lowercase normal-case italic">Multiple allowed</span></label><textarea id="inputOtb" rows="2" class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none resize-y" placeholder="OTB-01, OTB-02..."></textarea></div>
+                    <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Initial Status</label><select id="inputStatus" required class="w-full glass-input rounded-xl p-3.5 text-sm text-white focus:border-accent-500 outline-none appearance-none"><option value="Online" class="bg-dark-800 text-accent-400">Online</option><option value="Offline" class="bg-dark-800 text-red-400">Offline</option><option value="Warning" class="bg-dark-800 text-amber-400">Warning</option></select></div>
+                    <div class="md:col-span-2 pt-4"><button type="submit" id="submitInputBtn" class="w-full bg-accent-500 hover:bg-accent-400 text-dark-900 active:scale-95 font-bold py-4 rounded-xl transition shadow-neon-green flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-cloud-arrow-up"></i> Save to Database</button></div>
                 </form>
             </div>
         </div>
@@ -391,8 +285,7 @@
                 
                 <div class="flex items-center gap-2 md:gap-3">
                     <button id="btnExportEwoXlsx" onclick="exportEWOToExcel('xlsx')" class="hidden text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5 active:scale-95 transition shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                        <i class="fa-solid fa-file-excel text-emerald-400"></i> 
-                        <span class="hidden md:inline">Export Excel</span>
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> <span class="hidden md:inline">Export Excel</span>
                     </button>
                     <button onclick="toggleEWOModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark"></i></button>
                 </div>
@@ -400,29 +293,14 @@
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
                 <form id="ewoInputForm" onsubmit="handleEWOInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">EWO Number</label>
-                            <input type="text" id="noEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="EWO-2026-001">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Status</label>
-                            <select id="statEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none appearance-none">
-                                <option value="Not Done" class="bg-dark-800">Not Done</option><option value="Done" class="bg-dark-800">Done</option>
-                            </select>
-                        </div>
-                        <div class="space-y-1.5 md:col-span-2">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Job Description</label>
-                            <input type="text" id="deskEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="Describe task...">
-                        </div>
+                        <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">EWO Number</label><input type="text" id="noEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="EWO-2026-001"></div>
+                        <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Status</label><select id="statEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none appearance-none"><option value="Not Done" class="bg-dark-800">Not Done</option><option value="Done" class="bg-dark-800">Done</option></select></div>
+                        <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Job Description</label><input type="text" id="deskEwo" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="Describe task..."></div>
                     </div>
-                    <button type="submit" id="submitEwoBtn" class="w-full mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform">
-                        <i class="fa-solid fa-plus"></i> Create EWO
-                    </button>
+                    <button type="submit" id="submitEwoBtn" class="w-full mt-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-plus"></i> Create EWO</button>
                 </form>
                 
-                <div class="flex items-center gap-2 mb-4 pl-1">
-                    <i class="fa-solid fa-clock-rotate-left text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Recent History</h4>
-                </div>
+                <div class="flex items-center gap-2 mb-4 pl-1"><i class="fa-solid fa-clock-rotate-left text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Recent History</h4></div>
                 <div id="ewoList" class="space-y-3 text-sm w-full"></div>
             </div>
         </div>
@@ -443,55 +321,36 @@
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1 bg-dark-900 pb-safe">
                 <form id="otdrInputForm" onsubmit="handleOTDRInput(event)" class="space-y-4 mb-8 glass-card p-5 rounded-2xl border-purple-500/20">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1.5 md:col-span-2">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Project/Folder Name</label>
-                            <input type="text" id="folderOtdr" class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="Optional: Auto-generated if empty">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">OTB Name</label>
-                            <input type="text" id="otbOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="OTB-STB-01">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location</label>
-                            <input type="text" id="lokasiOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="POP Area">
-                        </div>
+                        <div class="space-y-1.5 md:col-span-2"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Project/Folder Name</label><input type="text" id="folderOtdr" class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="Optional: Auto-generated if empty"></div>
+                        <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">OTB Name</label><input type="text" id="otbOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="OTB-STB-01"></div>
+                        <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">Location</label><input type="text" id="lokasiOtdr" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-purple-500 outline-none" placeholder="POP Area"></div>
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider ml-1">.SOR File(s)</label>
                             <div class="relative w-full border-2 border-dashed border-zinc-700 rounded-xl hover:border-purple-500 transition-colors bg-dark-800/50 flex flex-col items-center justify-center text-center overflow-hidden group min-h-[140px]">
-                                
                                 <input type="file" id="fileOtdr" accept="*/*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="updateFileList(this)">
-                                
                                 <div id="fileUploadPrompt" class="flex flex-col items-center justify-center p-4 w-full h-full pointer-events-none z-10 transition-opacity duration-300">
                                     <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
                                     <span class="text-sm font-bold text-white mb-1">Tap to browse files</span>
                                     <span class="text-xs text-zinc-500">Pilih file ber-ekstensi .sor</span>
                                 </div>
-                                
-                                <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none transform translateZ(0)">
-                                </div>
+                                <div id="fileUploadList" class="hidden absolute inset-0 bg-dark-800/90 z-10 p-3 overflow-y-auto w-full h-full text-left scrollbar-hide flex flex-col backdrop-blur-sm pointer-events-none transform translateZ(0)"></div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" id="submitOtdrBtn" class="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform">
-                        <i class="fa-solid fa-upload"></i> Upload to Server
-                    </button>
+                    <button type="submit" id="submitOtdrBtn" class="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-bold py-3.5 rounded-xl transition shadow-[0_0_15px_rgba(147,51,234,0.4)] flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-upload"></i> Upload to Server</button>
                 </form>
                 
                 <div class="flex items-center justify-between mb-4 px-1">
                     <div class="flex items-center gap-2"><i class="fa-solid fa-folder-tree text-zinc-500 text-xs"></i><h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">File Browser</h4></div>
-                    <button onclick="downloadSelectedOTDR()" class="bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95">
-                        <i class="fa-solid fa-download"></i> Download Selected
-                    </button>
+                    <button onclick="downloadSelectedOTDR()" class="bg-dark-800 hover:bg-dark-700 text-zinc-300 border border-zinc-700 text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 transition active:scale-95"><i class="fa-solid fa-download"></i> Download Selected</button>
                 </div>
                 
                 <div class="flex items-center mb-3 px-2 glass-card py-2 rounded-lg border-zinc-800/50">
                     <input type="checkbox" id="selectAllOtdr" onchange="toggleAllOTDR(this)" class="mr-3 w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer">
                     <label for="selectAllOtdr" class="text-xs text-zinc-400 cursor-pointer select-none font-medium">Select All on Page</label>
                 </div>
-                
                 <div id="otdrList" class="space-y-3 text-sm w-full min-h-[100px]"></div>
                 
-                <!-- Pagination -->
                 <div id="otdrPagination" class="flex justify-between items-center text-xs text-zinc-400 mt-6 glass-card p-2 rounded-xl">
                     <button id="otdrPrevBtn" onclick="changeOTDRPage(-1)" class="px-4 py-2 bg-dark-800 rounded-lg hover:bg-dark-700 disabled:opacity-30 transition border border-zinc-700">&lt; Prev</button>
                     <span id="otdrPageInfo" class="font-medium px-3 py-1">Page 1 of 1</span>
@@ -566,15 +425,8 @@
             </div>
             <div class="p-6 overflow-y-auto scrollbar-hide flex-1">
                  <form id="editOtdrFolderForm" onsubmit="handleUpdateOTDRFolder(event)" class="space-y-4 pb-10">
-                    <div class="space-y-1.5">
-                        <label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama Folder Baru</label>
-                        <input type="text" id="editOtdrFolderNewName" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Masukkan nama baru">
-                    </div>
-                    <div class="pt-3">
-                        <button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform">
-                            <i class="fa-solid fa-save"></i> Terapkan Nama Baru
-                        </button>
-                    </div>
+                    <div class="space-y-1.5"><label class="text-[11px] text-zinc-400 font-semibold uppercase">Nama Folder Baru</label><input type="text" id="editOtdrFolderNewName" required class="w-full glass-input rounded-xl p-3 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Masukkan nama baru"></div>
+                    <div class="pt-3"><button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black active:scale-95 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-sm will-change-transform"><i class="fa-solid fa-save"></i> Terapkan Nama Baru</button></div>
                 </form>
             </div>
         </div>
@@ -585,7 +437,6 @@
             <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-5"><i class="fa-solid fa-trash-can text-3xl"></i></div>
             <h3 class="text-white text-lg font-bold mb-2">Hapus <span id="deleteContextType">Data</span>?</h3>
             <p class="text-zinc-400 text-sm mb-8 leading-relaxed">Apakah Anda yakin ingin menghapus data ini secara permanen dari server? Tindakan ini tidak dapat dibatalkan.</p>
-            
             <div class="flex gap-3 justify-center">
                 <button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 hover:bg-dark-700 text-zinc-300 text-sm font-semibold py-3.5 rounded-xl transition active:scale-95 border border-zinc-700 will-change-transform">Batal</button>
                 <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-3.5 rounded-xl transition active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)] will-change-transform">Ya, Hapus</button>
@@ -605,9 +456,7 @@
                 <button onclick="closeActivityLogModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
-                <div id="activityLogContainer" class="space-y-3 w-full">
-                    <!-- Logs akan disuntikkan ke sini -->
-                </div>
+                <div id="activityLogContainer" class="space-y-3 w-full"></div>
             </div>
         </div>
     </div>
@@ -627,13 +476,8 @@
                 </div>
             </div>
             <div class="p-3 md:p-5 overflow-y-auto scrollbar-hide bg-dark-900 flex-1 flex flex-col w-full relative">
-                <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-4 text-xs text-emerald-400 flex gap-2 items-start">
-                    <i class="fa-solid fa-info-circle mt-0.5"></i>
-                    <p>Posisi diperbarui otomatis setiap 3 menit saat tim login di aplikasi. Menampilkan lokasi terakhir masing-masing akun.</p>
-                </div>
-                <div id="trackerContainer" class="space-y-3 w-full">
-                    <!-- Data Tracker disuntikkan ke sini -->
-                </div>
+                <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl mb-4 text-xs text-emerald-400 flex gap-2 items-start"><i class="fa-solid fa-info-circle mt-0.5"></i><p>Posisi diperbarui otomatis setiap 3 menit saat tim login di aplikasi. Menampilkan lokasi terakhir masing-masing akun.</p></div>
+                <div id="trackerContainer" class="space-y-3 w-full"></div>
             </div>
         </div>
     </div>
@@ -642,7 +486,6 @@
     <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col items-center justify-end md:justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0 w-full h-full transform translateZ(0)">
         <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[32px] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] overflow-hidden border-t border-zinc-800 md:border flex flex-col h-[60vh] transform translate-y-full transition-transform duration-300 ease-out will-change-transform">
             <div class="w-full flex justify-center pt-3 pb-2 md:hidden"><div class="w-12 h-1.5 bg-zinc-700 rounded-full"></div></div>
-            
             <div class="px-5 py-4 border-b border-zinc-800/50 flex justify-between items-center bg-dark-900/90 backdrop-blur-md sticky top-0 z-20 transform translateZ(0)">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-map-location-dot text-emerald-400 text-sm"></i></div>
@@ -650,1156 +493,84 @@
                 </div>
                 <button onclick="closeMapModal()" class="w-8 h-8 bg-zinc-800 rounded-full flex justify-center items-center text-zinc-400 hover:text-white hover:bg-zinc-700 active:scale-90 transition will-change-transform"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
             <div class="p-0 bg-dark-900 flex-1 flex flex-col w-full relative">
                 <div class="w-full h-full bg-dark-800/50 flex flex-col items-center justify-center p-6 text-center">
-                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)] transform translateZ(0)">
-                        <i class="fa-solid fa-map-location-dot text-4xl text-emerald-400"></i>
-                    </div>
+                    <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)] transform translateZ(0)"><i class="fa-solid fa-map-location-dot text-4xl text-emerald-400"></i></div>
                     <h2 class="text-xl font-bold text-white mb-2">Peta Jalur Backbone & Joint Box</h2>
                     <p class="text-zinc-400 text-sm mb-8 max-w-md">End-to-end jalur backbone lengkap dengan titik koordinat Joint Box dan histori Fiber Cut.</p>
-                    
-                    <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-6 py-3.5 rounded-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-3 transition-all active:scale-95 will-change-transform">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live
-                    </a>
+                    <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white px-6 py-3.5 rounded-xl font-bold shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-3 transition-all active:scale-95 will-change-transform"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==============================================================
-        // GITHUB PAGES FETCH WRAPPER & MOCK DATA
-        // ==============================================================
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbydbmac2A0zMqLpbqYEgjsGnhYrGqa0L-UlfKkx-1KTt5NL7pwGmQ2mRsD85IEqIQ3H/exec"; 
-
-        if (typeof google === 'undefined') {
-            console.log("Environment: Luar Apps Script (GitHub Pages)");
-            
-            let mockNetworkData = [
-                { nama_perangkat: "OLT-ZTE-MDN-01", tipe: "OLT", ip_address: "10.10.10.1", lokasi: "POP Setiabudi", info_port: "PON 1/1", kode_otb: "OTB-STB-01", status: "Online" }
-            ];
-            let mockEWOData = [{no_ewo: "EWO-2026-001", deskripsi: "Pengecekan FO", status: "Done"}];
-            let mockOTDRData = [{nama_folder: "Core Line", nama_otb: "OTB-01", lokasi: "POP A", file_url: "#", timestamp: "2026-07-23 08:35:08"}];
-
-            const fetchAPI = async (action, payload, sCb, fCb) => {
-                if (!GAS_API_URL) return runMock(action, payload, sCb, fCb);
-                try {
-                    const response = await fetch(GAS_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify({ action: action, payload: payload }),
-                        redirect: "follow"
-                    });
-                    const result = await response.json();
-                    if (result.error) { if(fCb) fCb(new Error(result.message)); } 
-                    else { if(sCb) sCb(result.data); }
-                } catch (error) { if(fCb) fCb(error); }
-            };
-
-            const runMock = (action, payload, sCb, fCb) => {
-                setTimeout(() => {
-                    try {
-                        let res = { success: true };
-                        if(action === 'verifyLogin') { res = {success: true, role: (payload.email || "").includes("owner") ? "OWNER" : "ADMIN", email: payload.email}; } 
-                        else if(action === 'getDashboardStats') { res = { total: 1, online: 1, offline: 0, warning: 0, olt: 1, switch: 0, backbone: 0 }; }
-                        if(sCb) sCb(res);
-                    } catch(e) { if(fCb) fCb(e); }
-                }, 600);
-            };
-
-            const createRun = () => {
-                let sCb = null, fCb = null;
-                return {
-                    withSuccessHandler: function(cb) { sCb = cb; return this; },
-                    withFailureHandler: function(cb) { fCb = cb; return this; },
-                    verifyLogin: (email, pass) => fetchAPI('verifyLogin', {email, password: pass}, sCb, fCb),
-                    getDashboardStats: () => fetchAPI('getDashboardStats', {}, sCb, fCb),
-                    getRecapStats: () => fetchAPI('getRecapStats', {}, sCb, fCb),
-                    searchNetworkData: (filters) => fetchAPI('searchNetworkData', {filters}, sCb, fCb),
-                    getAllNetworkDataForExport: (filters) => fetchAPI('getAllNetworkDataForExport', {filters}, sCb, fCb),
-                    insertNetworkData: (dataObj, email) => fetchAPI('insertNetworkData', {dataObj, email}, sCb, fCb),
-                    updateNetworkData: (originalData, updatedData, email) => fetchAPI('updateNetworkData', {originalData, updatedData, email}, sCb, fCb),
-                    deleteNetworkData: (targetData, email) => fetchAPI('deleteNetworkData', {targetData, email}, sCb, fCb),
-                    getEWOData: () => fetchAPI('getEWOData', {}, sCb, fCb),
-                    insertEWOData: (dataObj, email) => fetchAPI('insertEWOData', {dataObj, email}, sCb, fCb),
-                    updateEWOData: (originalData, updatedData, email) => fetchAPI('updateEWOData', {originalData, updatedData, email}, sCb, fCb),
-                    deleteEWOData: (targetData, email) => fetchAPI('deleteEWOData', {targetData, email}, sCb, fCb),
-                    getOTDRData: (page) => fetchAPI('getOTDRData', {page}, sCb, fCb),
-                    uploadOTDRData: (dataObj) => fetchAPI('uploadOTDRData', {dataObj}, sCb, fCb),
-                    updateOTDRData: (originalData, updatedData, email) => fetchAPI('updateOTDRData', {originalData, updatedData, email}, sCb, fCb),
-                    deleteOTDRData: (targetData, email) => fetchAPI('deleteOTDRData', {targetData, email}, sCb, fCb),
-                    updateOTDRFolder: (oldFolderName, newFolderName, email) => fetchAPI('updateOTDRFolder', {oldFolderName, newFolderName, email}, sCb, fCb),
-                    deleteOTDRFolder: (folderName, email) => fetchAPI('deleteOTDRFolder', {folderName, email}, sCb, fCb),
-                    getActivityLogs: (email) => fetchAPI('getActivityLogs', {email}, sCb, fCb),
-                    getLocations: (email) => fetchAPI('getLocations', {email}, sCb, fCb)
-                };
-            };
-            window.google = { script: { get run() { return createRun(); } } };
-        }
-
-        // ==============================================================
-        // STATE VARIABLES
-        // ==============================================================
-        let currentFilter = 'All';
-        let searchTimeout = null;
-        let lastSearchResult = []; 
-        let lastEwoResult = []; 
-        
-        let deleteTargetType = 'NODE';
-        let originalSelectedNode = null; 
-        let originalSelectedEWO = null;
-        let originalSelectedOTDR = null;
-        let originalSelectedOTDRFolder = null; 
-
-        let currentOtdrPage = 1;
-        let totalOtdrPages = 1;
-        let isOwner = false;
-
-        let gpsTrackerInterval = null;
-
-        // ==============================================================
-        // UI UTILITIES
-        // ==============================================================
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const colors = { success: 'bg-dark-800 border-accent-500/50 text-accent-400', error: 'bg-dark-800 border-red-500/50 text-red-400', info: 'bg-dark-800 border-brand-500/50 text-brand-400' };
-            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
-            toast.className = `flex items-center gap-3 p-3.5 rounded-2xl border backdrop-blur-md shadow-lg toast-enter ${colors[type]}`;
-            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-xs font-semibold tracking-wide text-white">${message}</span>`;
-            
-            requestAnimationFrame(() => {
-                container.appendChild(toast);
-            });
-
-            setTimeout(() => { 
-                requestAnimationFrame(() => {
-                    toast.classList.replace('toast-enter', 'toast-exit'); 
-                });
-                setTimeout(() => { requestAnimationFrame(() => { toast.remove(); }); }, 300); 
-            }, 3000);
-        }
-
-        function setButtonState(btnId, isLoading, originalHtml) {
-            const btn = document.getElementById(btnId);
-            if(isLoading) {
-                btn.dataset.original = originalHtml || btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
-                btn.disabled = true; btn.classList.add('opacity-70', 'cursor-not-allowed');
-            } else {
-                btn.innerHTML = btn.dataset.original || originalHtml;
-                btn.disabled = false; btn.classList.remove('opacity-70', 'cursor-not-allowed');
-            }
-        }
-
-        function animateModalOpen(modalId, contentId) {
-            const modal = document.getElementById(modalId);
-            const content = document.getElementById(contentId);
-            
-            requestAnimationFrame(() => {
-                modal.classList.remove('hidden'); 
-                document.body.style.overflow = 'hidden';
-                
-                requestAnimationFrame(() => {
-                    modal.classList.remove('opacity-0'); 
-                    if(content) content.classList.remove('translate-y-full');
-                });
-            });
-        }
-        
-        function animateModalClose(modalId, contentId) {
-            const modal = document.getElementById(modalId);
-            const content = document.getElementById(contentId);
-            
-            requestAnimationFrame(() => {
-                modal.classList.add('opacity-0'); 
-                if(content) content.classList.add('translate-y-full');
-            });
-            
-            setTimeout(() => { 
-                requestAnimationFrame(() => {
-                    modal.classList.add('hidden'); 
-                    document.body.style.overflow = ''; 
-                });
-            }, 300);
-        }
-
-        // ==============================================================
-        // HIDDEN GPS TRACKING
-        // ==============================================================
-        function startHiddenGPS(email) {
-            clearInterval(gpsTrackerInterval);
-            
-            if (!navigator.geolocation) {
-                console.log("Geolocation is not supported by this browser/device.");
-                return;
-            }
-
-            const sendSilentLocation = () => {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const payload = { 
-                            action: 'updateLocation', 
-                            payload: { 
-                                email: email, 
-                                lat: position.coords.latitude, 
-                                lng: position.coords.longitude 
-                            } 
-                        };
-                        if(GAS_API_URL) {
-                            fetch(GAS_API_URL, { 
-                                method: 'POST', 
-                                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                                body: JSON.stringify(payload),
-                                redirect: "follow"
-                            }).catch(e => console.log("Silent GPS Update Failed"));
-                        }
-                    },
-                    (error) => { console.log("GPS Hidden Error", error); },
-                    { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
-                );
-            };
-
-            sendSilentLocation();
-            gpsTrackerInterval = setInterval(sendSilentLocation, 180000);
-        }
-
-        function stopHiddenGPS() {
-            if (gpsTrackerInterval) {
-                clearInterval(gpsTrackerInterval);
-                gpsTrackerInterval = null;
-            }
-        }
-
-        // ==============================================================
-        // TEAM TRACKER MODAL
-        // ==============================================================
-        function openTrackerModal() {
-            animateModalOpen('trackerModal', 'trackerModalContent');
-            refreshTrackerData();
-        }
-        function closeTrackerModal() { animateModalClose('trackerModal', 'trackerModalContent'); }
-
-        function refreshTrackerData() {
-            const syncIcon = document.getElementById('trackerSyncIcon');
-            const container = document.getElementById('trackerContainer');
-            if (syncIcon) syncIcon.classList.add('fa-spin');
-            
-            container.innerHTML = '<div class="text-center py-10 text-emerald-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3"></i><p class="text-xs font-medium">Mencari lokasi tim...</p></div>';
-            
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            
-            google.script.run.withSuccessHandler(res => {
-                if (syncIcon) syncIcon.classList.remove('fa-spin');
-                if (res.success) { requestAnimationFrame(() => renderTrackerData(res.data)); } 
-                else { container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`; }
-            }).withFailureHandler(err => {
-                if (syncIcon) syncIcon.classList.remove('fa-spin');
-                container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">Error: ${err.message}</p></div>`;
-            }).getLocations(session.email);
-        }
-
-        function renderTrackerData(data) {
-            const container = document.getElementById('trackerContainer');
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-zinc-500"><i class="fa-solid fa-user-ninja text-3xl mb-3 opacity-50"></i><p class="text-xs">Belum ada lokasi tim yang terekam.</p></div>';
-                return;
-            }
-
-            let html = '';
-            data.forEach(loc => {
-                let mapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}`;
-                html += `
-                <div class="bg-dark-800/50 p-4 rounded-2xl border border-zinc-800/80 flex flex-col gap-3 transition-all hover:bg-dark-800">
-                    <div class="flex justify-between items-center gap-2 border-b border-zinc-700/50 pb-2">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            <div class="w-8 h-8 rounded-full bg-dark-900 border border-zinc-700 flex items-center justify-center shrink-0">
-                                <i class="fa-solid fa-user text-zinc-400 text-xs"></i>
-                            </div>
-                            <span class="text-[11px] font-bold text-zinc-200 truncate">${loc.email}</span>
-                        </div>
-                        <span class="text-zinc-500 text-[9px] font-mono shrink-0"><i class="fa-regular fa-clock"></i> ${loc.timestamp}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="flex flex-col">
-                            <span class="text-[9px] text-zinc-500 uppercase tracking-wider">Koordinat Terakhir</span>
-                            <span class="text-[10px] font-mono text-emerald-400 mt-0.5">${loc.lat}, ${loc.lng}</span>
-                        </div>
-                        <a href="${mapsUrl}" target="_top" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm flex items-center gap-1.5 active:scale-95">
-                            <i class="fa-solid fa-map-location-dot"></i> Buka Maps
-                        </a>
-                    </div>
-                </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // ==============================================================
-        // ACTIVITY LOGS FUNCTIONS
-        // ==============================================================
-        function openActivityLogModal() {
-            animateModalOpen('activityLogModal', 'activityLogModalContent');
-            const container = document.getElementById('activityLogContainer');
-            container.innerHTML = '<div class="text-center py-10 text-blue-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3"></i><p class="text-xs font-medium">Memuat log aktivitas server...</p></div>';
-            
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            
-            google.script.run.withSuccessHandler(res => {
-                if (res.success) requestAnimationFrame(() => renderActivityLogs(res.data));
-                else container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${res.message}</p></div>`;
-            }).withFailureHandler(err => {
-                container.innerHTML = `<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">Error: ${err.message}</p></div>`;
-            }).getActivityLogs(session.email);
-        }
-
-        function closeActivityLogModal() { animateModalClose('activityLogModal', 'activityLogModalContent'); }
-
-        function renderActivityLogs(data) {
-            const container = document.getElementById('activityLogContainer');
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-zinc-500"><i class="fa-solid fa-ghost text-3xl mb-3 opacity-50"></i><p class="text-xs">Belum ada aktivitas yang terekam.</p></div>';
-                return;
-            }
-
-            let html = '';
-            data.forEach(log => {
-                let actionColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-                if (log.action.includes('DELETE')) actionColor = 'text-red-400 bg-red-500/10 border-red-500/30';
-                else if (log.action.includes('UPDATE')) actionColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-                else if (log.action.includes('INSERT') || log.action.includes('UPLOAD')) actionColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
-
-                html += `
-                <div class="bg-dark-800/50 p-3.5 rounded-2xl border border-zinc-800/80 flex flex-col gap-2 transition-all hover:bg-dark-800">
-                    <div class="flex justify-between items-start gap-2">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="px-2 py-0.5 rounded text-[9px] font-bold border ${actionColor}">${log.action}</span>
-                            <span class="text-zinc-500 text-[10px] font-mono"><i class="fa-regular fa-clock"></i> ${log.timestamp}</span>
-                        </div>
-                        <span class="text-[9px] font-mono bg-dark-900 text-zinc-400 px-2 py-1 rounded border border-zinc-700/50 shrink-0"><i class="fa-regular fa-user mr-1"></i>${log.email}</span>
-                    </div>
-                    <p class="text-xs text-zinc-300">${log.description}</p>
-                </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // ==============================================================
-        // DASHBOARD & RECAP
-        // ==============================================================
-        function refreshDashboardStats() {
-            const syncIcon = document.getElementById('syncIcon'); if(syncIcon) syncIcon.classList.add('fa-spin');
-            if (typeof google !== 'undefined' && google.script) {
-                google.script.run.withSuccessHandler(stats => {
-                    requestAnimationFrame(() => renderDashboardStats(stats));
-                    if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Data Synced', 'success');
-                }).withFailureHandler(err => { if(syncIcon) syncIcon.classList.remove('fa-spin'); showToast('Failed to load stats', 'error'); }).getDashboardStats();
-            }
-        }
-
-        function renderDashboardStats(stats) {
-            if(!stats) return;
-            document.getElementById('summaryCards').innerHTML = `
-                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl border border-brand-500/30 shadow-neon-blue"><i class="fa-solid fa-server"></i></div>
-                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Total Nodes</p><h2 class="text-2xl font-black text-white">${stats.total}</h2></div>
-                </div>
-                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-accent-500/20 text-accent-400 flex items-center justify-center text-xl border border-accent-500/30 shadow-neon-green"><i class="fa-solid fa-wifi"></i></div>
-                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Online</p><h2 class="text-2xl font-black text-white">${stats.online}</h2></div>
-                </div>
-                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Warning</p><h2 class="text-2xl font-black text-white">${stats.warning}</h2></div>
-                </div>
-                <div class="glass-card p-4 rounded-3xl flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl border border-red-500/30"><i class="fa-solid fa-plug-circle-xmark"></i></div>
-                    <div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Offline</p><h2 class="text-2xl font-black text-white">${stats.offline}</h2></div>
-                </div>
-            `;
-            
-            document.getElementById('detailedStats').innerHTML = `
-                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
-                    <div class="flex items-center gap-3"><i class="fa-solid fa-server text-purple-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">OLT Devices</span></div>
-                    <span class="text-lg font-black text-white">${stats.olt}</span>
-                </div>
-                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
-                    <div class="flex items-center gap-3"><i class="fa-solid fa-random text-blue-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Switches</span></div>
-                    <span class="text-lg font-black text-white">${stats.switch}</span>
-                </div>
-                <div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group">
-                    <div class="flex items-center gap-3"><i class="fa-solid fa-route text-orange-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Backbones</span></div>
-                    <span class="text-lg font-black text-white">${stats.backbone}</span>
-                </div>
-            `;
-        }
-
-        function toggleRecapDropdown() {
-            const panel = document.getElementById('recapDropdownPanel');
-            const chevron = document.getElementById('recapChevron');
-            requestAnimationFrame(() => {
-                if(panel.classList.contains('hidden')) {
-                    panel.classList.remove('hidden'); chevron.classList.add('rotate-180');
-                    requestAnimationFrame(() => panel.classList.remove('opacity-0', 'translate-y-2'));
-                } else {
-                    panel.classList.add('opacity-0', 'translate-y-2'); chevron.classList.remove('rotate-180');
-                    setTimeout(() => requestAnimationFrame(() => panel.classList.add('hidden')), 300);
-                }
-            });
-        }
-        
-        function toggleLocAccordion(idx) {
-            const body = document.getElementById('locBody_' + idx);
-            const chev = document.getElementById('locChev_' + idx);
-            requestAnimationFrame(() => {
-                if(body.classList.contains('hidden')) {
-                    body.classList.remove('hidden'); chev.classList.add('rotate-180');
-                } else {
-                    body.classList.add('hidden'); chev.classList.remove('rotate-180');
-                }
-            });
-        }
-
-        function loadRecapFromServer() {
-            const panel = document.getElementById('recapDropdownPanel');
-            if(panel.classList.contains('hidden')) toggleRecapDropdown();
-            
-            panel.innerHTML = `<div class="text-center py-6 text-sm text-brand-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Memuat Rekapitulasi Lokasi...</div>`;
-            
-            google.script.run.withSuccessHandler(data => {
-                if(!data || data.length === 0) { panel.innerHTML = `<div class="text-center py-6 text-sm text-zinc-500">Tidak ada data rekap tersedia.</div>`; return; }
-                
-                let html = `<h4 class="text-xs font-bold text-zinc-300 mb-4 flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-brand-400"></i> System Overview Per Lokasi</h4>
-                <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1 scrollbar-hide">`;
-                
-                data.forEach((loc, index) => {
-                    let totalOLT = loc.OLT.length;
-                    let totalSwitch = loc.SWITCH.length;
-                    let totalBB = loc.BACKBONE.length;
-                    
-                    html += `
-                    <div class="bg-dark-900/60 rounded-xl border border-zinc-800/80 overflow-hidden">
-                        <div class="p-3 flex justify-between items-center cursor-pointer hover:bg-dark-800 transition-colors" onclick="toggleLocAccordion(${index})">
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-location-dot text-accent-500"></i>
-                                <span class="font-bold text-white text-xs md:text-sm">${loc.lokasi}</span>
-                            </div>
-                            <div class="flex items-center gap-1.5 md:gap-2 text-[9px] md:text-[10px] font-semibold">
-                                ${totalOLT > 0 ? `<span class="bg-purple-500/20 text-purple-400 px-1.5 md:px-2 py-0.5 rounded border border-purple-500/30">${totalOLT} OLT</span>` : ''}
-                                ${totalSwitch > 0 ? `<span class="bg-blue-500/20 text-blue-400 px-1.5 md:px-2 py-0.5 rounded border border-blue-500/30">${totalSwitch} SW</span>` : ''}
-                                ${totalBB > 0 ? `<span class="bg-orange-500/20 text-orange-400 px-1.5 md:px-2 py-0.5 rounded border border-orange-500/30">${totalBB} BB</span>` : ''}
-                                <i id="locChev_${index}" class="fa-solid fa-chevron-down text-zinc-500 ml-1 transition-transform duration-300"></i>
-                            </div>
-                        </div>
-                        <div id="locBody_${index}" class="hidden bg-dark-800/40 p-3 border-t border-zinc-800/80 space-y-3">
-                    `;
-                    
-                    const renderDevs = (title, icon, color, list) => {
-                        if(!list || list.length === 0) return '';
-                        let out = `<div class="space-y-1.5">
-                            <div class="text-[10px] font-bold text-zinc-400 uppercase flex items-center gap-1.5"><i class="fa-solid ${icon} ${color}"></i> ${title} (${list.length} Unit)</div>`;
-                        list.forEach(dev => {
-                            out += `
-                            <div class="bg-dark-900/50 p-2.5 rounded-lg border border-zinc-800/60 flex justify-between items-center ml-1">
-                                <span class="text-[11px] font-bold text-zinc-200 truncate pr-2 w-1/2">${dev.nama}</span>
-                                <div class="flex gap-1.5 w-1/2 justify-end">
-                                    <span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-ethernet"></i> ${dev.total_port} Port</span>
-                                    <span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> ${dev.total_otb} OTB</span>
-                                </div>
-                            </div>`;
-                        });
-                        out += `</div>`;
-                        return out;
-                    };
-
-                    html += renderDevs('OLT', 'fa-server', 'text-purple-400', loc.OLT);
-                    html += renderDevs('Switch', 'fa-random', 'text-blue-400', loc.SWITCH);
-                    html += renderDevs('Backbone', 'fa-route', 'text-orange-400', loc.BACKBONE);
-                    
-                    if (totalOLT === 0 && totalSwitch === 0 && totalBB === 0) {
-                        html += `<div class="text-xs text-zinc-500 italic">Tidak ada perangkat.</div>`;
-                    }
-
-                    html += `</div></div>`;
-                });
-                
-                html += `</div>`; 
-                requestAnimationFrame(() => panel.innerHTML = html);
-            }).withFailureHandler(err => { panel.innerHTML = `<div class="text-center py-6 text-sm text-red-400">Gagal memuat rekap.</div>`; }).getRecapStats();
-        }
-
-        // ==============================================================
-        // DATABASE MODAL & SEARCH
-        // ==============================================================
-        function openDatabaseModal(type) {
-            setModalFilter(type);
-            animateModalOpen('databaseModal', 'databaseModalContent');
-        }
-        function closeDatabaseModal() { animateModalClose('databaseModal', 'databaseModalContent'); }
-        
-        function setModalFilter(type) {
-            currentFilter = type;
-            document.querySelectorAll('.modal-filter-btn').forEach(btn => { btn.className = 'modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all'; });
-            const activeBtn = document.getElementById(`modal-btn-${type}`);
-            if(activeBtn) activeBtn.className = 'modal-filter-btn shrink-0 bg-brand-500 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-neon-blue border border-brand-400/50';
-            triggerServerSearch();
-        }
-
-        function triggerServerSearch() {
-            clearTimeout(searchTimeout);
-            document.getElementById('serverLoadingIndicator').classList.remove('hidden');
-            searchTimeout = setTimeout(() => {
-                const filters = { type: currentFilter, nama: document.getElementById('searchNama').value, lokasi: document.getElementById('searchLokasi').value, port: document.getElementById('searchPort').value, otb: document.getElementById('searchOtb').value };
-                google.script.run.withSuccessHandler(data => { renderTable(data); document.getElementById('serverLoadingIndicator').classList.add('hidden'); })
-                .withFailureHandler(err => { showToast(err.message, 'error'); document.getElementById('serverLoadingIndicator').classList.add('hidden'); }).searchNetworkData(filters);
-            }, 600);
-        }
-
-        function renderTable(data) {
-            lastSearchResult = data;
-            const container = document.getElementById('data-list-container');
-            const emptyState = document.getElementById('emptyState');
-            
-            requestAnimationFrame(() => {
-                container.innerHTML = '';
-                
-                if (!data || data.length === 0) { emptyState.classList.remove('hidden'); return; }
-                emptyState.classList.add('hidden');
-
-                let htmlContent = '';
-                data.forEach((item, index) => {
-                    let typeBorderColor = 'border-l-purple-500';
-                    let typeColor = 'text-purple-400 bg-purple-500/10 border-purple-500/30';
-                    let typeIcon = 'fa-server';
-                    
-                    if(item.tipe === 'Switch') {
-                        typeBorderColor = 'border-l-blue-500';
-                        typeColor = 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-                        typeIcon = 'fa-random';
-                    } else if(item.tipe === 'Backbone') {
-                        typeBorderColor = 'border-l-orange-500';
-                        typeColor = 'text-orange-400 bg-orange-500/10 border-orange-500/30';
-                        typeIcon = 'fa-route';
-                    }
-                    
-                    let statusColor = 'text-accent-400 bg-accent-500/10 border-accent-500/30';
-                    let statusDotColor = 'bg-accent-500 shadow-[0_0_5px_#10b981]';
-                    
-                    if(item.status === 'Offline') {
-                        statusColor = 'text-red-400 bg-red-500/10 border-red-500/30';
-                        statusDotColor = 'bg-red-500 shadow-[0_0_5px_#ef4444]';
-                    } else if(item.status === 'Warning') {
-                        statusColor = 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-                        statusDotColor = 'bg-amber-500 shadow-[0_0_5px_#f59e0b]';
-                    }
-
-                    const ownerActions = isOwner ? `
-                        <div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50">
-                            <button onclick="openEditModal(${index})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
-                            <button onclick="confirmDeleteNode(${index})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
-                        </div>` : '';
-
-                    htmlContent += `
-                        <div class="glass-card p-4 rounded-2xl relative group border-l-4 ${typeBorderColor} flex flex-col gap-3 transform translateZ(0)">
-                            <div class="flex justify-between items-start gap-2">
-                                <h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${item.nama_perangkat}</h4>
-                                <span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${typeColor}">
-                                    <i class="fa-solid ${typeIcon}"></i> ${item.tipe}
-                                </span>
-                            </div>
-                            
-                            <div class="flex justify-between items-center mt-1">
-                                <div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner">
-                                    <i class="fa-solid fa-network-wired text-brand-500/70"></i> ${item.ip_address || '-'}
-                                </div>
-                                <div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${statusColor}">
-                                    <span class="w-1.5 h-1.5 rounded-full animate-pulse ${statusDotColor}"></span> ${item.status}
-                                </div>
-                            </div>
-                            
-                            <div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div>
-                            
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p>
-                                    <p class="text-[11px] font-semibold text-white break-words">${item.lokasi || '-'}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p>
-                                    <p class="text-[11px] font-semibold text-white break-words">${item.info_port || '-'}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1">
-                                <div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium">
-                                    <i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB
-                                </div>
-                                <div class="text-xs font-bold text-white break-words text-right font-mono">
-                                    ${item.kode_otb || '-'}
-                                </div>
-                            </div>
-                            
-                            ${ownerActions}
-                        </div>`;
-                });
-                
-                container.innerHTML = htmlContent;
-            });
-        }
-
-        // ==============================================================
-        // FUNGSI EXPORT DATA EXCEL KESELURUHAN
-        // ==============================================================
-        function exportTableToExcelTemplate(format = 'xlsx') {
-            showToast('Menyiapkan data export dari server, mohon tunggu...', 'info');
-            
-            const filters = { 
-                type: currentFilter, 
-                nama: document.getElementById('searchNama').value, 
-                lokasi: document.getElementById('searchLokasi').value, 
-                port: document.getElementById('searchPort').value, 
-                otb: document.getElementById('searchOtb').value 
-            };
-            
-            google.script.run.withSuccessHandler(fullData => {
-                if (!fullData || fullData.length === 0) {
-                    return showToast('Tidak ada data untuk diexport!', 'error');
-                }
-
-                const now = new Date();
-                const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
-
-                const templateRows = [
-                    ["NETCORE ISP - LAPORAN KESELURUHAN DATABASE JARINGAN"],
-                    [`Tanggal Cetak: ${dateStr}`],
-                    [`Kategori Filter: ${currentFilter}`],
-                    [`Total Data Diexport: ${fullData.length} Node Perangkat`],
-                    [], 
-                    ["NO", "NAMA PERANGKAT", "TIPE NODE", "IP ADDRESS", "LOKASI / AREA", "PORT INFO", "KODE OTB", "STATUS"]
-                ];
-
-                fullData.forEach((item, index) => {
-                    templateRows.push([
-                        index + 1,
-                        item.nama_perangkat || '-',
-                        item.tipe || '-',
-                        item.ip_address || '-',
-                        item.lokasi || '-',
-                        item.info_port || '-',
-                        item.kode_otb || '-',
-                        item.status || '-'
-                    ]);
-                });
-
-                templateRows.push([]);
-                templateRows.push(["--- Akhir Laporan Database Netcore ISP ---"]);
-
-                if (format === 'csv' || typeof XLSX === 'undefined') {
-                    let csvContent = "\uFEFF";
-                    templateRows.forEach(row => {
-                        const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
-                        csvContent += line + "\n";
-                    });
-
-                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement("a");
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `Data_Full_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.csv`;
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    showToast(`Export ${fullData.length} Data CSV Berhasil`, 'success');
-                } else {
-                    const wb = XLSX.utils.book_new();
-                    const ws = XLSX.utils.aoa_to_sheet(templateRows);
-                    ws['!cols'] = [{ wch: 6 }, { wch: 26 }, { wch: 12 }, { wch: 18 }, { wch: 24 }, { wch: 22 }, { wch: 22 }, { wch: 14 }];
-                    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 7 } }, { s: { r: 2, c: 0 }, e: { r: 2, c: 7 } }, { s: { r: 3, c: 0 }, e: { r: 3, c: 7 } }];
-                    XLSX.utils.book_append_sheet(wb, ws, `Data_${currentFilter}`);
-                    XLSX.writeFile(wb, `Data_Full_Netcore_${currentFilter}_${now.toISOString().slice(0, 10)}.xlsx`);
-                    showToast(`Export ${fullData.length} Data Excel (.xlsx) Berhasil!`, 'success');
-                }
-            }).withFailureHandler(err => {
-                showToast('Gagal menarik data dari server: ' + err.message, 'error');
-            }).getAllNetworkDataForExport(filters);
-        }
-
-        // ==============================================================
-        // INPUT & EDIT DATA
-        // ==============================================================
-        function toggleInputModal() { 
-            const mod = document.getElementById('inputModal');
-            if(mod.classList.contains('hidden')) animateModalOpen('inputModal', 'inputModalContent'); else animateModalClose('inputModal', 'inputModalContent');
-        }
-
-        function handleInputData(e) {
-            e.preventDefault(); setButtonState('submitInputBtn', true, '<i class="fa-solid fa-cloud-arrow-up"></i> Save to Database');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const dataObj = { nama_perangkat: document.getElementById('inputNama').value, tipe: document.getElementById('inputTipe').value, ip_address: document.getElementById('inputIp').value || '-', lokasi: document.getElementById('inputLokasi').value, info_port: document.getElementById('inputPort').value || '-', kode_otb: document.getElementById('inputOtb').value || '-', status: document.getElementById('inputStatus').value };
-
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitInputBtn', false);
-                if (res.success) { showToast(res.message, 'success'); document.getElementById('manualInputForm').reset(); toggleInputModal(); refreshDashboardStats(); triggerServerSearch(); } 
-                else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitInputBtn', false); showToast(err.message, 'error'); }).insertNetworkData(dataObj, session.email);
-        }
-
-        function toggleEditModal() {
-            const mod = document.getElementById('editModal');
-            if(mod.classList.contains('hidden')) animateModalOpen('editModal', 'editModalContent'); else animateModalClose('editModal', 'editModalContent');
-        }
-
-        function openEditModal(index) {
-            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data;
-            document.getElementById('editNama').value = data.nama_perangkat; document.getElementById('editTipe').value = data.tipe; document.getElementById('editIp').value = data.ip_address === '-' ? '' : data.ip_address; document.getElementById('editLokasi').value = data.lokasi; document.getElementById('editStatus').value = data.status; document.getElementById('editPort').value = data.info_port; document.getElementById('editOtb').value = data.kode_otb;
-            toggleEditModal();
-        }
-
-        function handleUpdateData(e) {
-            e.preventDefault(); setButtonState('submitEditBtn', true, '<i class="fa-solid fa-save"></i> Apply Changes');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const updatedData = { nama_perangkat: document.getElementById('editNama').value, tipe: document.getElementById('editTipe').value, ip_address: document.getElementById('editIp').value || '-', lokasi: document.getElementById('editLokasi').value, info_port: document.getElementById('editPort').value, kode_otb: document.getElementById('editOtb').value, status: document.getElementById('editStatus').value };
-
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEditBtn', false);
-                if(res.success) { showToast(res.message, 'success'); toggleEditModal(); triggerServerSearch(); refreshDashboardStats(); } 
-                else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEditBtn', false); showToast(err.message, 'error'); }).updateNetworkData(originalSelectedNode, updatedData, session.email);
-        }
-
-        // ==============================================================
-        // EWO MODULE 
-        // ==============================================================
-        function toggleEWOModal() {
-            const mod = document.getElementById('ewoModal');
-            if(mod.classList.contains('hidden')) { animateModalOpen('ewoModal', 'ewoModalContent'); refreshEWOList(); } else animateModalClose('ewoModal', 'ewoModalContent');
-        }
-
-        function refreshEWOList() {
-            const lst = document.getElementById('ewoList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading EWO...</div>';
-            google.script.run.withSuccessHandler(data => renderEWOList(data)).withFailureHandler(err => lst.innerHTML='Gagal memuat EWO').getEWOData();
-        }
-
-        function renderEWOList(data) {
-            lastEwoResult = data || []; 
-            const container = document.getElementById('ewoList'); 
-            
-            requestAnimationFrame(() => {
-                container.innerHTML = '';
-                if(!data || data.length === 0) { container.innerHTML = '<div class="text-center text-zinc-500 py-4 text-xs italic">No EWO records found.</div>'; return; }
-
-                let htmlContent = '';
-                data.forEach(item => {
-                    const statClass = item.status === 'Done' ? 'text-accent-400 bg-accent-500/10 border-accent-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
-                    const ownerActions = isOwner ? `
-                        <div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2">
-                            <button onclick="openEditEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button>
-                            <button onclick="confirmDeleteEWO('${item.no_ewo}', '${item.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button>
-                        </div>` : '';
-                    htmlContent += `
-                        <div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 transform translateZ(0) ${item.status === 'Done' ? 'border-l-accent-500' : 'border-l-amber-500'}">
-                            <div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${item.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${statClass}">${item.status}</span></div>
-                            <p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${item.deskripsi}</p>
-                            ${ownerActions}
-                        </div>`;
-                });
-                container.innerHTML = htmlContent;
-            });
-        }
-
-        function exportEWOToExcel(format = 'xlsx') {
-            if (!lastEwoResult || lastEwoResult.length === 0) return showToast('Tidak ada data EWO untuk diexport!', 'error');
-
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID');
-
-            const templateRows = [
-                ["NETCORE ISP - LAPORAN EMERGENCY WORK ORDER (EWO)"],
-                [`Tanggal Cetak: ${dateStr}`],
-                [`Total Data: ${lastEwoResult.length} EWO`],
-                [],
-                ["NO", "NOMOR EWO", "DESKRIPSI PEKERJAAN", "STATUS"]
-            ];
-
-            lastEwoResult.forEach((item, index) => {
-                templateRows.push([index + 1, item.no_ewo || '-', item.deskripsi || '-', item.status || '-']);
-            });
-
-            templateRows.push([]);
-            templateRows.push(["--- Akhir Laporan EWO Netcore ISP ---"]);
-
-            if (format === 'csv' || typeof XLSX === 'undefined') {
-                let csvContent = "\uFEFF";
-                templateRows.forEach(row => {
-                    const line = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",");
-                    csvContent += line + "\n";
-                });
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Laporan_EWO_${now.toISOString().slice(0, 10)}.csv`; link.style.visibility = 'hidden'; document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast('Export CSV EWO Berhasil', 'success');
-            } else {
-                const wb = XLSX.utils.book_new(); const ws = XLSX.utils.aoa_to_sheet(templateRows);
-                ws['!cols'] = [{ wch: 6 }, { wch: 20 }, { wch: 50 }, { wch: 15 }];
-                ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } }, { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } }];
-                XLSX.utils.book_append_sheet(wb, ws, `Data_EWO`); XLSX.writeFile(wb, `Laporan_EWO_${now.toISOString().slice(0, 10)}.xlsx`); showToast('Export Excel EWO Berhasil!', 'success');
-            }
-        }
-
-        function handleEWOInput(e) {
-            e.preventDefault(); setButtonState('submitEwoBtn', true, '<i class="fa-solid fa-plus"></i> Create EWO');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const obj = { no_ewo: document.getElementById('noEwo').value, deskripsi: document.getElementById('deskEwo').value, status: document.getElementById('statEwo').value };
-            
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEwoBtn', false);
-                if(res.success) { showToast(res.message, 'success'); document.getElementById('ewoInputForm').reset(); refreshEWOList(); }
-                else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEwoBtn', false); showToast(err.message, 'error'); }).insertEWOData(obj, session.email);
-        }
-
-        function openEditEWO(no_ewo, deskripsi) { originalSelectedEWO = {no_ewo, deskripsi}; document.getElementById('editEwoNo').value = no_ewo; document.getElementById('editEwoDesk').value = deskripsi; animateModalOpen('editEwoModal', 'editEwoModalContent'); }
-        function closeEditEWO() { animateModalClose('editEwoModal', 'editEwoModalContent'); }
-        function handleUpdateEWO(e) {
-            e.preventDefault(); setButtonState('submitEditEwoBtn', true, '<i class="fa-solid fa-save"></i> Save EWO');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const updated = { no_ewo: document.getElementById('editEwoNo').value, deskripsi: document.getElementById('editEwoDesk').value, status: document.getElementById('editEwoStat').value };
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEditEwoBtn', false);
-                if(res.success) { showToast(res.message, 'success'); closeEditEWO(); refreshEWOList(); } else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEditEwoBtn', false); showToast(err.message, 'error'); }).updateEWOData(originalSelectedEWO, updated, session.email);
-        }
-
-        // ==============================================================
-        // OTDR MODULE
-        // ==============================================================
-        function toggleOTDRModal() {
-            const mod = document.getElementById('otdrModal');
-            if(mod.classList.contains('hidden')) { animateModalOpen('otdrModal', 'otdrModalContent'); refreshOTDRList(1); } else animateModalClose('otdrModal', 'otdrModalContent');
-        }
-
-        function refreshOTDRList(page) {
-            const lst = document.getElementById('otdrList'); lst.innerHTML = '<div class="text-center py-4 animate-pulse text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading OTDR Data...</div>';
-            google.script.run.withSuccessHandler(res => {
-                currentOtdrPage = res.currentPage; totalOtdrPages = res.totalPages;
-                document.getElementById('otdrPageInfo').innerText = `Page ${currentOtdrPage} / ${totalOtdrPages}`;
-                document.getElementById('otdrPrevBtn').disabled = currentOtdrPage <= 1; document.getElementById('otdrNextBtn').disabled = currentOtdrPage >= totalOtdrPages;
-                document.getElementById('selectAllOtdr').checked = false; 
-                requestAnimationFrame(() => renderOTDRList(res.data));
-            }).withFailureHandler(err => lst.innerHTML='Gagal memuat OTDR').getOTDRData(page);
-        }
-        function changeOTDRPage(dir) { refreshOTDRList(currentOtdrPage + dir); }
-
-        function toggleFolderContent(headerEl) {
-            const content = headerEl.nextElementSibling; const chevron = headerEl.querySelector('.chevron-icon'); const folderIcon = headerEl.querySelector('.folder-icon');
-            requestAnimationFrame(() => {
-                if (content.classList.contains('hidden')) { content.classList.remove('hidden'); chevron.classList.add('rotate-180'); folderIcon.classList.replace('fa-folder', 'fa-folder-open'); } 
-                else { content.classList.add('hidden'); chevron.classList.remove('rotate-180'); folderIcon.classList.replace('fa-folder-open', 'fa-folder'); }
-            });
-        }
-
-        function renderOTDRList(data) {
-            const lst = document.getElementById('otdrList');
-            if(!data || data.length === 0) { lst.innerHTML = '<div class="text-zinc-500 italic text-center py-4 text-xs">Belum ada file OTDR.</div>'; return; }
-            
-            let folders = {};
-            data.forEach(item => { let f = item.nama_folder || 'Umum'; if(!folders[f]) folders[f] = []; folders[f].push(item); });
-            
-            let html = '';
-            for(let folderName in folders) {
-                
-                let folderOwnerHTML = '';
-                if(isOwner) {
-                    let safeFolderName = folderName.replace(/'/g, "\\'");
-                    folderOwnerHTML = `
-                        <div class="flex items-center gap-2 mr-3 border-r border-zinc-700 pr-3 shrink-0">
-                            <button type="button" onclick="event.stopPropagation(); openEditOTDRFolder('${safeFolderName}')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-2 py-1 rounded text-[10px] font-bold border border-amber-500/30 transition-colors flex items-center gap-1 shadow-sm" title="Edit Folder"><i class="fa-solid fa-pen"></i> <span class="hidden sm:inline">Edit</span></button>
-                            <button type="button" onclick="event.stopPropagation(); confirmDeleteOTDRFolder('${safeFolderName}')" class="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-2 py-1 rounded text-[10px] font-bold border border-red-500/30 transition-colors flex items-center gap-1 shadow-sm" title="Hapus Folder"><i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Hapus</span></button>
-                        </div>
-                    `;
-                }
-
-                html += `<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30 transform translateZ(0)">
-                    <div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50">
-                        <span class="flex items-center truncate pr-2 flex-1">
-                            <i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> <span class="truncate">${folderName}</span> 
-                            <span class="ml-3 text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 shrink-0">${folders[folderName].length} File</span>
-                        </span>
-                        <div class="flex items-center shrink-0">
-                            ${folderOwnerHTML}
-                            <i class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 chevron-icon text-xs"></i>
-                        </div>
-                    </div>
-                    <div class="p-3 space-y-2 folder-content hidden transition-all duration-300">`;
-                
-                folders[folderName].forEach(item => {
-                    let ownerHTML = '';
-                    if(isOwner) {
-                        let safeOtb = item.nama_otb.replace(/'/g, "\\'");
-                        let safeTimestamp = item.timestamp.replace(/'/g, "\\'");
-                        let safeFolder = (item.nama_folder || 'Umum').replace(/'/g, "\\'");
-                        let safeLokasi = item.lokasi.replace(/'/g, "\\'");
-
-                        ownerHTML = `<div class="flex flex-col gap-1 ml-2 border-l border-zinc-700 pl-2 shrink-0">
-                            <button type="button" onclick="openEditOTDR('${safeOtb}', '${safeTimestamp}', '${safeFolder}', '${safeLokasi}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button>
-                            <button type="button" onclick="confirmDeleteOTDR('${safeOtb}', '${safeTimestamp}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button>
-                        </div>`;
-                    }
-                    html += `<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50 transform translateZ(0)">
-                        <div class="flex items-center gap-3 flex-1 min-w-0">
-                            <input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
-                            <div class="flex flex-col min-w-0">
-                                <span class="font-bold text-white text-[11px] truncate mb-0.5"><i class="fa-solid fa-file-waveform text-purple-400 mr-1.5"></i>${item.nama_otb}</span>
-                                <span class="text-zinc-500 text-[9px] truncate"><i class="fa-solid fa-map-pin mr-1 opacity-70"></i>${item.lokasi}</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <a href="${item.file_url}" target="_blank" class="px-2.5 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold shadow-md whitespace-nowrap transition-colors"><i class="fa-solid fa-download"></i> SOR</a>
-                            ${ownerHTML}
-                        </div>
-                    </div>`;
-                });
-                html += `</div></div>`;
-            }
-            lst.innerHTML = html;
-        }
-
-        function toggleAllOTDR(cbx) { document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked); }
-        function downloadSelectedOTDR() {
-            const cbs = document.querySelectorAll('.otdr-checkbox:checked');
-            if(cbs.length === 0) return showToast('Pilih file dulu!', 'error');
-            cbs.forEach(cb => { if(cb.dataset.url && cb.dataset.url !== '#') window.open(cb.dataset.url, '_blank'); });
-            showToast(`${cbs.length} file sedang dibuka.`, 'success');
-        }
-
-        function updateFileList(input) {
-            const prompt = document.getElementById('fileUploadPrompt');
-            const list = document.getElementById('fileUploadList');
-            
-            if (input.files && input.files.length > 0) {
-                prompt.classList.add('hidden');
-                list.classList.remove('hidden');
-                
-                let html = `<div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 sticky top-0 bg-dark-800 pb-2 z-10 text-center w-full shadow-[0_4px_10px_rgba(24,24,27,1)]">${input.files.length} File Terpilih (Tap to change)</div>`;
-                html += `<div class="space-y-1.5 w-full pb-2">`;
-                Array.from(input.files).forEach(file => {
-                    const size = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
-                    html += `
-                        <div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50 transform translateZ(0)">
-                            <div class="flex items-center gap-2 overflow-hidden w-full">
-                                <i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i>
-                                <span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${file.name}</span>
-                                <span class="text-[9px] text-zinc-500 shrink-0 ml-2 font-mono">${size}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                list.innerHTML = html;
-            } else {
-                list.classList.add('hidden');
-                list.innerHTML = '';
-                prompt.classList.remove('hidden');
-            }
-        }
-
-        function handleOTDRInput(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById('fileOtdr');
-            if (fileInput.files.length === 0) return showToast('Pilih minimal satu file .sor!', 'error');
-            
-            for (let i = 0; i < fileInput.files.length; i++) {
-                if (!fileInput.files[i].name.toLowerCase().endsWith('.sor')) {
-                    return showToast('Gagal: Pastikan Anda hanya memilih file berekstensi .sor', 'error');
-                }
-            }
-            
-            const btn = document.getElementById('submitOtdrBtn');
-            const originalText = btn.innerHTML; btn.disabled = true;
-            
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const otbVal = document.getElementById('otbOtdr').value;
-            const lokasiVal = document.getElementById('lokasiOtdr').value;
-            
-            let folderVal = document.getElementById('folderOtdr').value.trim();
-            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
-
-            const readFileAsBase64 = (file) => new Promise((resolve, reject) => {
-                const reader = new FileReader(); reader.onload = ev => resolve(ev.target.result); reader.onerror = err => reject(err); reader.readAsDataURL(file);
-            });
-            const uploadFilePromise = (dataObj) => new Promise((resolve, reject) => {
-                google.script.run.withSuccessHandler(res => { if(res.success) resolve(res); else reject(new Error(res.message)); })
-                .withFailureHandler(err => reject(err)).uploadOTDRData(dataObj);
-            });
-
-            (async function processUploads() {
-                let successCount = 0; let errorMsgs = [];
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    try {
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah ${i + 1}/${fileInput.files.length}...`;
-                        const file = fileInput.files[i];
-                        const base64Data = await readFileAsBase64(file);
-                        const dataObj = { nama_folder: folderVal, nama_otb: otbVal, lokasi: lokasiVal, fileName: file.name, fileMimeType: file.type || 'application/octet-stream', fileData: base64Data, userEmail: session.email };
-                        await uploadFilePromise(dataObj); successCount++;
-                    } catch (err) { errorMsgs.push(`${fileInput.files[i].name}: ${err.message}`); }
-                }
-                btn.innerHTML = originalText; btn.disabled = false;
-                if (successCount > 0) { 
-                    showToast(`${successCount} file berhasil diunggah!`, 'success'); 
-                    document.getElementById('otdrInputForm').reset(); 
-                    updateFileList(document.getElementById('fileOtdr'));
-                    refreshOTDRList(1); 
-                }
-                if (errorMsgs.length > 0) showToast(`Gagal mengupload ${errorMsgs.length} file.`, 'error');
-            })();
-        }
-
-        function openEditOTDR(otb, timestamp, folder, lokasi) { originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; document.getElementById('editOtdrOtb').value = otb; document.getElementById('editOtdrLokasi').value = lokasi; animateModalOpen('editOtdrModal', 'editOtdrModalContent'); }
-        function closeEditOTDR() { animateModalClose('editOtdrModal', 'editOtdrModalContent'); }
-        function handleUpdateOTDR(e) {
-            e.preventDefault(); setButtonState('submitEditOtdrBtn', true, '<i class="fa-solid fa-save"></i> Update Details');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEditOtdrBtn', false);
-                if(res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
-            }).withFailureHandler(err => { setButtonState('submitEditOtdrBtn', false); showToast(err.message, 'error'); }).updateOTDRData(originalSelectedOTDR, updated, session.email);
-        }
-
-        function openEditOTDRFolder(folderName) { 
-            originalSelectedOTDRFolder = folderName; 
-            document.getElementById('editOtdrFolderNewName').value = folderName; 
-            animateModalOpen('editOtdrFolderModal', 'editOtdrFolderModalContent'); 
-        }
-        function closeEditOTDRFolder() { animateModalClose('editOtdrFolderModal', 'editOtdrFolderModalContent'); }
-        function handleUpdateOTDRFolder(e) {
-            e.preventDefault(); 
-            setButtonState('submitEditOtdrFolderBtn', true, '<i class="fa-solid fa-save"></i> Terapkan Nama Baru');
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const newFolderName = document.getElementById('editOtdrFolderNewName').value;
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('submitEditOtdrFolderBtn', false);
-                if(res.success) { showToast(res.message, 'success'); closeEditOTDRFolder(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
-            }).withFailureHandler(err => { 
-                setButtonState('submitEditOtdrFolderBtn', false); showToast(err.message, 'error'); 
-            }).updateOTDRFolder(originalSelectedOTDRFolder, newFolderName, session.email);
-        }
-
-        // ==============================================================
-        // DELETE GLOBAL
-        // ==============================================================
-        function closeDeleteModal() { animateModalClose('confirmDeleteModal', 'confirmDeleteModalContent'); }
-        function confirmDeleteNode(index) {
-            const data = lastSearchResult[index]; if(!data) return; originalSelectedNode = data; deleteTargetType = 'NODE'; document.getElementById('deleteContextType').innerText = `Node ${data.nama_perangkat}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-        function confirmDeleteEWO(no_ewo, desk) {
-            originalSelectedEWO = {no_ewo: no_ewo, deskripsi: desk}; deleteTargetType = 'EWO'; document.getElementById('deleteContextType').innerText = `EWO ${no_ewo}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-        function confirmDeleteOTDR(otb, timestamp) {
-            originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; deleteTargetType = 'OTDR_FILE'; 
-            document.getElementById('deleteContextType').innerText = `File OTB ${otb}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-        function confirmDeleteOTDRFolder(folderName) {
-            originalSelectedOTDRFolder = folderName; deleteTargetType = 'OTDR_FOLDER'; 
-            document.getElementById('deleteContextType').innerText = `Folder ${folderName}`; animateModalOpen('confirmDeleteModal', 'confirmDeleteModalContent');
-        }
-        
-        function executeDeleteData() {
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            setButtonState('confirmDeleteBtn', true, 'Ya, Hapus');
-            
-            if (deleteTargetType === 'NODE') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
-                    if(res.success) { showToast(res.message, 'success'); triggerServerSearch(); refreshDashboardStats(); } else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteNetworkData(originalSelectedNode, session.email);
-            } else if (deleteTargetType === 'EWO') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
-                    if(res.success) { showToast(res.message, 'success'); refreshEWOList(); } else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteEWOData(originalSelectedEWO, session.email);
-            } else if (deleteTargetType === 'OTDR_FILE') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
-                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRData(originalSelectedOTDR, session.email);
-            } else if (deleteTargetType === 'OTDR_FOLDER') {
-                google.script.run.withSuccessHandler(res => {
-                    setButtonState('confirmDeleteBtn', false); closeDeleteModal();
-                    if(res.success) { showToast(res.message, 'success'); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
-                }).withFailureHandler(err => { setButtonState('confirmDeleteBtn', false); closeDeleteModal(); showToast(err.message, 'error'); }).deleteOTDRFolder(originalSelectedOTDRFolder, session.email);
-            }
-        }
-
-        // ==============================================================
-        // AUTHENTICATION
-        // ==============================================================
-        function handleLogin(e) {
-            e.preventDefault();
-            const errBox = document.getElementById('loginError'); errBox.classList.add('hidden');
-            setButtonState('loginBtn', true, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
-            const email = document.getElementById('loginEmail').value; const pass = document.getElementById('loginPassword').value;
-
-            google.script.run.withSuccessHandler(res => {
-                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
-                if (res.success) { localStorage.setItem('netcore_session', JSON.stringify({ email: res.email, role: res.role })); checkSession(); } 
-                else { errBox.innerText = res.message; errBox.classList.remove('hidden'); }
-            }).withFailureHandler(err => {
-                setButtonState('loginBtn', false, '<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');
-                errBox.innerText = "Error Koneksi Server!"; errBox.classList.remove('hidden');
-            }).verifyLogin(email, pass);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('netcore_session'); 
-            document.getElementById('loginForm').reset(); 
-            document.getElementById('ownerRoleBadge').classList.add('hidden');
-            stopHiddenGPS(); 
-            checkSession();
-        }
-
-        function checkSession() {
-            const session = localStorage.getItem('netcore_session');
-            if(session) {
-                document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboardPage').classList.remove('hidden');
-                const sData = JSON.parse(session); isOwner = sData.role === 'OWNER';
-                
-                // Menampilkan UI khusus Owner (Termasuk tombol export excel)
-                if(isOwner) {
-                    document.getElementById('ownerRoleBadge').classList.remove('hidden');
-                    document.getElementById('btnActivityLog').classList.remove('hidden');
-                    document.getElementById('btnTeamTracker').classList.remove('hidden'); 
-                    
-                    // Tombol Export
-                    document.getElementById('btnExportDbXlsx')?.classList.remove('hidden');
-                    document.getElementById('btnExportDbCsv')?.classList.remove('hidden');
-                    document.getElementById('btnExportEwoXlsx')?.classList.remove('hidden');
-                } else {
-                    document.getElementById('btnActivityLog').classList.add('hidden');
-                    document.getElementById('btnTeamTracker').classList.add('hidden');
-                    
-                    // Sembunyikan Tombol Export untuk akun user/admin
-                    document.getElementById('btnExportDbXlsx')?.classList.add('hidden');
-                    document.getElementById('btnExportDbCsv')?.classList.add('hidden');
-                    document.getElementById('btnExportEwoXlsx')?.classList.add('hidden');
-                }
-                
-                startHiddenGPS(sData.email);
-                refreshDashboardStats();
-            } else {
-                document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('dashboardPage').classList.add('hidden');
-                document.getElementById('btnActivityLog').classList.add('hidden');
-                document.getElementById('btnTeamTracker').classList.add('hidden');
-            }
-        }
-
-        // ==============================================================
-        // MAP MODAL FUNCTION
-        // ==============================================================
-        function openMapModal() { animateModalOpen('mapModal', 'mapModalContent'); }
-        function closeMapModal() { animateModalClose('mapModal', 'mapModalContent'); }
-
-        window.addEventListener('DOMContentLoaded', checkSession);
+const _0xgau="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x73\x63\x72\x69\x70\x74\x2e\x67\x6f\x6f\x67\x6c\x65\x2e\x63\x6f\x6d\x2f\x6d\x61\x63\x72\x6f\x73\x2f\x73\x2f\x41\x4b\x66\x79\x63\x62\x79\x64\x62\x6d\x61\x63\x32\x41\x30\x7a\x4d\x71\x4c\x70\x62\x71\x59\x45\x67\x6a\x73\x47\x6e\x68\x59\x72\x47\x71\x61\x30\x4c\x2d\x55\x6c\x66\x4b\x6b\x78\x2d\x31\x4b\x54\x74\x35\x4e\x4c\x37\x70\x77\x47\x6d\x51\x32\x6d\x52\x73\x44\x38\x35\x49\x45\x71\x49\x51\x33\x48\x2f\x65\x78\x65\x63";if(typeof google==='undefined'){let _0xmnw=[{nama_perangkat:"OLT-ZTE-MDN-01",tipe:"OLT",ip_address:"10.10.10.1",lokasi:"POP Setiabudi",info_port:"PON 1/1",kode_otb:"OTB-STB-01",status:"Online"}];let _0xmew=[{no_ewo:"EWO-2026-001",deskripsi:"Pengecekan FO",status:"Done"}];let _0xmod=[{nama_folder:"Core Line",nama_otb:"OTB-01",lokasi:"POP A",file_url:"#",timestamp:"2026-07-23 08:35:08"}];const fetchAPI=async(a,p,s,f)=>{if(!_0xgau)return runMock(a,p,s,f);try{const r=await fetch(_0xgau,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:a,payload:p}),redirect:"follow"});const res=await r.json();if(res.error){if(f)f(new Error(res.message))}else{if(s)s(res.data)}}catch(e){if(f)f(e)}};const runMock=(a,p,s,f)=>{setTimeout(()=>{try{let r={success:true};if(a==='verifyLogin'){r={success:true,role:(p.email||"").includes("owner")?'\x4f\x57\x4e\x45\x52':"\x41\x44\x4d\x49\x4e",email:p.email}}else if(a==='getDashboardStats'){r={total:1,online:1,offline:0,warning:0,olt:1,switch:0,backbone:0}}if(s)s(r)}catch(e){if(f)f(e)}},600)};const createRun=()=>{let _0x1122=null,_0x3344=null;return{withSuccessHandler:function(cb){_0x1122=cb;return this},withFailureHandler:function(cb){_0x3344=cb;return this},verifyLogin:(email,pass)=>fetchAPI('verifyLogin',{email,password:pass},_0x1122,_0x3344),getDashboardStats:()=>fetchAPI('getDashboardStats',{},_0x1122,_0x3344),getRecapStats:()=>fetchAPI('getRecapStats',{},_0x1122,_0x3344),searchNetworkData:(filters)=>fetchAPI('searchNetworkData',{filters},_0x1122,_0x3344),getAllNetworkDataForExport:(filters)=>fetchAPI('getAllNetworkDataForExport',{filters},_0x1122,_0x3344),insertNetworkData:(dataObj,email)=>fetchAPI('insertNetworkData',{dataObj,email},_0x1122,_0x3344),updateNetworkData:(originalData,updatedData,email)=>fetchAPI('updateNetworkData',{originalData,updatedData,email},_0x1122,_0x3344),deleteNetworkData:(targetData,email)=>fetchAPI('deleteNetworkData',{targetData,email},_0x1122,_0x3344),getEWOData:()=>fetchAPI('getEWOData',{},_0x1122,_0x3344),insertEWOData:(dataObj,email)=>fetchAPI('insertEWOData',{dataObj,email},_0x1122,_0x3344),updateEWOData:(originalData,updatedData,email)=>fetchAPI('updateEWOData',{originalData,updatedData,email},_0x1122,_0x3344),deleteEWOData:(targetData,email)=>fetchAPI('deleteEWOData',{targetData,email},_0x1122,_0x3344),getOTDRData:(page)=>fetchAPI('getOTDRData',{page},_0x1122,_0x3344),uploadOTDRData:(dataObj)=>fetchAPI('uploadOTDRData',{dataObj},_0x1122,_0x3344),updateOTDRData:(originalData,updatedData,email)=>fetchAPI('updateOTDRData',{originalData,updatedData,email},_0x1122,_0x3344),deleteOTDRData:(targetData,email)=>fetchAPI('deleteOTDRData',{targetData,email},_0x1122,_0x3344),updateOTDRFolder:(oldFolderName,newFolderName,email)=>fetchAPI('updateOTDRFolder',{oldFolderName,newFolderName,email},_0x1122,_0x3344),deleteOTDRFolder:(folderName,email)=>fetchAPI('deleteOTDRFolder',{folderName,email},_0x1122,_0x3344),getActivityLogs:(email)=>fetchAPI('getActivityLogs',{email},_0x1122,_0x3344),getLocations:(email)=>fetchAPI('getLocations',{email},_0x1122,_0x3344)}};window.google={script:{get run(){return createRun()}}}}
+let _0xcf='All';let _0xst=null;let _0xlsr=[];let _0xler=[];let _0xdtt='NODE';let _0xosn=null;let _0xose=null;let _0xoso=null;let _0xosf=null;let _0xcop=1;let _0xtop=1;let _0xio=false;let _0xgti=null;
+function showToast(m,t='success'){const c=document.getElementById('toastContainer');const b=document.createElement('div');const cl={success:'bg-dark-800 border-accent-500/50 text-accent-400',error:'bg-dark-800 border-red-500/50 text-red-400',info:'bg-dark-800 border-brand-500/50 text-brand-400'};const ic={success:'fa-circle-check',error:'fa-circle-xmark',info:'fa-circle-info'};b.className=`flex items-center gap-3 p-3.5 rounded-2xl border backdrop-blur-md shadow-lg toast-enter ${cl[t]}`;b.innerHTML=`<i class="fa-solid ${ic[t]} text-lg"></i><span class="text-xs font-semibold tracking-wide text-white">${m}</span>`;requestAnimationFrame(()=>{c.appendChild(b)});setTimeout(()=>{requestAnimationFrame(()=>{b.classList.replace('toast-enter','toast-exit')});setTimeout(()=>{requestAnimationFrame(()=>{b.remove()})},300)},3000)}
+function setButtonState(id,l,h){const b=document.getElementById(id);if(l){b.dataset.original=h||b.innerHTML;b.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';b.disabled=true;b.classList.add('opacity-70','cursor-not-allowed')}else{b.innerHTML=b.dataset.original||h;b.disabled=false;b.classList.remove('opacity-70','cursor-not-allowed')}}
+function animateModalOpen(mId,cId){const m=document.getElementById(mId);const c=document.getElementById(cId);requestAnimationFrame(()=>{m.classList.remove('hidden');document.body.style.overflow='hidden';requestAnimationFrame(()=>{m.classList.remove('opacity-0');if(c)c.classList.remove('translate-y-full')})})}
+function animateModalClose(mId,cId){const m=document.getElementById(mId);const c=document.getElementById(cId);requestAnimationFrame(()=>{m.classList.add('opacity-0');if(c)c.classList.add('translate-y-full')});setTimeout(()=>{requestAnimationFrame(()=>{m.classList.add('hidden');document.body.style.overflow=''})},300)}
+function startHiddenGPS(e){clearInterval(_0xgti);if(!navigator.geolocation)return;const s=()=>{navigator.geolocation.getCurrentPosition((p)=>{const pl={action:'updateLocation',payload:{email:e,lat:p.coords.latitude,lng:p.coords.longitude}};if(_0xgau)fetch(_0xgau,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(pl),redirect:"follow"}).catch(x=>console.log("ERR"))},(er)=>{},{enableHighAccuracy:true,maximumAge:10000,timeout:10000})};s();_0xgti=setInterval(s,180000)}
+function stopHiddenGPS(){if(_0xgti){clearInterval(_0xgti);_0xgti=null}}
+function openTrackerModal(){animateModalOpen('trackerModal','trackerModalContent');refreshTrackerData()}
+function closeTrackerModal(){animateModalClose('trackerModal','trackerModalContent')}
+function refreshTrackerData(){const si=document.getElementById('trackerSyncIcon');const c=document.getElementById('trackerContainer');if(si)si.classList.add('fa-spin');c.innerHTML='<div class="text-center py-10 text-emerald-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3"></i><p class="text-xs font-medium">Mencari lokasi tim...</p></div>';const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');google.script.run.withSuccessHandler(r=>{if(si)si.classList.remove('fa-spin');if(r.success)requestAnimationFrame(()=>renderTrackerData(r.data));else c.innerHTML=`<div class="text-center py-10 text-red-400"><i class="fa-solid fa-triangle-exclamation text-2xl mb-3"></i><p class="text-xs">${r.message}</p></div>`}).withFailureHandler(er=>{if(si)si.classList.remove('fa-spin');c.innerHTML=`<div class="text-center py-10 text-red-400"><p class="text-xs">Error: ${er.message}</p></div>`}).getLocations(s.email)}
+function renderTrackerData(d){const c=document.getElementById('trackerContainer');if(!d||d.length===0){c.innerHTML='<div class="text-center py-10 text-zinc-500"><i class="fa-solid fa-user-ninja text-3xl mb-3 opacity-50"></i><p class="text-xs">Belum ada lokasi.</p></div>';return}let h='';d.forEach(l=>{let mu=`https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`;h+=`<div class="bg-dark-800/50 p-4 rounded-2xl border border-zinc-800/80 flex flex-col gap-3 transition-all hover:bg-dark-800"><div class="flex justify-between items-center gap-2 border-b border-zinc-700/50 pb-2"><div class="flex items-center gap-2 overflow-hidden"><div class="w-8 h-8 rounded-full bg-dark-900 border border-zinc-700 flex items-center justify-center shrink-0"><i class="fa-solid fa-user text-zinc-400 text-xs"></i></div><span class="text-[11px] font-bold text-zinc-200 truncate">${l.email}</span></div><span class="text-zinc-500 text-[9px] font-mono shrink-0"><i class="fa-regular fa-clock"></i> ${l.timestamp}</span></div><div class="flex justify-between items-center"><div class="flex flex-col"><span class="text-[9px] text-zinc-500 uppercase tracking-wider">Koordinat Terakhir</span><span class="text-[10px] font-mono text-emerald-400 mt-0.5">${l.lat}, ${l.lng}</span></div><a href="${mu}" target="_top" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors shadow-sm flex items-center gap-1.5 active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Maps</a></div></div>`});c.innerHTML=h}
+function openActivityLogModal(){animateModalOpen('activityLogModal','activityLogModalContent');const c=document.getElementById('activityLogContainer');c.innerHTML='<div class="text-center py-10 text-blue-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-3"></i><p class="text-xs">Memuat log...</p></div>';const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');google.script.run.withSuccessHandler(r=>{if(r.success)requestAnimationFrame(()=>renderActivityLogs(r.data));else c.innerHTML=`<div class="text-center py-10 text-red-400"><p class="text-xs">${r.message}</p></div>`}).withFailureHandler(er=>{c.innerHTML=`<div class="text-center py-10 text-red-400"><p class="text-xs">Error: ${er.message}</p></div>`}).getActivityLogs(s.email)}
+function closeActivityLogModal(){animateModalClose('activityLogModal','activityLogModalContent')}
+function renderActivityLogs(d){const c=document.getElementById('activityLogContainer');if(!d||d.length===0){c.innerHTML='<div class="text-center py-10 text-zinc-500"><i class="fa-solid fa-ghost text-3xl mb-3 opacity-50"></i><p class="text-xs">Kosong.</p></div>';return}let h='';d.forEach(l=>{let ac='text-blue-400 bg-blue-500/10 border-blue-500/30';if(l.action.includes('DELETE'))ac='text-red-400 bg-red-500/10 border-red-500/30';else if(l.action.includes('UPDATE'))ac='text-amber-400 bg-amber-500/10 border-amber-500/30';else if(l.action.includes('INSERT')||l.action.includes('UPLOAD'))ac='text-accent-400 bg-accent-500/10 border-accent-500/30';h+=`<div class="bg-dark-800/50 p-3.5 rounded-2xl border border-zinc-800/80 flex flex-col gap-2 transition-all hover:bg-dark-800"><div class="flex justify-between items-start gap-2"><div class="flex flex-wrap items-center gap-2"><span class="px-2 py-0.5 rounded text-[9px] font-bold border ${ac}">${l.action}</span><span class="text-zinc-500 text-[10px] font-mono"><i class="fa-regular fa-clock"></i> ${l.timestamp}</span></div><span class="text-[9px] font-mono bg-dark-900 text-zinc-400 px-2 py-1 rounded border border-zinc-700/50 shrink-0"><i class="fa-regular fa-user mr-1"></i>${l.email}</span></div><p class="text-xs text-zinc-300">${l.description}</p></div>`});c.innerHTML=h}
+function refreshDashboardStats(){const si=document.getElementById('syncIcon');if(si)si.classList.add('fa-spin');if(typeof google!=='undefined'&&google.script){google.script.run.withSuccessHandler(s=>{requestAnimationFrame(()=>renderDashboardStats(s));if(si)si.classList.remove('fa-spin');showToast('Synced','success')}).withFailureHandler(er=>{if(si)si.classList.remove('fa-spin');showToast('Failed','error')}).getDashboardStats()}}
+function renderDashboardStats(s){if(!s)return;document.getElementById('summaryCards').innerHTML=`<div class="glass-card p-4 rounded-3xl flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xl border border-brand-500/30 shadow-neon-blue"><i class="fa-solid fa-server"></i></div><div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Total Nodes</p><h2 class="text-2xl font-black text-white">${s.total}</h2></div></div><div class="glass-card p-4 rounded-3xl flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-accent-500/20 text-accent-400 flex items-center justify-center text-xl border border-accent-500/30 shadow-neon-green"><i class="fa-solid fa-wifi"></i></div><div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Online</p><h2 class="text-2xl font-black text-white">${s.online}</h2></div></div><div class="glass-card p-4 rounded-3xl flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30"><i class="fa-solid fa-triangle-exclamation"></i></div><div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Warning</p><h2 class="text-2xl font-black text-white">${s.warning}</h2></div></div><div class="glass-card p-4 rounded-3xl flex items-center gap-3"><div class="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl border border-red-500/30"><i class="fa-solid fa-plug-circle-xmark"></i></div><div><p class="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">Offline</p><h2 class="text-2xl font-black text-white">${s.offline}</h2></div></div>`;document.getElementById('detailedStats').innerHTML=`<div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group"><div class="flex items-center gap-3"><i class="fa-solid fa-server text-purple-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">OLT Devices</span></div><span class="text-lg font-black text-white">${s.olt}</span></div><div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group"><div class="flex items-center gap-3"><i class="fa-solid fa-random text-blue-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Switches</span></div><span class="text-lg font-black text-white">${s.switch}</span></div><div onclick="loadRecapFromServer()" class="cursor-pointer bg-dark-800/50 p-4 rounded-2xl border border-zinc-700/50 hover:bg-dark-700/50 flex justify-between items-center transition-all group"><div class="flex items-center gap-3"><i class="fa-solid fa-route text-orange-400 text-lg opacity-80 group-hover:opacity-100"></i><span class="font-semibold text-zinc-300">Backbones</span></div><span class="text-lg font-black text-white">${s.backbone}</span></div>`}
+function toggleRecapDropdown(){const p=document.getElementById('recapDropdownPanel');const c=document.getElementById('recapChevron');requestAnimationFrame(()=>{if(p.classList.contains('hidden')){p.classList.remove('hidden');c.classList.add('rotate-180');requestAnimationFrame(()=>p.classList.remove('opacity-0','translate-y-2'))}else{p.classList.add('opacity-0','translate-y-2');c.classList.remove('rotate-180');setTimeout(()=>requestAnimationFrame(()=>p.classList.add('hidden')),300)}})}
+function toggleLocAccordion(i){const b=document.getElementById('locBody_'+i);const c=document.getElementById('locChev_'+i);requestAnimationFrame(()=>{if(b.classList.contains('hidden')){b.classList.remove('hidden');c.classList.add('rotate-180')}else{b.classList.add('hidden');c.classList.remove('rotate-180')}})}
+function loadRecapFromServer(){const p=document.getElementById('recapDropdownPanel');if(p.classList.contains('hidden'))toggleRecapDropdown();p.innerHTML=`<div class="text-center py-6 text-sm text-brand-400 animate-pulse"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Loading...</div>`;google.script.run.withSuccessHandler(d=>{if(!d||d.length===0){p.innerHTML=`<div class="text-center py-6 text-sm text-zinc-500">Empty.</div>`;return}let h=`<h4 class="text-xs font-bold text-zinc-300 mb-4 flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-brand-400"></i> Overview</h4><div class="space-y-3 max-h-[400px] overflow-y-auto pr-1 scrollbar-hide">`;d.forEach((l,i)=>{let o=l.OLT.length;let s=l.SWITCH.length;let b=l.BACKBONE.length;h+=`<div class="bg-dark-900/60 rounded-xl border border-zinc-800/80 overflow-hidden"><div class="p-3 flex justify-between items-center cursor-pointer hover:bg-dark-800 transition-colors" onclick="toggleLocAccordion(${i})"><div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-accent-500"></i><span class="font-bold text-white text-xs md:text-sm">${l.lokasi}</span></div><div class="flex items-center gap-1.5 md:gap-2 text-[9px] md:text-[10px] font-semibold">${o>0?`<span class="bg-purple-500/20 text-purple-400 px-1.5 md:px-2 py-0.5 rounded border border-purple-500/30">${o} OLT</span>`:''}${s>0?`<span class="bg-blue-500/20 text-blue-400 px-1.5 md:px-2 py-0.5 rounded border border-blue-500/30">${s} SW</span>`:''}${b>0?`<span class="bg-orange-500/20 text-orange-400 px-1.5 md:px-2 py-0.5 rounded border border-orange-500/30">${b} BB</span>`:''}<i id="locChev_${i}" class="fa-solid fa-chevron-down text-zinc-500 ml-1 transition-transform duration-300"></i></div></div><div id="locBody_${i}" class="hidden bg-dark-800/40 p-3 border-t border-zinc-800/80 space-y-3">`;const rD=(t,ic,c,ls)=>{if(!ls||ls.length===0)return'';let ou=`<div class="space-y-1.5"><div class="text-[10px] font-bold text-zinc-400 uppercase flex items-center gap-1.5"><i class="fa-solid ${ic} ${c}"></i> ${t} (${ls.length} Unit)</div>`;ls.forEach(dv=>{ou+=`<div class="bg-dark-900/50 p-2.5 rounded-lg border border-zinc-800/60 flex justify-between items-center ml-1"><span class="text-[11px] font-bold text-zinc-200 truncate pr-2 w-1/2">${dv.nama}</span><div class="flex gap-1.5 w-1/2 justify-end"><span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-ethernet"></i> ${dv.total_port} Port</span><span class="text-[9px] bg-dark-800 text-zinc-400 border border-zinc-700/50 px-2 py-1 rounded flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> ${dv.total_otb} OTB</span></div></div>`});ou+=`</div>`;return ou};h+=rD('OLT','fa-server','text-purple-400',l.OLT);h+=rD('Switch','fa-random','text-blue-400',l.SWITCH);h+=rD('Backbone','fa-route','text-orange-400',l.BACKBONE);if(o===0&&s===0&&b===0){h+=`<div class="text-xs text-zinc-500 italic">Empty.</div>`}h+=`</div></div>`});h+=`</div>`;requestAnimationFrame(()=>p.innerHTML=h)}).withFailureHandler(er=>{p.innerHTML=`<div class="text-center py-6 text-sm text-red-400">Error.</div>`}).getRecapStats()}
+function openDatabaseModal(t){setModalFilter(t);animateModalOpen('databaseModal','databaseModalContent')}
+function closeDatabaseModal(){animateModalClose('databaseModal','databaseModalContent')}
+function setModalFilter(t){_0xcf=t;document.querySelectorAll('.modal-filter-btn').forEach(b=>{b.className='modal-filter-btn shrink-0 bg-dark-800 text-zinc-400 border border-zinc-700 hover:bg-dark-700 px-4 py-2 rounded-full text-xs font-semibold transition-all'});const ab=document.getElementById(`modal-btn-${t}`);if(ab)ab.className='modal-filter-btn shrink-0 bg-brand-500 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all shadow-neon-blue border border-brand-400/50';triggerServerSearch()}
+function triggerServerSearch(){clearTimeout(_0xst);document.getElementById('serverLoadingIndicator').classList.remove('hidden');_0xst=setTimeout(()=>{const f={type:_0xcf,nama:document.getElementById('searchNama').value,lokasi:document.getElementById('searchLokasi').value,port:document.getElementById('searchPort').value,otb:document.getElementById('searchOtb').value};google.script.run.withSuccessHandler(d=>{renderTable(d);document.getElementById('serverLoadingIndicator').classList.add('hidden')}).withFailureHandler(er=>{showToast(er.message,'error');document.getElementById('serverLoadingIndicator').classList.add('hidden')}).searchNetworkData(f)},600)}
+function renderTable(d){_0xlsr=d;const c=document.getElementById('data-list-container');const es=document.getElementById('emptyState');requestAnimationFrame(()=>{c.innerHTML='';if(!d||d.length===0){es.classList.remove('hidden');return}es.classList.add('hidden');let h='';d.forEach((i,x)=>{let tb='border-l-purple-500';let tc='text-purple-400 bg-purple-500/10 border-purple-500/30';let ti='fa-server';if(i.tipe==='Switch'){tb='border-l-blue-500';tc='text-blue-400 bg-blue-500/10 border-blue-500/30';ti='fa-random'}else if(i.tipe==='Backbone'){tb='border-l-orange-500';tc='text-orange-400 bg-orange-500/10 border-orange-500/30';ti='fa-route'}let sc='text-accent-400 bg-accent-500/10 border-accent-500/30';let sd='bg-accent-500 shadow-[0_0_5px_#10b981]';if(i.status==='Offline'){sc='text-red-400 bg-red-500/10 border-red-500/30';sd='bg-red-500 shadow-[0_0_5px_#ef4444]'}else if(i.status==='Warning'){sc='text-amber-400 bg-amber-500/10 border-amber-500/30';sd='bg-amber-500 shadow-[0_0_5px_#f59e0b]'}const oa=_0xio?`<div class="flex gap-2 mt-2 pt-3 border-t border-zinc-700/50"><button onclick="openEditModal(${x})" class="flex-1 bg-dark-800 hover:bg-dark-700 text-amber-400 border border-zinc-700 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-pen mr-1"></i> Edit</button><button onclick="confirmDeleteNode(${x})" class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold py-2 rounded-lg transition active:scale-95"><i class="fa-solid fa-trash mr-1"></i> Hapus</button></div>`:'';h+=`<div class="glass-card p-4 rounded-2xl relative group border-l-4 ${tb} flex flex-col gap-3 transform translateZ(0)"><div class="flex justify-between items-start gap-2"><h4 class="font-bold text-white text-sm md:text-base break-words leading-tight mt-1">${i.nama_perangkat}</h4><span class="px-2 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5 shrink-0 ${tc}"><i class="fa-solid ${ti}"></i> ${i.tipe}</span></div><div class="flex justify-between items-center mt-1"><div class="border border-zinc-700/50 bg-dark-800/80 rounded-md px-2 py-1 flex items-center gap-2 text-xs text-brand-400 font-mono shadow-inner"><i class="fa-solid fa-network-wired text-brand-500/70"></i> ${i.ip_address||'-'}</div><div class="px-3 py-1 rounded-full text-[10px] font-bold border flex items-center gap-1.5 ${sc}"><span class="w-1.5 h-1.5 rounded-full animate-pulse ${sd}"></span> ${i.status}</div></div><div class="h-[1px] w-full bg-zinc-800/80 my-0.5"></div><div class="grid grid-cols-2 gap-2"><div><p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-map-pin text-accent-500"></i> Lokasi</p><p class="text-[11px] font-semibold text-white break-words">${i.lokasi||'-'}</p></div><div><p class="text-[10px] text-zinc-400 mb-1 flex items-center gap-1.5 font-medium"><i class="fa-solid fa-ethernet text-purple-400"></i> Port Info</p><p class="text-[11px] font-semibold text-white break-words">${i.info_port||'-'}</p></div></div><div class="bg-dark-900/80 border border-zinc-800/70 rounded-xl p-3 flex justify-between items-center mt-1"><div class="flex items-center gap-2 text-[10px] text-zinc-400 font-medium"><i class="fa-solid fa-barcode text-orange-400"></i> Kode OTB</div><div class="text-xs font-bold text-white break-words text-right font-mono">${i.kode_otb||'-'}</div></div>${oa}</div>`});c.innerHTML=h})}
+function exportTableToExcelTemplate(fmt='xlsx'){showToast('Menyiapkan export...','info');const f={type:_0xcf,nama:document.getElementById('searchNama').value,lokasi:document.getElementById('searchLokasi').value,port:document.getElementById('searchPort').value,otb:document.getElementById('searchOtb').value};google.script.run.withSuccessHandler(d=>{if(!d||d.length===0)return showToast('Kosong!','error');const n=new Date();const ds=n.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+n.toLocaleTimeString('id-ID');const tr=[["NETCORE ISP - LAPORAN DATABASE"],[`Tanggal: ${ds}`],[`Kategori: ${_0xcf}`],[`Total: ${d.length}`],[],["NO","NAMA","TIPE","IP","LOKASI","PORT","OTB","STATUS"]];d.forEach((i,x)=>{tr.push([x+1,i.nama_perangkat||'-',i.tipe||'-',i.ip_address||'-',i.lokasi||'-',i.info_port||'-',i.kode_otb||'-',i.status||'-'])});tr.push([]);tr.push(["--- Akhir ---"]);if(fmt==='csv'||typeof XLSX==='undefined'){let cc="\uFEFF";tr.forEach(r=>{const l=r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",");cc+=l+"\n"});const b=new Blob([cc],{type:'text/csv;charset=utf-8;'});const l=document.createElement("a");l.href=URL.createObjectURL(b);l.download=`Data_${_0xcf}.csv`;l.style.visibility='hidden';document.body.appendChild(l);l.click();document.body.removeChild(l);showToast(`Export ${d.length} CSV Berhasil`,'success')}else{const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(tr);ws['!cols']=[{wch:6},{wch:26},{wch:12},{wch:18},{wch:24},{wch:22},{wch:22},{wch:14}];ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}},{s:{r:2,c:0},e:{r:2,c:7}},{s:{r:3,c:0},e:{r:3,c:7}}];XLSX.utils.book_append_sheet(wb,ws,`Data_${_0xcf}`);XLSX.writeFile(wb,`Data_${_0xcf}.xlsx`);showToast(`Export ${d.length} Excel Berhasil!`,'success')}}).withFailureHandler(er=>{showToast('Gagal: '+er.message,'error')}).getAllNetworkDataForExport(f)}
+function toggleInputModal(){const m=document.getElementById('inputModal');if(m.classList.contains('hidden'))animateModalOpen('inputModal','inputModalContent');else animateModalClose('inputModal','inputModalContent')}
+function handleInputData(e){e.preventDefault();setButtonState('submitInputBtn',true,'<i class="fa-solid fa-cloud-arrow-up"></i> Save');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const d={nama_perangkat:document.getElementById('inputNama').value,tipe:document.getElementById('inputTipe').value,ip_address:document.getElementById('inputIp').value||'-',lokasi:document.getElementById('inputLokasi').value,info_port:document.getElementById('inputPort').value||'-',kode_otb:document.getElementById('inputOtb').value||'-',status:document.getElementById('inputStatus').value};google.script.run.withSuccessHandler(r=>{setButtonState('submitInputBtn',false);if(r.success){showToast(r.message,'success');document.getElementById('manualInputForm').reset();toggleInputModal();refreshDashboardStats();triggerServerSearch()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitInputBtn',false);showToast(er.message,'error')}).insertNetworkData(d,s.email)}
+function toggleEditModal(){const m=document.getElementById('editModal');if(m.classList.contains('hidden'))animateModalOpen('editModal','editModalContent');else animateModalClose('editModal','editModalContent')}
+function openEditModal(i){const d=_0xlsr[i];if(!d)return;_0xosn=d;document.getElementById('editNama').value=d.nama_perangkat;document.getElementById('editTipe').value=d.tipe;document.getElementById('editIp').value=d.ip_address==='-'?'':d.ip_address;document.getElementById('editLokasi').value=d.lokasi;document.getElementById('editStatus').value=d.status;document.getElementById('editPort').value=d.info_port;document.getElementById('editOtb').value=d.kode_otb;toggleEditModal()}
+function handleUpdateData(e){e.preventDefault();setButtonState('submitEditBtn',true,'<i class="fa-solid fa-save"></i> Apply');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const u={nama_perangkat:document.getElementById('editNama').value,tipe:document.getElementById('editTipe').value,ip_address:document.getElementById('editIp').value||'-',lokasi:document.getElementById('editLokasi').value,info_port:document.getElementById('editPort').value,kode_otb:document.getElementById('editOtb').value,status:document.getElementById('editStatus').value};google.script.run.withSuccessHandler(r=>{setButtonState('submitEditBtn',false);if(r.success){showToast(r.message,'success');toggleEditModal();triggerServerSearch();refreshDashboardStats()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitEditBtn',false);showToast(er.message,'error')}).updateNetworkData(_0xosn,u,s.email)}
+function toggleEWOModal(){const m=document.getElementById('ewoModal');if(m.classList.contains('hidden')){animateModalOpen('ewoModal','ewoModalContent');refreshEWOList()}else animateModalClose('ewoModal','ewoModalContent')}
+function refreshEWOList(){const l=document.getElementById('ewoList');l.innerHTML='<div class="text-center py-4 animate-pulse text-amber-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading...</div>';google.script.run.withSuccessHandler(d=>renderEWOList(d)).withFailureHandler(er=>l.innerHTML='Gagal').getEWOData()}
+function renderEWOList(d){_0xler=d||[];const c=document.getElementById('ewoList');requestAnimationFrame(()=>{c.innerHTML='';if(!d||d.length===0){c.innerHTML='<div class="text-center text-zinc-500 py-4 text-xs italic">Kosong.</div>';return}let h='';d.forEach(i=>{const sc=i.status==='Done'?'text-accent-400 bg-accent-500/10 border-accent-500/30':'text-amber-400 bg-amber-500/10 border-amber-500/30';const oa=_0xio?`<div class="mt-2 pt-2 border-t border-zinc-700/50 flex gap-2"><button onclick="openEditEWO('${i.no_ewo}','${i.deskripsi}')" class="text-[10px] text-amber-400 hover:text-amber-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-pen"></i> Edit</button><button onclick="confirmDeleteEWO('${i.no_ewo}','${i.deskripsi}')" class="text-[10px] text-red-400 hover:text-red-300 px-2 py-1 bg-dark-800 rounded-md border border-zinc-700"><i class="fa-solid fa-trash"></i> Hapus</button></div>`:'';h+=`<div class="bg-dark-800/60 p-3.5 rounded-2xl border border-zinc-800 border-l-4 transform translateZ(0) ${i.status==='Done'?'border-l-accent-500':'border-l-amber-500'}"><div class="flex justify-between items-start mb-1"><span class="font-bold text-white text-xs">${i.no_ewo}</span><span class="text-[9px] px-2 py-0.5 rounded-full border font-semibold ${sc}">${i.status}</span></div><p class="text-zinc-400 text-xs mb-1.5 line-clamp-2">${i.deskripsi}</p>${oa}</div>`});c.innerHTML=h})}
+function exportEWOToExcel(fmt='xlsx'){if(!_0xler||_0xler.length===0)return showToast('Kosong!','error');const n=new Date();const ds=n.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+n.toLocaleTimeString('id-ID');const tr=[["NETCORE ISP - LAPORAN EWO"],[`Tanggal: ${ds}`],[`Total: ${_0xler.length}`],[],["NO","NOMOR EWO","DESKRIPSI","STATUS"]];_0xler.forEach((i,x)=>{tr.push([x+1,i.no_ewo||'-',i.deskripsi||'-',i.status||'-'])});tr.push([]);tr.push(["--- Akhir ---"]);if(fmt==='csv'||typeof XLSX==='undefined'){let cc="\uFEFF";tr.forEach(r=>{const l=r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",");cc+=l+"\n"});const b=new Blob([cc],{type:'text/csv;charset=utf-8;'});const l=document.createElement("a");l.href=URL.createObjectURL(b);l.download=`EWO.csv`;l.style.visibility='hidden';document.body.appendChild(l);l.click();document.body.removeChild(l);showToast('Export CSV Berhasil','success')}else{const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet(tr);ws['!cols']=[{wch:6},{wch:20},{wch:50},{wch:15}];ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:3}},{s:{r:1,c:0},e:{r:1,c:3}},{s:{r:2,c:0},e:{r:2,c:3}}];XLSX.utils.book_append_sheet(wb,ws,`Data_EWO`);XLSX.writeFile(wb,`EWO.xlsx`);showToast('Export Excel Berhasil!','success')}}
+function handleEWOInput(e){e.preventDefault();setButtonState('submitEwoBtn',true,'<i class="fa-solid fa-plus"></i> Create');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const o={no_ewo:document.getElementById('noEwo').value,deskripsi:document.getElementById('deskEwo').value,status:document.getElementById('statEwo').value};google.script.run.withSuccessHandler(r=>{setButtonState('submitEwoBtn',false);if(r.success){showToast(r.message,'success');document.getElementById('ewoInputForm').reset();refreshEWOList()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitEwoBtn',false);showToast(er.message,'error')}).insertEWOData(o,s.email)}
+function openEditEWO(n,d){_0xose={no_ewo:n,deskripsi:d};document.getElementById('editEwoNo').value=n;document.getElementById('editEwoDesk').value=d;animateModalOpen('editEwoModal','editEwoModalContent')}
+function closeEditEWO(){animateModalClose('editEwoModal','editEwoModalContent')}
+function handleUpdateEWO(e){e.preventDefault();setButtonState('submitEditEwoBtn',true,'<i class="fa-solid fa-save"></i> Save');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const u={no_ewo:document.getElementById('editEwoNo').value,deskripsi:document.getElementById('editEwoDesk').value,status:document.getElementById('editEwoStat').value};google.script.run.withSuccessHandler(r=>{setButtonState('submitEditEwoBtn',false);if(r.success){showToast(r.message,'success');closeEditEWO();refreshEWOList()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitEditEwoBtn',false);showToast(er.message,'error')}).updateEWOData(_0xose,u,s.email)}
+function toggleOTDRModal(){const m=document.getElementById('otdrModal');if(m.classList.contains('hidden')){animateModalOpen('otdrModal','otdrModalContent');refreshOTDRList(1)}else animateModalClose('otdrModal','otdrModalContent')}
+function refreshOTDRList(p){const l=document.getElementById('otdrList');l.innerHTML='<div class="text-center py-4 animate-pulse text-purple-400"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading...</div>';google.script.run.withSuccessHandler(r=>{_0xcop=r.currentPage;_0xtop=r.totalPages;document.getElementById('otdrPageInfo').innerText=`Page ${_0xcop} / ${_0xtop}`;document.getElementById('otdrPrevBtn').disabled=_0xcop<=1;document.getElementById('otdrNextBtn').disabled=_0xcop>=_0xtop;document.getElementById('selectAllOtdr').checked=false;requestAnimationFrame(()=>renderOTDRList(r.data))}).withFailureHandler(er=>l.innerHTML='Gagal').getOTDRData(p)}
+function changeOTDRPage(d){refreshOTDRList(_0xcop+d)}
+function toggleFolderContent(h){const c=h.nextElementSibling;const ch=h.querySelector('.chevron-icon');const fi=h.querySelector('.folder-icon');requestAnimationFrame(()=>{if(c.classList.contains('hidden')){c.classList.remove('hidden');ch.classList.add('rotate-180');fi.classList.replace('fa-folder','fa-folder-open')}else{c.classList.add('hidden');ch.classList.remove('rotate-180');fi.classList.replace('fa-folder-open','fa-folder')}})}
+function renderOTDRList(d){const l=document.getElementById('otdrList');if(!d||d.length===0){l.innerHTML='<div class="text-zinc-500 italic text-center py-4 text-xs">Kosong.</div>';return}let fs={};d.forEach(i=>{let f=i.nama_folder||'Umum';if(!fs[f])fs[f]=[];fs[f].push(i)});let h='';for(let fn in fs){let foh='';if(_0xio){let sfn=fn.replace(/'/g,"\\'");foh=`<div class="flex items-center gap-2 mr-3 border-r border-zinc-700 pr-3 shrink-0"><button type="button" onclick="event.stopPropagation(); openEditOTDRFolder('${sfn}')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 px-2 py-1 rounded text-[10px] font-bold border border-amber-500/30 transition-colors flex items-center gap-1 shadow-sm"><i class="fa-solid fa-pen"></i> <span class="hidden sm:inline">Edit</span></button><button type="button" onclick="event.stopPropagation(); confirmDeleteOTDRFolder('${sfn}')" class="bg-red-500/10 text-red-500 hover:bg-red-500/20 px-2 py-1 rounded text-[10px] font-bold border border-red-500/30 transition-colors flex items-center gap-1 shadow-sm"><i class="fa-solid fa-trash"></i> <span class="hidden sm:inline">Hapus</span></button></div>`}h+=`<div class="mb-3 border border-zinc-800/80 rounded-2xl overflow-hidden bg-dark-800/30 transform translateZ(0)"><div onclick="toggleFolderContent(this)" class="bg-dark-800/60 px-4 py-3 font-bold text-zinc-300 text-[11px] flex items-center justify-between cursor-pointer select-none hover:bg-dark-700/60 transition-colors border-b border-zinc-800/50"><span class="flex items-center truncate pr-2 flex-1"><i class="fa-solid fa-folder text-purple-400 mr-2 text-sm folder-icon"></i> <span class="truncate">${fn}</span> <span class="ml-3 text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 shrink-0">${fs[fn].length} File</span></span><div class="flex items-center shrink-0">${foh}<i class="fa-solid fa-chevron-down text-zinc-500 transition-transform duration-300 chevron-icon text-xs"></i></div></div><div class="p-3 space-y-2 folder-content hidden transition-all duration-300">`;fs[fn].forEach(i=>{let oh='';if(_0xio){let so=i.nama_otb.replace(/'/g,"\\'");let st=i.timestamp.replace(/'/g,"\\'");let sf=(i.nama_folder||'Umum').replace(/'/g,"\\'");let sl=i.lokasi.replace(/'/g,"\\'");oh=`<div class="flex flex-col gap-1 ml-2 border-l border-zinc-700 pl-2 shrink-0"><button type="button" onclick="openEditOTDR('${so}','${st}','${sf}','${sl}')" class="text-amber-500 hover:text-amber-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-pen text-[10px]"></i></button><button type="button" onclick="confirmDeleteOTDR('${so}','${st}')" class="text-red-500 hover:text-red-400 active:scale-90 p-1.5 bg-dark-800 rounded border border-zinc-700"><i class="fa-solid fa-trash text-[10px]"></i></button></div>`}h+=`<div class="glass-card p-3 rounded-xl flex items-center justify-between group border-zinc-800/50 transform translateZ(0)"><div class="flex items-center gap-3 flex-1 min-w-0"><input type="checkbox" class="otdr-checkbox w-4 h-4 rounded border-zinc-600 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${i.file_url}"><div class="flex flex-col min-w-0"><span class="font-bold text-white text-[11px] truncate mb-0.5"><i class="fa-solid fa-file-waveform text-purple-400 mr-1.5"></i>${i.nama_otb}</span><span class="text-zinc-500 text-[9px] truncate"><i class="fa-solid fa-map-pin mr-1 opacity-70"></i>${i.lokasi}</span></div></div><div class="flex items-center gap-2"><a href="${i.file_url}" target="_blank" class="px-2.5 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded text-[10px] font-bold shadow-md whitespace-nowrap transition-colors"><i class="fa-solid fa-download"></i> SOR</a>${oh}</div></div>`});h+=`</div></div>`}l.innerHTML=h}
+function toggleAllOTDR(cx){document.querySelectorAll('.otdr-checkbox').forEach(c=>c.checked=cx.checked)}
+function downloadSelectedOTDR(){const cs=document.querySelectorAll('.otdr-checkbox:checked');if(cs.length===0)return showToast('Pilih file dulu!','error');cs.forEach(c=>{if(c.dataset.url&&c.dataset.url!=='#')window.open(c.dataset.url,'_blank')});showToast(`${cs.length} dibuka.`,'success')}
+function updateFileList(inpt){const pt=document.getElementById('fileUploadPrompt');const ls=document.getElementById('fileUploadList');if(inpt.files&&inpt.files.length>0){pt.classList.add('hidden');ls.classList.remove('hidden');let h=`<div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-2 sticky top-0 bg-dark-800 pb-2 z-10 text-center w-full shadow-[0_4px_10px_rgba(24,24,27,1)]">${inpt.files.length} File Terpilih</div><div class="space-y-1.5 w-full pb-2">`;Array.from(inpt.files).forEach(f=>{const sz=f.size>1024*1024?(f.size/(1024*1024)).toFixed(2)+' MB':(f.size/1024).toFixed(1)+' KB';h+=`<div class="flex items-center justify-between bg-dark-900/80 p-2.5 rounded-lg border border-zinc-700/50 transform translateZ(0)"><div class="flex items-center gap-2 overflow-hidden w-full"><i class="fa-solid fa-file-waveform text-purple-500 text-xs shrink-0"></i><span class="text-[11px] text-zinc-300 truncate font-medium flex-1">${f.name}</span><span class="text-[9px] text-zinc-500 shrink-0 ml-2 font-mono">${sz}</span></div></div>`});h+=`</div>`;ls.innerHTML=h}else{ls.classList.add('hidden');ls.innerHTML='';pt.classList.remove('hidden')}}
+function handleOTDRInput(e){e.preventDefault();const fi=document.getElementById('fileOtdr');if(fi.files.length===0)return showToast('Pilih file!','error');for(let i=0;i<fi.files.length;i++){if(!fi.files[i].name.toLowerCase().endsWith('.sor'))return showToast('Hanya .sor','error')}const b=document.getElementById('submitOtdrBtn');const ot=b.innerHTML;b.disabled=true;const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const ov=document.getElementById('otbOtdr').value;const lv=document.getElementById('lokasiOtdr').value;let fv=document.getElementById('folderOtdr').value.trim();if(!fv)fv=`OTDR - ${lv} - ${ov}`;const rb=(f)=>new Promise((rs,rj)=>{const rd=new FileReader();rd.onload=v=>rs(v.target.result);rd.onerror=r=>rj(r);rd.readAsDataURL(f)});const up=(d)=>new Promise((rs,rj)=>{google.script.run.withSuccessHandler(r=>{if(r.success)rs(r);else rj(new Error(r.message))}).withFailureHandler(er=>rj(er)).uploadOTDRData(d)});(async function(){let sc=0;let em=[];for(let i=0;i<fi.files.length;i++){try{b.innerHTML=`<i class="fa-solid fa-spinner fa-spin"></i> ${i+1}/${fi.files.length}...`;const f=fi.files[i];const bd=await rb(f);const dj={nama_folder:fv,nama_otb:ov,lokasi:lv,fileName:f.name,fileMimeType:f.type||'application/octet-stream',fileData:bd,userEmail:s.email};await up(dj);sc++}catch(er){em.push(`${fi.files[i].name}: ${er.message}`)}}b.innerHTML=ot;b.disabled=false;if(sc>0){showToast(`${sc} sukses!`,'success');document.getElementById('otdrInputForm').reset();updateFileList(document.getElementById('fileOtdr'));refreshOTDRList(1)}if(em.length>0)showToast(`Gagal ${em.length} file.`,'error')})()}
+function openEditOTDR(o,t,f,l){_0xoso={nama_otb:o,timestamp:t};document.getElementById('editOtdrFolder').value=f&&f!=='undefined'?f:'Umum';document.getElementById('editOtdrOtb').value=o;document.getElementById('editOtdrLokasi').value=l;animateModalOpen('editOtdrModal','editOtdrModalContent')}
+function closeEditOTDR(){animateModalClose('editOtdrModal','editOtdrModalContent')}
+function handleUpdateOTDR(e){e.preventDefault();setButtonState('submitEditOtdrBtn',true,'<i class="fa-solid fa-save"></i> Update');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const u={nama_folder:document.getElementById('editOtdrFolder').value,nama_otb:document.getElementById('editOtdrOtb').value,lokasi:document.getElementById('editOtdrLokasi').value};google.script.run.withSuccessHandler(r=>{setButtonState('submitEditOtdrBtn',false);if(r.success){showToast(r.message,'success');closeEditOTDR();refreshOTDRList(_0xcop)}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitEditOtdrBtn',false);showToast(er.message,'error')}).updateOTDRData(_0xoso,u,s.email)}
+function openEditOTDRFolder(f){_0xosf=f;document.getElementById('editOtdrFolderNewName').value=f;animateModalOpen('editOtdrFolderModal','editOtdrFolderModalContent')}
+function closeEditOTDRFolder(){animateModalClose('editOtdrFolderModal','editOtdrFolderModalContent')}
+function handleUpdateOTDRFolder(e){e.preventDefault();setButtonState('submitEditOtdrFolderBtn',true,'<i class="fa-solid fa-save"></i> Save');const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');const nf=document.getElementById('editOtdrFolderNewName').value;google.script.run.withSuccessHandler(r=>{setButtonState('submitEditOtdrFolderBtn',false);if(r.success){showToast(r.message,'success');closeEditOTDRFolder();refreshOTDRList(_0xcop)}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('submitEditOtdrFolderBtn',false);showToast(er.message,'error')}).updateOTDRFolder(_0xosf,nf,s.email)}
+function closeDeleteModal(){animateModalClose('confirmDeleteModal','confirmDeleteModalContent')}
+function confirmDeleteNode(i){const d=_0xlsr[i];if(!d)return;_0xosn=d;_0xdtt='NODE';document.getElementById('deleteContextType').innerText=`Node ${d.nama_perangkat}`;animateModalOpen('confirmDeleteModal','confirmDeleteModalContent')}
+function confirmDeleteEWO(n,d){_0xose={no_ewo:n,deskripsi:d};_0xdtt='EWO';document.getElementById('deleteContextType').innerText=`EWO ${n}`;animateModalOpen('confirmDeleteModal','confirmDeleteModalContent')}
+function confirmDeleteOTDR(o,t){_0xoso={nama_otb:o,timestamp:t};_0xdtt='OTDR_FILE';document.getElementById('deleteContextType').innerText=`File OTB ${o}`;animateModalOpen('confirmDeleteModal','confirmDeleteModalContent')}
+function confirmDeleteOTDRFolder(f){_0xosf=f;_0xdtt='OTDR_FOLDER';document.getElementById('deleteContextType').innerText=`Folder ${f}`;animateModalOpen('confirmDeleteModal','confirmDeleteModalContent')}
+function executeDeleteData(){const s=JSON.parse(localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e')||'{}');setButtonState('confirmDeleteBtn',true,'Ya, Hapus');if(_0xdtt==='NODE'){google.script.run.withSuccessHandler(r=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();if(r.success){showToast(r.message,'success');triggerServerSearch();refreshDashboardStats()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();showToast(er.message,'error')}).deleteNetworkData(_0xosn,s.email)}else if(_0xdtt==='EWO'){google.script.run.withSuccessHandler(r=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();if(r.success){showToast(r.message,'success');refreshEWOList()}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();showToast(er.message,'error')}).deleteEWOData(_0xose,s.email)}else if(_0xdtt==='OTDR_FILE'){google.script.run.withSuccessHandler(r=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();if(r.success){showToast(r.message,'success');refreshOTDRList(_0xcop)}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();showToast(er.message,'error')}).deleteOTDRData(_0xoso,s.email)}else if(_0xdtt==='OTDR_FOLDER'){google.script.run.withSuccessHandler(r=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();if(r.success){showToast(r.message,'success');refreshOTDRList(_0xcop)}else showToast(r.message,'error')}).withFailureHandler(er=>{setButtonState('confirmDeleteBtn',false);closeDeleteModal();showToast(er.message,'error')}).deleteOTDRFolder(_0xosf,s.email)}}
+function handleLogin(e){e.preventDefault();const eb=document.getElementById('loginError');eb.classList.add('hidden');setButtonState('loginBtn',true,'<span>Auth</span>');const em=document.getElementById('loginEmail').value;const p=document.getElementById('loginPassword').value;google.script.run.withSuccessHandler(r=>{setButtonState('loginBtn',false,'<span>Authenticate</span><i class="fa-solid fa-arrow-right-to-bracket text-sm"></i>');if(r.success){localStorage.setItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e',JSON.stringify({email:r.email,role:r.role}));checkSession()}else{eb.innerText=r.message;eb.classList.remove('hidden')}}).withFailureHandler(er=>{setButtonState('loginBtn',false,'<span>Authenticate</span>');eb.innerText="Error!";eb.classList.remove('hidden')}).verifyLogin(em,p)}
+function handleLogout(){localStorage.removeItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e');document.getElementById('loginForm').reset();document.getElementById('ownerRoleBadge').classList.add('hidden');stopHiddenGPS();checkSession()}
+function checkSession(){const s=localStorage.getItem('\x6e\x65\x74\x63\x6f\x72\x65\x5f\x73\x65\x73\x73\x69\x6f\x6e');if(s){document.getElementById('loginPage').classList.add('hidden');document.getElementById('dashboardPage').classList.remove('hidden');const sd=JSON.parse(s);_0xio=sd.role==='\x4f\x57\x4e\x45\x52';if(_0xio){document.getElementById('ownerRoleBadge').classList.remove('hidden');document.getElementById('btnActivityLog').classList.remove('hidden');document.getElementById('btnTeamTracker').classList.remove('hidden');document.getElementById('btnExportDbXlsx')?.classList.remove('hidden');document.getElementById('btnExportDbCsv')?.classList.remove('hidden');document.getElementById('btnExportEwoXlsx')?.classList.remove('hidden')}else{document.getElementById('btnActivityLog').classList.add('hidden');document.getElementById('btnTeamTracker').classList.add('hidden');document.getElementById('btnExportDbXlsx')?.classList.add('hidden');document.getElementById('btnExportDbCsv')?.classList.add('hidden');document.getElementById('btnExportEwoXlsx')?.classList.add('hidden')}startHiddenGPS(sd.email);refreshDashboardStats()}else{document.getElementById('loginPage').classList.remove('hidden');document.getElementById('dashboardPage').classList.add('hidden');document.getElementById('btnActivityLog').classList.add('hidden');document.getElementById('btnTeamTracker').classList.add('hidden')}}
+function openMapModal(){animateModalOpen('mapModal','mapModalContent')}
+function closeMapModal(){animateModalClose('mapModal','mapModalContent')}
+window.addEventListener('DOMContentLoaded',checkSession);
     </script>
 </body>
 </html>
