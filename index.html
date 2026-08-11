@@ -49,7 +49,6 @@
             padding: 0;
         }
 
-        /* Optimized Static Background for 60fps Mobile Performance */
         .app-bg {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -59,7 +58,6 @@
             transform: translateZ(0);
         }
 
-        /* Optimized Hardware Accelerated Cards without Heavy Blur Filters */
         .fast-glass { 
             background: rgba(18, 18, 22, 0.88); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -99,7 +97,6 @@
         .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
         .nav-safe { padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 6px); }
 
-        /* Virtual list optimization */
         .node-item-card {
             content-visibility: auto;
             contain-intrinsic-size: 0 170px;
@@ -159,7 +156,7 @@
                         <i class="fa-solid fa-globe text-white text-xs"></i>
                     </div>
                     <div>
-                        <h1 class="text-base font-bold tracking-tight text-white leading-none mb-1">Netcore ISP Portal Medan Network</h1>
+                        <h1 class="text-base font-bold tracking-tight text-white leading-none mb-1">Netcore Portal</h1>
                         <div class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse"></span>
                             <span class="text-zinc-400 text-[9px] font-medium tracking-wider uppercase leading-none">System Online</span>
@@ -319,9 +316,9 @@
         </div>
     </div>
 
-    <!-- Modal Form Node Registrasi -->
+    <!-- Modal Form Node Registrasi (Dukungan Enter / Multiline) -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
+        <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[92vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 flex justify-between items-center border-b border-zinc-800">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-server text-accent-400 text-xs"></i> Register Node</h3>
                 <button onclick="toggleInputModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
@@ -334,10 +331,24 @@
                         <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">IP Address</label><input type="text" id="inputIp" class="w-full fast-input rounded-xl p-2.5 text-xs text-white" placeholder="10.x.x.x"></div>
                     </div>
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Location</label><input type="text" id="inputLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white" placeholder="POP Area"></div>
+                    
                     <div class="grid grid-cols-2 gap-2">
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Port Info</label><input type="text" id="inputPort" class="w-full fast-input rounded-xl p-2.5 text-xs text-white" placeholder="PON 1, PON 2..."></div>
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">OTB Code</label><input type="text" id="inputOtb" class="w-full fast-input rounded-xl p-2.5 text-xs text-white" placeholder="OTB-01, OTB-02..."></div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-zinc-400 uppercase font-semibold flex items-center justify-between">
+                                <span>Port Info</span>
+                                <span class="text-[8px] text-brand-400 font-normal">Pisah Enter/Koma</span>
+                            </label>
+                            <textarea id="inputPort" rows="3" class="w-full fast-input rounded-xl p-2.5 text-xs text-white leading-relaxed resize-none font-mono" placeholder="PON 1&#10;PON 2&#10;PON 3..."></textarea>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-zinc-400 uppercase font-semibold flex items-center justify-between">
+                                <span>OTB Code</span>
+                                <span class="text-[8px] text-purple-400 font-normal">Pisah Enter/Koma</span>
+                            </label>
+                            <textarea id="inputOtb" rows="3" class="w-full fast-input rounded-xl p-2.5 text-xs text-white leading-relaxed resize-none font-mono" placeholder="OTB-01&#10;OTB-02&#10;OTB-03..."></textarea>
+                        </div>
                     </div>
+
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Initial Status</label><select id="inputStatus" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option></select></div>
                     <div class="pt-2"><button type="submit" id="submitInputBtn" class="w-full bg-accent-500 text-dark-950 font-bold py-3 rounded-xl active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-cloud-arrow-up"></i> Save Node</button></div>
                 </form>
@@ -574,7 +585,6 @@
         let isOwner = false;
         let gpsTrackerInterval = null;
 
-        // Fast Client API Runner
         const fetchAPI = async (action, payload = {}) => {
             if (!GAS_API_URL) throw new Error("API URL tidak terdefinisi.");
             const response = await fetch(GAS_API_URL, {
