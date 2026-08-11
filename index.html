@@ -66,7 +66,7 @@
         }
 
         .fast-card { 
-            background: rgba(24, 24, 28, 0.94);
+            background: rgba(24, 24, 28, 0.94); 
             border: 1px solid rgba(255, 255, 255, 0.06); 
             transform: translateZ(0);
             contain: content;
@@ -382,7 +382,7 @@
         </div>
     </div>
 
-    <!-- Modal OTDR Files -->
+    <!-- Modal OTDR Files (Android Multi-Upload Robust) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
@@ -391,23 +391,37 @@
             </div>
             
             <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-4">
-                <form id="otdrInputForm" onsubmit="handleOTDRInput(event)" class="space-y-2.5 fast-card p-3.5 rounded-xl border-purple-500/20">
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder Name</label><input type="text" id="folderOtdr" class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="Optional: Auto Generated"></div>
+                <form id="otdrInputForm" onsubmit="handleOTDRBatchUpload(event)" class="space-y-2.5 fast-card p-3.5 rounded-xl border-purple-500/20">
+                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder Name</label><input type="text" id="folderOtdr" class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="Opsional: Otomatis Dibuat"></div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">OTB Name</label><input type="text" id="otbOtdr" required class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="OTB-STB-01"></div>
                         <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Location</label><input type="text" id="lokasiOtdr" required class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="POP Area"></div>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">SOR File</label>
+                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Bisa Pilih Banyak Sekaligus)</label>
                         <div class="relative w-full border border-dashed border-zinc-700 rounded-lg p-3 text-center bg-dark-950/60">
-                            <input type="file" id="fileOtdr" accept="*/*" multiple required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileList(this)">
+                            <!-- Support multi file on all android browsers -->
+                            <input type="file" id="fileOtdr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileList(this)">
                             <div id="fileUploadPrompt" class="flex flex-col items-center pointer-events-none">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl text-purple-400 mb-1"></i>
-                                <span class="text-xs font-semibold text-zinc-200">Select .SOR Files</span>
+                                <span class="text-xs font-semibold text-zinc-200">Ketuk untuk Pilih Berkas .SOR</span>
+                                <span class="text-[9px] text-zinc-500 mt-0.5">Mendukung multi-select Android / PC</span>
                             </div>
                             <div id="fileUploadList" class="hidden text-xs text-purple-300 font-medium"></div>
                         </div>
                     </div>
+                    
+                    <!-- Progress Bar Saat Upload Banyak File -->
+                    <div id="uploadProgressContainer" class="hidden space-y-1">
+                        <div class="flex justify-between text-[10px] text-zinc-400">
+                            <span id="uploadProgressStatus">Mengunggah...</span>
+                            <span id="uploadProgressPercent" class="font-bold text-purple-400">0%</span>
+                        </div>
+                        <div class="w-full bg-dark-950 rounded-full h-1.5 overflow-hidden border border-zinc-800">
+                            <div id="uploadProgressBar" class="bg-purple-500 h-full w-0 transition-all duration-200"></div>
+                        </div>
+                    </div>
+
                     <button type="submit" id="submitOtdrBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-lg active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-upload"></i> Upload Files</button>
                 </form>
                 
@@ -620,7 +634,6 @@
                 updateEWOData: (originalData, updatedData, email) => wrap(fetchAPI('updateEWOData', { originalData, updatedData, email })),
                 deleteEWOData: (targetData, email) => wrap(fetchAPI('deleteEWOData', { targetData, email })),
                 getOTDRData: (page) => wrap(fetchAPI('getOTDRData', { page })),
-                uploadOTDRData: (dataObj) => wrap(fetchAPI('uploadOTDRData', { dataObj })),
                 updateOTDRData: (originalData, updatedData, email) => wrap(fetchAPI('updateOTDRData', { originalData, updatedData, email })),
                 deleteOTDRData: (targetData, email) => wrap(fetchAPI('deleteOTDRData', { targetData, email })),
                 updateOTDRFolder: (oldFolderName, newFolderName, email) => wrap(fetchAPI('updateOTDRFolder', { oldFolderName, newFolderName, email })),
@@ -1193,7 +1206,7 @@
         }
 
         // ==============================================================
-        // OTDR MANAGER (.SOR FILES)
+        // OTDR MANAGER & ANDROID BULK UPLOAD ENGINE
         // ==============================================================
         function toggleOTDRModal() {
             const mod = document.getElementById('otdrModal');
@@ -1308,6 +1321,7 @@
         }
 
         function toggleAllOTDR(cbx) { document.querySelectorAll('.otdr-checkbox').forEach(cb => cb.checked = cbx.checked); }
+        
         function downloadSelectedOTDR() {
             const cbs = document.querySelectorAll('.otdr-checkbox:checked');
             if (cbs.length === 0) return showToast('Pilih file dulu!', 'error');
@@ -1321,67 +1335,103 @@
             if (input.files && input.files.length > 0) {
                 prompt.classList.add('hidden');
                 list.classList.remove('hidden');
-                list.innerText = `${input.files.length} file .SOR dipilih`;
+                list.innerText = `${input.files.length} berkas dipilih`;
             } else {
                 list.classList.add('hidden');
                 prompt.classList.remove('hidden');
             }
         }
 
-        function handleOTDRInput(e) {
+        // Helper FileReader Async untuk Android
+        const readFileAsBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => resolve(event.target.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        // ANDROID BULK UPLOADER ENGINE
+        async function handleOTDRBatchUpload(e) {
             e.preventDefault();
             const fileInput = document.getElementById('fileOtdr');
-            if (fileInput.files.length === 0) return showToast('Pilih file .sor!', 'error');
-            
-            for (let i = 0; i < fileInput.files.length; i++) {
-                if (!fileInput.files[i].name.toLowerCase().endsWith('.sor')) {
-                    return showToast('Format harus .sor!', 'error');
-                }
+            if (!fileInput.files || fileInput.files.length === 0) {
+                return showToast('Pilih setidaknya 1 file .sor!', 'error');
             }
-            
+
+            const files = Array.from(fileInput.files);
+            const totalFiles = files.length;
             const btn = document.getElementById('submitOtdrBtn');
-            const orig = btn.innerHTML;
-            btn.disabled = true;
-            
+            const progressBox = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const progressStatus = document.getElementById('uploadProgressStatus');
+            const progressPercent = document.getElementById('uploadProgressPercent');
+
+            // Form data umum
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const otbVal = document.getElementById('otbOtdr').value;
-            const lokasiVal = document.getElementById('lokasiOtdr').value;
+            const otbVal = document.getElementById('otbOtdr').value.trim();
+            const lokasiVal = document.getElementById('lokasiOtdr').value.trim();
             let folderVal = document.getElementById('folderOtdr').value.trim();
             if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
 
-            const readFile = (file) => new Promise((res, rej) => {
-                const reader = new FileReader(); reader.onload = ev => res(ev.target.result); reader.onerror = err => rej(err); reader.readAsDataURL(file);
-            });
+            // Aktifkan visual progress
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            progressBox.classList.remove('hidden');
 
-            (async function processUploads() {
-                let successCount = 0;
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    try {
-                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${i + 1}/${fileInput.files.length}`;
-                        const file = fileInput.files[i];
-                        const base64Data = await readFile(file);
-                        const dataObj = { 
-                            nama_folder: folderVal, 
-                            nama_otb: otbVal, 
-                            lokasi: lokasiVal, 
-                            fileName: file.name, 
-                            fileMimeType: file.type || 'application/octet-stream', 
-                            fileData: base64Data, 
-                            userEmail: session.email 
-                        };
-                        await fetchAPI('uploadOTDRData', { dataObj });
+            let successCount = 0;
+            let failCount = 0;
+
+            for (let i = 0; i < totalFiles; i++) {
+                const file = files[i];
+                const currentIdx = i + 1;
+                const percent = Math.round((currentIdx / totalFiles) * 100);
+
+                progressStatus.innerText = `Mengunggah (${currentIdx}/${totalFiles}): ${file.name}`;
+                progressPercent.innerText = `${percent}%`;
+                progressBar.style.width = `${percent}%`;
+
+                try {
+                    const base64Data = await readFileAsBase64(file);
+                    const fileItem = {
+                        fileName: file.name,
+                        fileData: base64Data
+                    };
+
+                    // Kirim stream satuan per file agar Android WebView tidak hang
+                    const res = await fetchAPI('uploadSingleOTDR', {
+                        fileItem: fileItem,
+                        folderName: folderVal,
+                        otbName: otbVal,
+                        location: lokasiVal,
+                        userEmail: session.email
+                    });
+
+                    if (res && res.success) {
                         successCount++;
-                    } catch (err) {}
+                    } else {
+                        failCount++;
+                    }
+                } catch (err) {
+                    failCount++;
                 }
-                btn.innerHTML = orig;
-                btn.disabled = false;
-                if (successCount > 0) { 
-                    showToast(`${successCount} file terupload!`, 'success'); 
-                    document.getElementById('otdrInputForm').reset(); 
-                    updateFileList(document.getElementById('fileOtdr'));
-                    refreshOTDRList(1); 
-                } else showToast('Gagal upload file.', 'error');
-            })();
+            }
+
+            // Reset UI State
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            progressBox.classList.add('hidden');
+            progressBar.style.width = '0%';
+
+            if (successCount > 0) {
+                showToast(`${successCount} file SOR berhasil diunggah!`, 'success');
+                document.getElementById('otdrInputForm').reset();
+                updateFileList(document.getElementById('fileOtdr'));
+                refreshOTDRList(1);
+            } else {
+                showToast(`Gagal mengunggah ${failCount} file.`, 'error');
+            }
         }
 
         function openEditOTDR(otb, timestamp, folder, lokasi) { 
