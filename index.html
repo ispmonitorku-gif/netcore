@@ -382,11 +382,11 @@
         </div>
     </div>
 
-    <!-- Modal OTDR Files (Android Multi-Upload Robust) -->
+    <!-- Modal OTDR Files (Android Multi-Upload Robust & Parser) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
-                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-chart-area text-purple-400 text-xs"></i> OTDR SOR Manager</h3>
+                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-chart-area text-purple-400 text-xs"></i> OTDR Smart Manager</h3>
                 <button onclick="toggleOTDRModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
             
@@ -398,7 +398,7 @@
                         <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Location</label><input type="text" id="lokasiOtdr" required class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="POP Area"></div>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Bisa Pilih Banyak Sekaligus)</label>
+                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Scan Otomatis Biner)</label>
                         <div class="relative w-full border border-dashed border-zinc-700 rounded-lg p-3 text-center bg-dark-950/60">
                             <!-- Support multi file on all android browsers -->
                             <input type="file" id="fileOtdr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileList(this)">
@@ -422,7 +422,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="submitOtdrBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-lg active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-upload"></i> Upload Files</button>
+                    <button type="submit" id="submitOtdrBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-lg active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-upload"></i> Upload & Ekstrak Info</button>
                 </form>
                 
                 <div class="flex items-center justify-between">
@@ -1206,7 +1206,7 @@
         }
 
         // ==============================================================
-        // OTDR MANAGER & ANDROID BULK UPLOAD ENGINE
+        // OTDR MANAGER & ANDROID BULK UPLOAD ENGINE (WITH PARSER)
         // ==============================================================
         function toggleOTDRModal() {
             const mod = document.getElementById('otdrModal');
@@ -1272,7 +1272,7 @@
                 }
 
                 html += `
-                <div class="border border-zinc-800 rounded-xl overflow-hidden bg-dark-900/60 text-xs">
+                <div class="border border-zinc-800 rounded-xl overflow-hidden bg-dark-900/60 text-xs mb-2">
                     <div onclick="toggleFolderContent(this)" class="bg-dark-800/80 px-3 py-2.5 font-bold text-zinc-300 flex items-center justify-between cursor-pointer">
                         <span class="flex items-center truncate flex-1 pr-2">
                             <i class="fa-solid fa-folder text-purple-400 mr-2 folder-icon"></i>
@@ -1299,19 +1299,31 @@
                         `;
                     }
                     html += `
-                        <div class="fast-card p-2 rounded-lg flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2 flex-1 min-w-0">
-                                <input type="checkbox" class="otdr-checkbox w-3.5 h-3.5 rounded border-zinc-700 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
-                                <div class="truncate">
-                                    <span class="font-bold text-white text-[11px] block truncate">${item.nama_otb}</span>
-                                    <span class="text-zinc-500 text-[9px] block truncate">${item.lokasi}</span>
+                        <div class="fast-card p-2 rounded-lg flex flex-col gap-1.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2 flex-1 min-w-0">
+                                    <input type="checkbox" class="otdr-checkbox w-3.5 h-3.5 rounded border-zinc-700 bg-dark-900 accent-purple-500 cursor-pointer shrink-0" data-url="${item.file_url}">
+                                    <div class="truncate">
+                                        <span class="font-bold text-white text-[11px] block truncate">${item.nama_otb}</span>
+                                        <span class="text-zinc-500 text-[9px] block truncate">${item.lokasi}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <a href="${item.file_url}" target="_blank" class="px-2 py-1 bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded text-[9px] font-bold whitespace-nowrap">
+                                        <i class="fa-solid fa-download mr-0.5"></i> SOR
+                                    </a>
+                                    ${ownerHTML}
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1.5">
-                                <a href="${item.file_url}" target="_blank" class="px-2 py-1 bg-brand-500/10 text-brand-400 border border-brand-500/30 rounded text-[9px] font-bold whitespace-nowrap">
-                                    <i class="fa-solid fa-download mr-0.5"></i> SOR
-                                </a>
-                                ${ownerHTML}
+                            
+                            <!-- Display Jarak & Loss -->
+                            <div class="flex gap-2 text-[9px] mt-1 pt-1.5 border-t border-zinc-800/50">
+                                <span class="bg-dark-800 text-zinc-300 px-1.5 py-0.5 rounded border border-zinc-700 flex items-center gap-1">
+                                    <i class="fa-solid fa-ruler-horizontal text-emerald-400"></i> ${item.jarak} km
+                                </span>
+                                <span class="bg-dark-800 text-zinc-300 px-1.5 py-0.5 rounded border border-zinc-700 flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-trend-down text-red-400"></i> ${item.loss} dB
+                                </span>
                             </div>
                         </div>`;
                 });
@@ -1342,7 +1354,41 @@
             }
         }
 
-        // Helper FileReader Async untuk Android
+        /**
+         * Membaca biner file .SOR menggunakan heuristik pencarian string.
+         */
+        async function extractSorMetadata(arrayBuffer) {
+            try {
+                const decoder = new TextDecoder('iso-8859-1');
+                const text = decoder.decode(arrayBuffer);
+                
+                let distance = "N/A", loss = "N/A";
+                
+                const lossMatch = text.match(/Loss[^0-9]*([0-9]+\.[0-9]+)/i);
+                if (lossMatch && lossMatch[1]) loss = lossMatch[1];
+                
+                const distMatch = text.match(/Dist[^0-9]*([0-9]+\.[0-9]+)/i);
+                if (distMatch && distMatch[1]) distance = distMatch[1];
+                
+                if (distance === "N/A" || loss === "N/A") {
+                    return { distance: "Cek Manual", loss: "Cek Manual" };
+                }
+                
+                return { distance, loss };
+            } catch (e) {
+                return { distance: "Error Baca", loss: "Error Baca" };
+            }
+        }
+
+        const readFileAsArrayBuffer = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsArrayBuffer(file);
+            });
+        };
+
         const readFileAsBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1352,7 +1398,7 @@
             });
         };
 
-        // ANDROID BULK UPLOADER ENGINE
+        // ANDROID BULK UPLOADER ENGINE WITH PARSER
         async function handleOTDRBatchUpload(e) {
             e.preventDefault();
             const fileInput = document.getElementById('fileOtdr');
@@ -1393,10 +1439,16 @@
                 progressBar.style.width = `${percent}%`;
 
                 try {
+                    // Ekstraksi Metadata Biner
+                    const arrayBuffer = await readFileAsArrayBuffer(file);
+                    const extractedMetadata = await extractSorMetadata(arrayBuffer);
+                    
                     const base64Data = await readFileAsBase64(file);
                     const fileItem = {
                         fileName: file.name,
-                        fileData: base64Data
+                        fileData: base64Data,
+                        distance: extractedMetadata.distance,
+                        loss: extractedMetadata.loss
                     };
 
                     // Kirim stream satuan per file agar Android WebView tidak hang
