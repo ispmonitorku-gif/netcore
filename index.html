@@ -382,7 +382,7 @@
         </div>
     </div>
 
-    <!-- Modal OTDR Files (Android Multi-Upload Robust & Parser) -->
+    <!-- Modal OTDR Files -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
@@ -391,6 +391,12 @@
             </div>
             
             <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-4">
+                
+                <!-- TOMBOL BUKA VIEWER ONLINE -->
+                <button onclick="openSORViewerOnline()" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 shadow-neon-blue text-white font-bold py-3 rounded-xl active:scale-95 transition text-xs flex items-center justify-center gap-2 mb-2">
+                    <i class="fa-solid fa-magnifying-glass-chart text-sm"></i> Buka Layar SOR Viewer Online
+                </button>
+
                 <form id="otdrInputForm" onsubmit="handleOTDRBatchUpload(event)" class="space-y-2.5 fast-card p-3.5 rounded-xl border-purple-500/20">
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder Name</label><input type="text" id="folderOtdr" class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="Opsional: Otomatis Dibuat"></div>
                     <div class="grid grid-cols-2 gap-2">
@@ -398,20 +404,18 @@
                         <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Location</label><input type="text" id="lokasiOtdr" required class="w-full fast-input rounded-lg p-2 text-xs text-white" placeholder="POP Area"></div>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Scan Otomatis Biner)</label>
+                        <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Bisa Multi-Select)</label>
                         <div class="relative w-full border border-dashed border-zinc-700 rounded-lg p-3 text-center bg-dark-950/60">
-                            <!-- Support multi file on all android browsers -->
                             <input type="file" id="fileOtdr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileList(this)">
                             <div id="fileUploadPrompt" class="flex flex-col items-center pointer-events-none">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl text-purple-400 mb-1"></i>
                                 <span class="text-xs font-semibold text-zinc-200">Ketuk untuk Pilih Berkas .SOR</span>
-                                <span class="text-[9px] text-zinc-500 mt-0.5">Mendukung multi-select Android / PC</span>
+                                <span class="text-[9px] text-zinc-500 mt-0.5">Jika jarak tidak terbaca, edit manual nanti</span>
                             </div>
                             <div id="fileUploadList" class="hidden text-xs text-purple-300 font-medium"></div>
                         </div>
                     </div>
                     
-                    <!-- Progress Bar Saat Upload Banyak File -->
                     <div id="uploadProgressContainer" class="hidden space-y-1">
                         <div class="flex justify-between text-[10px] text-zinc-400">
                             <span id="uploadProgressStatus">Mengunggah...</span>
@@ -422,7 +426,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="submitOtdrBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-lg active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-upload"></i> Upload & Ekstrak Info</button>
+                    <button type="submit" id="submitOtdrBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 rounded-lg active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-upload"></i> Upload Berkas</button>
                 </form>
                 
                 <div class="flex items-center justify-between">
@@ -441,6 +445,22 @@
                     <button id="otdrNextBtn" onclick="changeOTDRPage(1)" class="px-3 py-1.5 bg-dark-800 rounded-md border border-zinc-700 disabled:opacity-30">Next &gt;</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Layar SOR Viewer Online Terintegrasi -->
+    <div id="sorViewerModal" class="hidden fixed inset-0 z-[120] flex flex-col bg-dark-900 transition-opacity duration-200 opacity-0">
+        <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800 bg-dark-950 pt-safe">
+            <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-satellite-dish text-blue-400"></i> Online Trace Viewer</h3>
+            <button onclick="closeSORViewerOnline()" class="w-8 h-8 bg-red-500/10 rounded-full flex justify-center items-center text-red-400 active:scale-90 transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="flex-1 w-full h-full bg-white relative">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-zinc-400 pointer-events-none bg-dark-900 z-0">
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-2 text-blue-500"></i>
+                <p class="text-xs font-semibold">Memuat Viewer...</p>
+            </div>
+            <!-- Menggunakan viewer pihak ketiga yang umum mendukung iFrame, atau fallback ke alat pembaca SOR populer -->
+            <iframe id="sorIframe" src="about:blank" class="w-full h-full border-0 relative z-10 bg-white" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
         </div>
     </div>
 
@@ -498,6 +518,20 @@
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder</label><input type="text" id="editOtdrFolder" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">OTB</label><input type="text" id="editOtdrOtb" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
                     <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Lokasi</label><input type="text" id="editOtdrLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
+                    
+                    <!-- INPUT TAMBAHAN UNTUK INPUT MANUAL JARAK DAN LOSS -->
+                    <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-zinc-800">
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-emerald-400 uppercase font-bold"><i class="fa-solid fa-ruler-horizontal mr-1"></i> Jarak (km)</label>
+                            <input type="text" id="editOtdrJarak" class="w-full bg-dark-950 border border-emerald-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: 10.5">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] text-red-400 uppercase font-bold"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Loss (dB)</label>
+                            <input type="text" id="editOtdrLoss" class="w-full bg-dark-950 border border-red-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: -2.3">
+                        </div>
+                    </div>
+                    <p class="text-[9px] text-zinc-500 mt-1 italic">*Jika data terbaca N/A, Anda bisa input manual angka setelah melihatnya di Viewer Online.</p>
+
                     <div class="pt-2"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Save Changes</button></div>
                 </form>
             </div>
@@ -703,6 +737,35 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 document.body.style.overflow = '';
+            }, 200);
+        }
+
+        // ==============================================================
+        // ONLINE SOR VIEWER INTEGRATION
+        // ==============================================================
+        function openSORViewerOnline() {
+            const modal = document.getElementById('sorViewerModal');
+            const iframe = document.getElementById('sorIframe');
+            modal.classList.remove('hidden');
+            
+            // Menggunakan Fiberizer/Generic SOR viewer online.
+            // Anda bisa mengganti URL di bawah jika punya preferensi STV online yang lain.
+            iframe.src = "https://sorviewer.com/"; 
+            
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+            });
+        }
+
+        function closeSORViewerOnline() {
+            const modal = document.getElementById('sorViewerModal');
+            const iframe = document.getElementById('sorIframe');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                iframe.src = "about:blank"; // Reset iframe untuk menghemat RAM WebView
             }, 200);
         }
 
@@ -1206,7 +1269,7 @@
         }
 
         // ==============================================================
-        // OTDR MANAGER & ANDROID BULK UPLOAD ENGINE (WITH PARSER)
+        // OTDR MANAGER & ANDROID BULK UPLOAD ENGINE (WITH PARSER FALLBACK)
         // ==============================================================
         function toggleOTDRModal() {
             const mod = document.getElementById('otdrModal');
@@ -1293,8 +1356,10 @@
                         let st = item.timestamp.replace(/'/g, "\\'");
                         let sf = (item.nama_folder || 'Umum').replace(/'/g, "\\'");
                         let sl = item.lokasi.replace(/'/g, "\\'");
+                        let sj = (item.jarak || 'N/A').replace(/'/g, "\\'");
+                        let sL = (item.loss || 'N/A').replace(/'/g, "\\'");
                         ownerHTML = `
-                            <button type="button" onclick="openEditOTDR('${so}', '${st}', '${sf}', '${sl}')" class="text-amber-400 p-1 bg-dark-800 rounded border border-zinc-700 text-[9px]"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" onclick="openEditOTDR('${so}', '${st}', '${sf}', '${sl}', '${sj}', '${sL}')" class="text-amber-400 p-1 bg-dark-800 rounded border border-zinc-700 text-[9px]"><i class="fa-solid fa-pen"></i></button>
                             <button type="button" onclick="confirmDeleteOTDR('${so}', '${st}')" class="text-red-400 p-1 bg-dark-800 rounded border border-zinc-700 text-[9px]"><i class="fa-solid fa-trash"></i></button>
                         `;
                     }
@@ -1354,29 +1419,109 @@
             }
         }
 
-        /**
-         * Membaca biner file .SOR menggunakan heuristik pencarian string.
-         */
-        async function extractSorMetadata(arrayBuffer) {
-            try {
-                const decoder = new TextDecoder('iso-8859-1');
-                const text = decoder.decode(arrayBuffer);
-                
-                let distance = "N/A", loss = "N/A";
-                
-                const lossMatch = text.match(/Loss[^0-9]*([0-9]+\.[0-9]+)/i);
-                if (lossMatch && lossMatch[1]) loss = lossMatch[1];
-                
-                const distMatch = text.match(/Dist[^0-9]*([0-9]+\.[0-9]+)/i);
-                if (distMatch && distMatch[1]) distance = distMatch[1];
-                
-                if (distance === "N/A" || loss === "N/A") {
-                    return { distance: "Cek Manual", loss: "Cek Manual" };
+        // BATCH UPLOAD DENGAN AUTO-PARSER (JIKA GAGAL BISA DI EDIT MANUAL NANTI)
+        async function handleOTDRBatchUpload(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileOtdr');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                return showToast('Pilih setidaknya 1 file .sor!', 'error');
+            }
+
+            const files = Array.from(fileInput.files);
+            const totalFiles = files.length;
+            const btn = document.getElementById('submitOtdrBtn');
+            const progressBox = document.getElementById('uploadProgressContainer');
+            const progressBar = document.getElementById('uploadProgressBar');
+            const progressStatus = document.getElementById('uploadProgressStatus');
+            const progressPercent = document.getElementById('uploadProgressPercent');
+
+            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+            const otbVal = document.getElementById('otbOtdr').value.trim();
+            const lokasiVal = document.getElementById('lokasiOtdr').value.trim();
+            let folderVal = document.getElementById('folderOtdr').value.trim();
+            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            progressBox.classList.remove('hidden');
+
+            let successCount = 0;
+            let failCount = 0;
+
+            for (let i = 0; i < totalFiles; i++) {
+                const file = files[i];
+                const currentIdx = i + 1;
+                const percent = Math.round((currentIdx / totalFiles) * 100);
+
+                progressStatus.innerText = `Mengunggah (${currentIdx}/${totalFiles}): ${file.name}`;
+                progressPercent.innerText = `${percent}%`;
+                progressBar.style.width = `${percent}%`;
+
+                try {
+                    // Coba jalankan parser otomatis, jika gagal tetap upload dengan nilai "N/A"
+                    let distanceVal = "N/A";
+                    let lossVal = "N/A";
+                    try {
+                        const buffer = await readFileAsArrayBuffer(file);
+                        const decoder = new TextDecoder('iso-8859-1');
+                        const rawText = decoder.decode(buffer);
+                        const cleanText = rawText.replace(/\x00/g, '').replace(/[\x01-\x1F\x7F-\x9F]/g, ' ');
+
+                        const distRegex = /(\d{1,3}(?:[\.,]\d+)?)\s*(?:km|kM|Km|KM)/g;
+                        let distMatches = [...cleanText.matchAll(distRegex)];
+                        if (distMatches.length > 0) {
+                            let maxDist = 0;
+                            distMatches.forEach(m => {
+                                let val = parseFloat(m[1].replace(',', '.'));
+                                if (val > maxDist) maxDist = val;
+                            });
+                            if (maxDist > 0) distanceVal = maxDist.toFixed(3);
+                        }
+
+                        const specificLossRegex = /(?:Total|Span|End|E-E|Link)[a-zA-Z\s:\-]*?(\d{1,3}(?:[\.,]\d+)?)\s*(?:dB|db|DB)/i;
+                        const specificLossMatch = cleanText.match(specificLossRegex);
+                        if (specificLossMatch && specificLossMatch[1]) {
+                            lossVal = parseFloat(specificLossMatch[1].replace(',', '.')).toFixed(3);
+                        }
+                    } catch (e) {
+                        // Abaikan error parsing agar upload tetap berjalan
+                    }
+                    
+                    const base64Data = await readFileAsBase64(file);
+                    const fileItem = {
+                        fileName: file.name,
+                        fileData: base64Data,
+                        distance: distanceVal,
+                        loss: lossVal
+                    };
+
+                    const res = await fetchAPI('uploadSingleOTDR', {
+                        fileItem: fileItem,
+                        folderName: folderVal,
+                        otbName: otbVal,
+                        location: lokasiVal,
+                        userEmail: session.email
+                    });
+
+                    if (res && res.success) successCount++;
+                    else failCount++;
+                } catch (err) {
+                    failCount++;
                 }
-                
-                return { distance, loss };
-            } catch (e) {
-                return { distance: "Error Baca", loss: "Error Baca" };
+            }
+
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            progressBox.classList.add('hidden');
+            progressBar.style.width = '0%';
+
+            if (successCount > 0) {
+                showToast(`${successCount} file SOR berhasil diunggah!`, 'success');
+                document.getElementById('otdrInputForm').reset();
+                updateFileList(document.getElementById('fileOtdr'));
+                refreshOTDRList(1);
+            } else {
+                showToast(`Gagal mengunggah ${failCount} file.`, 'error');
             }
         }
 
@@ -1398,107 +1543,30 @@
             });
         };
 
-        // ANDROID BULK UPLOADER ENGINE WITH PARSER
-        async function handleOTDRBatchUpload(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById('fileOtdr');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                return showToast('Pilih setidaknya 1 file .sor!', 'error');
-            }
-
-            const files = Array.from(fileInput.files);
-            const totalFiles = files.length;
-            const btn = document.getElementById('submitOtdrBtn');
-            const progressBox = document.getElementById('uploadProgressContainer');
-            const progressBar = document.getElementById('uploadProgressBar');
-            const progressStatus = document.getElementById('uploadProgressStatus');
-            const progressPercent = document.getElementById('uploadProgressPercent');
-
-            // Form data umum
-            const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const otbVal = document.getElementById('otbOtdr').value.trim();
-            const lokasiVal = document.getElementById('lokasiOtdr').value.trim();
-            let folderVal = document.getElementById('folderOtdr').value.trim();
-            if (!folderVal) folderVal = `OTDR - ${lokasiVal} - ${otbVal}`;
-
-            // Aktifkan visual progress
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            progressBox.classList.remove('hidden');
-
-            let successCount = 0;
-            let failCount = 0;
-
-            for (let i = 0; i < totalFiles; i++) {
-                const file = files[i];
-                const currentIdx = i + 1;
-                const percent = Math.round((currentIdx / totalFiles) * 100);
-
-                progressStatus.innerText = `Mengunggah (${currentIdx}/${totalFiles}): ${file.name}`;
-                progressPercent.innerText = `${percent}%`;
-                progressBar.style.width = `${percent}%`;
-
-                try {
-                    // Ekstraksi Metadata Biner
-                    const arrayBuffer = await readFileAsArrayBuffer(file);
-                    const extractedMetadata = await extractSorMetadata(arrayBuffer);
-                    
-                    const base64Data = await readFileAsBase64(file);
-                    const fileItem = {
-                        fileName: file.name,
-                        fileData: base64Data,
-                        distance: extractedMetadata.distance,
-                        loss: extractedMetadata.loss
-                    };
-
-                    // Kirim stream satuan per file agar Android WebView tidak hang
-                    const res = await fetchAPI('uploadSingleOTDR', {
-                        fileItem: fileItem,
-                        folderName: folderVal,
-                        otbName: otbVal,
-                        location: lokasiVal,
-                        userEmail: session.email
-                    });
-
-                    if (res && res.success) {
-                        successCount++;
-                    } else {
-                        failCount++;
-                    }
-                } catch (err) {
-                    failCount++;
-                }
-            }
-
-            // Reset UI State
-            btn.disabled = false;
-            btn.classList.remove('opacity-50');
-            progressBox.classList.add('hidden');
-            progressBar.style.width = '0%';
-
-            if (successCount > 0) {
-                showToast(`${successCount} file SOR berhasil diunggah!`, 'success');
-                document.getElementById('otdrInputForm').reset();
-                updateFileList(document.getElementById('fileOtdr'));
-                refreshOTDRList(1);
-            } else {
-                showToast(`Gagal mengunggah ${failCount} file.`, 'error');
-            }
-        }
-
-        function openEditOTDR(otb, timestamp, folder, lokasi) { 
+        // EDIT OTDR TERMASUK JARAK DAN LOSS MANUAL
+        function openEditOTDR(otb, timestamp, folder, lokasi, jarak, loss) { 
             originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; 
             document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; 
             document.getElementById('editOtdrOtb').value = otb; 
             document.getElementById('editOtdrLokasi').value = lokasi; 
+            document.getElementById('editOtdrJarak').value = (jarak && jarak !== 'N/A' && jarak !== 'Cek Manual') ? jarak : '';
+            document.getElementById('editOtdrLoss').value = (loss && loss !== 'N/A' && loss !== 'Cek Manual') ? loss : '';
             animateModalOpen('editOtdrModal', 'editOtdrModalContent'); 
         }
+
         function closeEditOTDR() { animateModalClose('editOtdrModal', 'editOtdrModalContent'); }
+        
         function handleUpdateOTDR(e) {
             e.preventDefault();
             setButtonState('submitEditOtdrBtn', true);
             const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
-            const updated = { nama_folder: document.getElementById('editOtdrFolder').value, nama_otb: document.getElementById('editOtdrOtb').value, lokasi: document.getElementById('editOtdrLokasi').value };
+            const updated = { 
+                nama_folder: document.getElementById('editOtdrFolder').value, 
+                nama_otb: document.getElementById('editOtdrOtb').value, 
+                lokasi: document.getElementById('editOtdrLokasi').value,
+                jarak: document.getElementById('editOtdrJarak').value || 'N/A', // Data input manual
+                loss: document.getElementById('editOtdrLoss').value || 'N/A'   // Data input manual
+            };
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditOtdrBtn', false, '<i class="fa-solid fa-save mr-1"></i> Save Changes');
                 if (res.success) { showToast(res.message, 'success'); closeEditOTDR(); refreshOTDRList(currentOtdrPage); } else showToast(res.message, 'error');
