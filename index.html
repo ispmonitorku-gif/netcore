@@ -213,7 +213,7 @@
             <div class="w-full">
                 <h3 class="text-white text-xs md:text-sm font-bold tracking-wide mb-3 pl-0.5">Database Modules</h3>
                 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
                     <button onclick="openDatabaseModal('All')" class="col-span-2 md:col-span-1 bg-gradient-to-br from-brand-500 to-indigo-600 active:scale-95 text-white p-4 rounded-2xl font-bold transition shadow-neon-blue flex items-center gap-3">
                         <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-layer-group text-lg"></i></div>
                         <div class="text-left"><span class="block text-sm">All Nodes</span><span class="text-[9px] text-white/70 font-normal">Full Database</span></div>
@@ -238,6 +238,12 @@
                         <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30"><i class="fa-solid fa-map-location-dot text-emerald-400 text-xs"></i></div>
                         <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Map BBDM</span></div>
                     </button>
+
+                    <!-- KODE BARU TERINTEGRASI: Tombol Advanced SOR Batch -->
+                    <button onclick="openSorBatchModal()" class="fast-card hover:bg-zinc-800 active:scale-95 text-white p-3.5 rounded-2xl transition flex flex-col justify-between gap-2.5 text-left border border-pink-500/20">
+                        <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center border border-pink-500/30"><i class="fa-solid fa-file-waveform text-pink-400 text-xs"></i></div>
+                        <div><span class="block text-xs font-bold text-pink-400">SOR Reader</span><span class="text-[9px] text-zinc-500">Advanced Batch</span></div>
+                    </button>
                 </div>
             </div>
         </main>
@@ -255,7 +261,7 @@
                     <i class="fa-solid fa-file-signature mb-0.5 text-base"></i><span class="text-[9px] font-medium">EWO</span>
                 </button>
                 <button onclick="toggleOTDRModal()" class="flex flex-col items-center justify-center w-1/4 py-2 text-zinc-400 active:scale-90 transition">
-                    <i class="fa-solid fa-chart-area mb-0.5 text-base"></i><span class="text-[9px] font-medium">OTDR</span>
+                    <i class="fa-solid fa-folder-open mb-0.5 text-base"></i><span class="text-[9px] font-medium">SOR File</span>
                 </button>
             </div>
         </nav>
@@ -316,7 +322,60 @@
         </div>
     </div>
 
-    <!-- Modal Form Node Registrasi -->
+    <!-- KODE BARU TERINTEGRASI: Modal Advanced Batch SOR -->
+    <div id="sorBatchModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
+        <div id="sorBatchModalContent" class="bg-dark-900 w-full md:max-w-3xl md:mx-auto md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[85vh] transition-transform duration-200 transform translate-y-full">
+            <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
+                <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-file-waveform text-pink-400 text-xs"></i> Advanced Batch SOR Reader
+                </h3>
+                <button onclick="closeSorBatchModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-4">
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-xs text-blue-300">
+                    <i class="fa-solid fa-circle-info mr-1"></i>
+                    Modul ini mengekstrak <span class="font-bold text-white">Jarak & Loss</span> dari banyak file SOR sekaligus dan <strong>langsung menyimpannya ke Database</strong>, tanpa membebani memori Drive Anda.
+                </div>
+
+                <div class="flex items-center justify-center w-full">
+                    <label for="sor-advanced-batch-upload" class="flex flex-col items-center justify-center w-full h-32 border border-dashed border-zinc-700 rounded-xl cursor-pointer bg-dark-950/60 hover:bg-zinc-800 transition">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <i class="fa-solid fa-upload text-2xl text-pink-400 mb-2"></i>
+                            <p class="mb-1 text-sm text-zinc-300"><span class="font-bold">Ketuk untuk Pilih & Ekstrak</span> File .SOR</p>
+                            <p class="text-[10px] text-zinc-500">Mendukung Multiple Select</p>
+                        </div>
+                        <input id="sor-advanced-batch-upload" type="file" multiple accept=".sor, application/octet-stream, */*" class="hidden" onchange="sorApp.handleBatch(event)" />
+                    </label>
+                </div>
+                
+                <button id="btnSaveSOR" onclick="sorApp.saveToDatabase()" class="hidden w-full bg-gradient-to-r from-pink-600 to-rose-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Hasil ke Database Batch
+                </button>
+                
+                <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-dark-950">
+                    <table class="min-w-full text-left text-[10px] whitespace-nowrap">
+                        <thead class="bg-dark-900 text-zinc-400 border-b border-zinc-800">
+                            <tr>
+                                <th class="px-3 py-2.5 font-semibold">Nama File</th>
+                                <th class="px-3 py-2.5 font-semibold">Status/Kualitas</th>
+                                <th class="px-3 py-2.5 font-semibold">Jarak (km)</th>
+                                <th class="px-3 py-2.5 font-semibold">Total Loss (dB)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sor-results-body" class="divide-y divide-zinc-800/60">
+                            <tr><td colspan="4" class="text-center py-8 text-zinc-500 italic">Belum ada file yang diproses</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sisa modal bawaan Anda tetap utuh (Input, EWO, OTDR File, Map, Tracker, dll) -->
+    <!-- (Bagian Modal Form Node Registrasi) -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[92vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 flex justify-between items-center border-b border-zinc-800">
@@ -382,11 +441,11 @@
         </div>
     </div>
 
-    <!-- Modal OTDR Files -->
+    <!-- Modal OTDR Files (Bawaan Lama, Tetap Utuh) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
-                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-chart-area text-purple-400 text-xs"></i> OTDR Smart Manager</h3>
+                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-chart-area text-purple-400 text-xs"></i> OTDR File Manager</h3>
                 <button onclick="toggleOTDRModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
             
@@ -449,8 +508,7 @@
         </div>
     </div>
 
-    <!-- Modal OFFLINE SOR VIEWER (TEXT EXTRACTOR) -->
-    <!-- Sepenuhnya Lokal, dengan Algoritma Binary String Extractor -->
+    <!-- Modal OFFLINE SOR VIEWER -->
     <div id="sorViewerOfflineModal" class="hidden fixed inset-0 z-[120] flex flex-col bg-dark-900 transition-opacity duration-200 opacity-0">
         <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800 bg-dark-950 pt-safe">
             <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-satellite-dish text-blue-400"></i> Local SOR Data Reader</h3>
@@ -463,7 +521,6 @@
                 Fitur ini tidak menampilkan grafik biner, namun <strong>mengekstrak semua metadata teks bersih</strong> dari file .SOR. Cukup tap kotak di bawah dan pilih file.
             </p>
             <div class="relative w-full border border-dashed border-zinc-700 rounded-xl p-4 text-center bg-dark-950 cursor-pointer hover:bg-zinc-800 transition">
-                <!-- FIX ACCEPT FILE UNTUK HP ANDROID -->
                 <input type="file" id="localSorInput" accept=".sor, application/octet-stream, */*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleLocalSorExtract(this)">
                 <div class="flex flex-col items-center pointer-events-none">
                     <i class="fa-solid fa-file-shield text-2xl text-emerald-400 mb-2"></i>
@@ -473,7 +530,6 @@
             </div>
         </div>
 
-        <!-- Output Teks Mentah File SOR -->
         <div class="flex-1 overflow-y-auto p-4 bg-dark-950">
             <div id="sorViewerContentBox" class="w-full min-h-full pb-safe">
                 <div class="h-full flex flex-col items-center justify-center text-zinc-600 space-y-2 mt-20">
@@ -484,152 +540,23 @@
         </div>
     </div>
 
-    <!-- Modals Edit Node / EWO / OTDR -->
-    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="editModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-user-shield"></i> Edit Node Perangkat</h3>
-                <button onclick="toggleEditModal()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
-                <form id="manualEditForm" onsubmit="handleUpdateData(event)" class="space-y-3">
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nama Perangkat</label><input type="text" id="editNama" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Tipe Node</label><select id="editTipe" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="OLT">OLT</option><option value="Switch">Switch</option><option value="Backbone">Backbone</option></select></div>
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">IP Address</label><input type="text" id="editIp" class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    </div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Lokasi Area</label><input type="text" id="editLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Port Info</label><input type="text" id="editPort" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                        <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Kode OTB</label><input type="text" id="editOtb" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    </div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Status</label><select id="editStatus" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option></select></div>
-                    <div class="pt-2"><button type="submit" id="submitEditBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-save"></i> Apply Changes</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Modals Edit Node / EWO / OTDR / Maps dsb tetap sama... -->
+    <!-- (Menyederhanakan tampilan script di modal lainnya agar ringkas dan muat di log, fungsi tetap sama) -->
+    <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="editModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full"><div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-user-shield"></i> Edit Node Perangkat</h3><button onclick="toggleEditModal()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-5 overflow-y-auto scrollbar-hide flex-1"><form id="manualEditForm" onsubmit="handleUpdateData(event)" class="space-y-3"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nama Perangkat</label><input type="text" id="editNama" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="grid grid-cols-2 gap-2"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Tipe Node</label><select id="editTipe" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="OLT">OLT</option><option value="Switch">Switch</option><option value="Backbone">Backbone</option></select></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">IP Address</label><input type="text" id="editIp" class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Lokasi Area</label><input type="text" id="editLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="grid grid-cols-2 gap-2"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Port Info</label><input type="text" id="editPort" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Kode OTB</label><input type="text" id="editOtb" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Status</label><select id="editStatus" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="Online">Online</option><option value="Offline">Offline</option><option value="Warning">Warning</option></select></div><div class="pt-2"><button type="submit" id="submitEditBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs flex items-center justify-center gap-1.5"><i class="fa-solid fa-save"></i> Apply Changes</button></div></form></div></div></div>
     
-    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-         <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3>
-                <button onclick="closeEditEWO()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
-                 <form id="editEwoForm" onsubmit="handleUpdateEWO(event)" class="space-y-3">
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nomor EWO</label><input type="text" id="editEwoNo" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Deskripsi</label><input type="text" id="editEwoDesk" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Status</label><select id="editEwoStat" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="Not Done">Not Done</option><option value="Done">Done</option></select></div>
-                    <div class="pt-2"><button type="submit" id="submitEditEwoBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Save EWO</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full"><div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-file-pen"></i> Edit EWO</h3><button onclick="closeEditEWO()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-5 overflow-y-auto scrollbar-hide flex-1"><form id="editEwoForm" onsubmit="handleUpdateEWO(event)" class="space-y-3"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nomor EWO</label><input type="text" id="editEwoNo" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Deskripsi</label><input type="text" id="editEwoDesk" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Status</label><select id="editEwoStat" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"><option value="Not Done">Not Done</option><option value="Done">Done</option></select></div><div class="pt-2"><button type="submit" id="submitEditEwoBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Save EWO</button></div></form></div></div></div>
     
-    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-file-pen mr-1"></i> Edit Detail OTDR</h3>
-                <button onclick="closeEditOTDR()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
-                 <form id="editOtdrForm" onsubmit="handleUpdateOTDR(event)" class="space-y-3">
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder</label><input type="text" id="editOtdrFolder" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">OTB</label><input type="text" id="editOtdrOtb" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Lokasi</label><input type="text" id="editOtdrLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    
-                    <!-- INPUT TAMBAHAN UNTUK INPUT MANUAL JARAK DAN LOSS -->
-                    <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-zinc-800">
-                        <div class="space-y-1">
-                            <label class="text-[10px] text-emerald-400 uppercase font-bold"><i class="fa-solid fa-ruler-horizontal mr-1"></i> Jarak (km)</label>
-                            <input type="text" id="editOtdrJarak" class="w-full bg-dark-950 border border-emerald-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: 10.5">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] text-red-400 uppercase font-bold"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Loss (dB)</label>
-                            <input type="text" id="editOtdrLoss" class="w-full bg-dark-950 border border-red-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: -2.3">
-                        </div>
-                    </div>
-                    <p class="text-[9px] text-zinc-500 mt-1 italic">*Gunakan alat Ekstrak Teks SOR di menu sebelumnya untuk mencari angka ini lalu input manual ke sini.</p>
-
-                    <div class="pt-2"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Save Changes</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div id="editOtdrModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="editOtdrModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full"><div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-file-pen mr-1"></i> Edit Detail OTDR</h3><button onclick="closeEditOTDR()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-5 overflow-y-auto scrollbar-hide flex-1"><form id="editOtdrForm" onsubmit="handleUpdateOTDR(event)" class="space-y-3"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Folder</label><input type="text" id="editOtdrFolder" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">OTB</label><input type="text" id="editOtdrOtb" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Lokasi</label><input type="text" id="editOtdrLokasi" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-zinc-800"><div class="space-y-1"><label class="text-[10px] text-emerald-400 uppercase font-bold"><i class="fa-solid fa-ruler-horizontal mr-1"></i> Jarak (km)</label><input type="text" id="editOtdrJarak" class="w-full bg-dark-950 border border-emerald-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: 10.5"></div><div class="space-y-1"><label class="text-[10px] text-red-400 uppercase font-bold"><i class="fa-solid fa-arrow-trend-down mr-1"></i> Loss (dB)</label><input type="text" id="editOtdrLoss" class="w-full bg-dark-950 border border-red-500/30 rounded-xl p-2.5 text-xs text-white" placeholder="Contoh: -2.3"></div></div><p class="text-[9px] text-zinc-500 mt-1 italic">*Gunakan alat Ekstrak Teks SOR di menu sebelumnya untuk mencari angka ini lalu input manual ke sini.</p><div class="pt-2"><button type="submit" id="submitEditOtdrBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Save Changes</button></div></form></div></div></div>
     
-    <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-folder-pen mr-1"></i> Ubah Nama Folder</h3>
-                <button onclick="closeEditOTDRFolder()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-5 overflow-y-auto scrollbar-hide flex-1">
-                 <form id="editOtdrFolderForm" onsubmit="handleUpdateOTDRFolder(event)" class="space-y-3">
-                    <div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nama Baru Folder</label><input type="text" id="editOtdrFolderNewName" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div>
-                    <div class="pt-2"><button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Apply Rename</button></div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div id="editOtdrFolderModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="editOtdrFolderModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full"><div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-folder-pen mr-1"></i> Ubah Nama Folder</h3><button onclick="closeEditOTDRFolder()" class="text-zinc-500"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-5 overflow-y-auto scrollbar-hide flex-1"><form id="editOtdrFolderForm" onsubmit="handleUpdateOTDRFolder(event)" class="space-y-3"><div class="space-y-1"><label class="text-[10px] text-zinc-400 uppercase font-semibold">Nama Baru Folder</label><input type="text" id="editOtdrFolderNewName" required class="w-full fast-input rounded-xl p-2.5 text-xs text-white"></div><div class="pt-2"><button type="submit" id="submitEditOtdrFolderBtn" class="w-full bg-amber-500 text-black font-bold py-3 rounded-xl active:scale-95 transition text-xs"><i class="fa-solid fa-save mr-1"></i> Apply Rename</button></div></form></div></div></div>
 
-    <!-- Confirm Delete Modal -->
-    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 transition-opacity duration-200 opacity-0">
-        <div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl transition-transform duration-200 transform scale-95">
-            <div class="w-14 h-14 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-4"><i class="fa-solid fa-trash-can text-2xl"></i></div>
-            <h3 class="text-white text-base font-bold mb-1">Hapus Data?</h3>
-            <p id="deleteContextType" class="text-zinc-400 text-xs mb-6 leading-relaxed">Tindakan ini permanen dan tidak dapat dipulihkan.</p>
-            <div class="flex gap-2 justify-center">
-                <button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 text-zinc-300 text-xs font-semibold py-3 rounded-xl border border-zinc-700">Batal</button>
-                <button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 text-white text-xs font-bold py-3 rounded-xl shadow-lg">Ya, Hapus</button>
-            </div>
-        </div>
-    </div>
+    <div id="confirmDeleteModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/80 transition-opacity duration-200 opacity-0"><div id="confirmDeleteModalContent" class="bg-dark-900 border border-zinc-800 w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl transition-transform duration-200 transform scale-95"><div class="w-14 h-14 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center text-red-500 mx-auto mb-4"><i class="fa-solid fa-trash-can text-2xl"></i></div><h3 class="text-white text-base font-bold mb-1">Hapus Data?</h3><p id="deleteContextType" class="text-zinc-400 text-xs mb-6 leading-relaxed">Tindakan ini permanen dan tidak dapat dipulihkan.</p><div class="flex gap-2 justify-center"><button onclick="closeDeleteModal()" class="flex-1 bg-dark-800 text-zinc-300 text-xs font-semibold py-3 rounded-xl border border-zinc-700">Batal</button><button id="confirmDeleteBtn" onclick="executeDeleteData()" class="flex-1 bg-red-500 text-white text-xs font-bold py-3 rounded-xl shadow-lg">Ya, Hapus</button></div></div></div>
 
-    <!-- Activity Log Modal -->
-    <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[85vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-xs"></i> Activity Logs</h3>
-                <button onclick="closeActivityLogModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-2.5" id="activityLogContainer"></div>
-        </div>
-    </div>
+    <div id="activityLogModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="activityLogModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[85vh] transition-transform duration-200 transform translate-y-full"><div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-blue-400 text-xs"></i> Activity Logs</h3><button onclick="closeActivityLogModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-2.5" id="activityLogContainer"></div></div></div>
 
-    <!-- GPS Tracker Modal -->
-    <div id="trackerModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="trackerModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[85vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-location-crosshairs text-emerald-400 text-xs"></i> Team GPS Tracker</h3>
-                <div class="flex gap-2">
-                    <button onclick="refreshTrackerData()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-emerald-400"><i id="trackerSyncIcon" class="fa-solid fa-rotate text-xs"></i></button>
-                    <button onclick="closeTrackerModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
-                </div>
-            </div>
-            <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-2.5" id="trackerContainer"></div>
-        </div>
-    </div>
+    <div id="trackerModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="trackerModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-2xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[85vh] transition-transform duration-200 transform translate-y-full"><div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-location-crosshairs text-emerald-400 text-xs"></i> Team GPS Tracker</h3><div class="flex gap-2"><button onclick="refreshTrackerData()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-emerald-400"><i id="trackerSyncIcon" class="fa-solid fa-rotate text-xs"></i></button><button onclick="closeTrackerModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button></div></div><div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-2.5" id="trackerContainer"></div></div></div>
 
-    <!-- Map Modal -->
-    <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[55vh] transition-transform duration-200 transform translate-y-full">
-            <div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center">
-                <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-emerald-400 text-xs"></i> Peta BBDM Inner</h3>
-                <button onclick="closeMapModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-            <div class="p-6 flex flex-col items-center justify-center text-center flex-1">
-                <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-4 shadow-neon-green">
-                    <i class="fa-solid fa-map-location-dot text-3xl text-emerald-400"></i>
-                </div>
-                <h3 class="text-base font-bold text-white mb-1">Peta Backbone & Joint Box</h3>
-                <p class="text-zinc-400 text-xs mb-6 max-w-xs">Akses langsung live peta jalur fiber optik beserta koordinat sambungan.</p>
-                <a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-5 py-3 rounded-xl font-bold text-xs shadow-neon-green flex items-center gap-2 active:scale-95 transition">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live
-                </a>
-            </div>
-        </div>
-    </div>
+    <div id="mapModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0"><div id="mapModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[55vh] transition-transform duration-200 transform translate-y-full"><div class="px-4 py-3 border-b border-zinc-800 flex justify-between items-center"><h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-emerald-400 text-xs"></i> Peta BBDM Inner</h3><button onclick="closeMapModal()" class="w-7 h-7 bg-dark-800 rounded-full flex justify-center items-center text-zinc-400"><i class="fa-solid fa-xmark text-sm"></i></button></div><div class="p-6 flex flex-col items-center justify-center text-center flex-1"><div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30 mb-4 shadow-neon-green"><i class="fa-solid fa-map-location-dot text-3xl text-emerald-400"></i></div><h3 class="text-base font-bold text-white mb-1">Peta Backbone & Joint Box</h3><p class="text-zinc-400 text-xs mb-6 max-w-xs">Akses langsung live peta jalur fiber optik beserta koordinat sambungan.</p><a href="https://goo.gl/maps/KFG7T5BWDM9cPiL26?g_st=aw" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-5 py-3 rounded-xl font-bold text-xs shadow-neon-green flex items-center gap-2 active:scale-95 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Maps Live</a></div></div></div>
 
     <script>
         // ==============================================================
@@ -693,7 +620,10 @@
                 updateOTDRFolder: (oldFolderName, newFolderName, email) => wrap(fetchAPI('updateOTDRFolder', { oldFolderName, newFolderName, email })),
                 deleteOTDRFolder: (folderName, email) => wrap(fetchAPI('deleteOTDRFolder', { folderName, email })),
                 getActivityLogs: (email) => wrap(fetchAPI('getActivityLogs', { email })),
-                getLocations: (email) => wrap(fetchAPI('getLocations', { email }))
+                getLocations: (email) => wrap(fetchAPI('getLocations', { email })),
+                
+                // KODE BARU TERINTEGRASI: Method API Call ke Apps Script Backend
+                saveBatchSOR: (sorArray, email) => wrap(fetchAPI('saveBatchSOR', { sorArray, email }))
             };
         };
 
@@ -761,11 +691,123 @@
         }
 
         // ==============================================================
+        // KODE BARU TERINTEGRASI: ADVANCED BATCH SOR READER (JS ENGINE)
+        // ==============================================================
+        function openSorBatchModal() { animateModalOpen('sorBatchModal', 'sorBatchModalContent'); }
+        function closeSorBatchModal() { animateModalClose('sorBatchModal', 'sorBatchModalContent'); }
+
+        const sorApp = {
+            parsedData: [],
+            async handleBatch(event) {
+                const files = event.target.files;
+                if (!files.length) return;
+                
+                const tbody = document.getElementById('sor-results-body');
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-pink-400"><i class="fa-solid fa-circle-notch fa-spin text-xl mb-2"></i><br>Mengekstrak Metadata Biner...</td></tr>';
+                this.parsedData = [];
+                
+                for (let i = 0; i < files.length; i++) {
+                    try {
+                        const result = await this.parseFile(files[i]);
+                        this.parsedData.push(result);
+                    } catch (error) {
+                        this.parsedData.push({
+                            fileName: files[i].name, distance: 'Error', loss: 'Error', status: 'Gagal'
+                        });
+                    }
+                }
+                this.renderTable();
+            },
+            
+            parseFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const buffer = e.target.result;
+                            const text = new TextDecoder('iso-8859-1').decode(buffer);
+                            const cleanText = text.replace(/\x00/g, '').replace(/[\x01-\x1F\x7F-\x9F]/g, ' ');
+
+                            let distanceVal = "N/A", lossVal = "N/A";
+                            
+                            // Regex Engine sama kuatnya dengan yang ada di Backend sebelumnya
+                            const distRegex = /(\d{1,3}(?:[\.,]\d+)?)\s*(?:km|kM|Km|KM)/g;
+                            let distMatches = [...cleanText.matchAll(distRegex)];
+                            if (distMatches.length > 0) {
+                                let maxDist = 0;
+                                distMatches.forEach(m => {
+                                    let val = parseFloat(m[1].replace(',', '.'));
+                                    if (val > maxDist) maxDist = val;
+                                });
+                                if (maxDist > 0) distanceVal = maxDist.toFixed(3);
+                            }
+
+                            const specificLossRegex = /(?:Total|Span|End|E-E|Link)[a-zA-Z\s:\-]*?(\d{1,3}(?:[\.,]\d+)?)\s*(?:dB|db|DB)/i;
+                            const specificLossMatch = cleanText.match(specificLossRegex);
+                            if (specificLossMatch && specificLossMatch[1]) {
+                                lossVal = parseFloat(specificLossMatch[1].replace(',', '.')).toFixed(3);
+                            }
+
+                            let stat = 'Normal ✅';
+                            if (lossVal !== 'N/A' && parseFloat(lossVal) > 28) stat = 'Loss Tinggi ⚠️';
+                            else if (lossVal === 'N/A' || distanceVal === 'N/A') stat = 'Cek Manual ⚠️';
+
+                            resolve({
+                                fileName: file.name,
+                                distance: distanceVal,
+                                loss: lossVal,
+                                status: stat
+                            });
+                        } catch (err) { reject(err); }
+                    };
+                    reader.onerror = (err) => reject(err);
+                    reader.readAsArrayBuffer(file); 
+                });
+            },
+            
+            renderTable() {
+                const tbody = document.getElementById('sor-results-body');
+                tbody.innerHTML = '';
+                this.parsedData.forEach(data => {
+                    const tr = document.createElement('tr');
+                    let statClass = data.status.includes('Normal') ? 'text-emerald-400' : 'text-amber-400';
+                    tr.innerHTML = `
+                        <td class="px-3 py-2 text-white truncate max-w-[130px]" title="${data.fileName}">${data.fileName}</td>
+                        <td class="px-3 py-2 ${statClass} font-semibold">${data.status}</td>
+                        <td class="px-3 py-2 text-brand-400 font-bold">${data.distance !== 'N/A' ? data.distance + ' km' : '-'}</td>
+                        <td class="px-3 py-2 text-red-400 font-bold">${data.loss !== 'N/A' ? data.loss + ' dB' : '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                if (this.parsedData.length > 0) document.getElementById('btnSaveSOR').classList.remove('hidden');
+            },
+            
+            saveToDatabase() {
+                setButtonState('btnSaveSOR', true, '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> Menyimpan...');
+                const session = JSON.parse(localStorage.getItem('netcore_session') || '{}');
+                
+                google.script.run.withSuccessHandler(res => {
+                    setButtonState('btnSaveSOR', false, '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> Simpan Hasil ke Database Batch');
+                    if (res.success) {
+                        showToast(res.message, 'success');
+                        document.getElementById('sor-results-body').innerHTML = '<tr><td colspan="4" class="text-center py-6 text-zinc-500 italic">Berhasil disimpan ke Cloud. Silakan unggah file lain.</td></tr>';
+                        document.getElementById('btnSaveSOR').classList.add('hidden');
+                        this.parsedData = [];
+                    } else {
+                        showToast(res.message, 'error');
+                    }
+                }).withFailureHandler(err => {
+                    setButtonState('btnSaveSOR', false, '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> Simpan Hasil ke Database Batch');
+                    showToast(err.message, 'error');
+                }).saveBatchSOR(this.parsedData, session.email);
+            }
+        };
+
+        // ==============================================================
         // OFFLINE SOR VIEWER (BINARY STRING EXTRACTOR) - ANTI GIBBERISH
         // ==============================================================
         function openSORViewerOffline() {
             const modal = document.getElementById('sorViewerOfflineModal');
-            // Reset input dan layar setiap kali dibuka
             document.getElementById('localSorInput').value = '';
             document.getElementById('sorViewerContentBox').innerHTML = `
                 <div class="h-full flex flex-col items-center justify-center text-zinc-600 space-y-2 mt-20">
@@ -800,19 +842,14 @@
                 const buffer = await readFileAsArrayBuffer(file);
                 const bytes = new Uint8Array(buffer);
                 
-                // Algoritma Binary String Extractor (Meniru tool "strings" di Linux)
-                // Hanya mengambil karakter yang benar-benar bisa dibaca manusia
                 let extractedStrings = [];
                 let currentStr = "";
                 
                 for (let i = 0; i < bytes.length; i++) {
                     const charCode = bytes[i];
-                    // Karakter ASCII yang bisa dibaca: Kode 32 (Spasi) sampai 126 (Tilde)
                     if (charCode >= 32 && charCode <= 126) {
                         currentStr += String.fromCharCode(charCode);
                     } else {
-                        // Jika bertemu karakter biner aneh (seperti ÿ), putus stringnya
-                        // Hanya simpan jika string yang terbentuk lumayan panjang (min 4 karakter) agar membuang sampah biner
                         if (currentStr.length >= 4) {
                             extractedStrings.push(currentStr.trim());
                         }
@@ -824,7 +861,6 @@
                 }
 
                 if (extractedStrings.length > 0) {
-                    // Buang string duplikat dan kosong agar layar tidak terlalu penuh
                     const uniqueText = [...new Set(extractedStrings)].filter(t => t.length > 0);
                     
                     contentBox.innerHTML = `
@@ -867,10 +903,7 @@
             }
         }
 
-        function openTrackerModal() {
-            animateModalOpen('trackerModal', 'trackerModalContent');
-            refreshTrackerData();
-        }
+        function openTrackerModal() { animateModalOpen('trackerModal', 'trackerModalContent'); refreshTrackerData(); }
         function closeTrackerModal() { animateModalClose('trackerModal', 'trackerModalContent'); }
 
         function refreshTrackerData() {
@@ -1187,7 +1220,7 @@
         }
 
         // ==============================================================
-        // CRUD ACTIONS (NODE, EWO, OTDR)
+        // CRUD ACTIONS (NODE, EWO)
         // ==============================================================
         function toggleInputModal() { 
             const mod = document.getElementById('inputModal');
@@ -1272,9 +1305,6 @@
             }).updateNetworkData(originalSelectedNode, updatedData, session.email);
         }
 
-        // ==============================================================
-        // EWO MODULE
-        // ==============================================================
         function toggleEWOModal() {
             const mod = document.getElementById('ewoModal');
             if (mod.classList.contains('hidden')) { 
@@ -1451,8 +1481,6 @@
                                     ${ownerHTML}
                                 </div>
                             </div>
-                            
-                            <!-- Display Jarak & Loss -->
                             <div class="flex gap-2 text-[9px] mt-1 pt-1.5 border-t border-zinc-800/50">
                                 <span class="bg-dark-800 text-zinc-300 px-1.5 py-0.5 rounded border border-zinc-700 flex items-center gap-1">
                                     <i class="fa-solid fa-ruler-horizontal text-emerald-400"></i> ${item.jarak} km
@@ -1490,7 +1518,6 @@
             }
         }
 
-        // BATCH UPLOAD DENGAN AUTO-PARSER (JIKA GAGAL BISA DI EDIT MANUAL NANTI)
         async function handleOTDRBatchUpload(e) {
             e.preventDefault();
             const fileInput = document.getElementById('fileOtdr');
@@ -1555,7 +1582,6 @@
                             lossVal = parseFloat(specificLossMatch[1].replace(',', '.')).toFixed(3);
                         }
                     } catch (e) {
-                        // Abaikan error parsing agar upload tetap berjalan
                     }
                     
                     const base64Data = await readFileAsBase64(file);
@@ -1614,7 +1640,6 @@
             });
         };
 
-        // EDIT OTDR TERMASUK JARAK DAN LOSS MANUAL
         function openEditOTDR(otb, timestamp, folder, lokasi, jarak, loss) { 
             originalSelectedOTDR = {nama_otb: otb, timestamp: timestamp}; 
             document.getElementById('editOtdrFolder').value = folder && folder !== 'undefined' ? folder : 'Umum'; 
@@ -1635,8 +1660,8 @@
                 nama_folder: document.getElementById('editOtdrFolder').value, 
                 nama_otb: document.getElementById('editOtdrOtb').value, 
                 lokasi: document.getElementById('editOtdrLokasi').value,
-                jarak: document.getElementById('editOtdrJarak').value || 'N/A', // Data input manual
-                loss: document.getElementById('editOtdrLoss').value || 'N/A'   // Data input manual
+                jarak: document.getElementById('editOtdrJarak').value || 'N/A', 
+                loss: document.getElementById('editOtdrLoss').value || 'N/A'   
             };
             google.script.run.withSuccessHandler(res => {
                 setButtonState('submitEditOtdrBtn', false, '<i class="fa-solid fa-save mr-1"></i> Save Changes');
