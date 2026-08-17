@@ -406,7 +406,6 @@
                     <div class="space-y-1">
                         <label class="text-[10px] text-zinc-400 uppercase font-semibold">File SOR (Bisa Pilih Banyak Sekaligus)</label>
                         <div class="relative w-full border border-dashed border-zinc-700 rounded-lg p-3 text-center bg-dark-950/60">
-                            <!-- Support multi file on all android browsers -->
                             <input type="file" id="fileOtdr" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="updateFileList(this)">
                             <div id="fileUploadPrompt" class="flex flex-col items-center pointer-events-none">
                                 <i class="fa-solid fa-cloud-arrow-up text-xl text-purple-400 mb-1"></i>
@@ -417,7 +416,7 @@
                         </div>
                     </div>
                     
-                    <!-- Progress Bar Saat Upload Banyak File -->
+                    <!-- Progress Bar Saat Upload -->
                     <div id="uploadProgressContainer" class="hidden space-y-1">
                         <div class="flex justify-between text-[10px] text-zinc-400">
                             <span id="uploadProgressStatus">Mengunggah...</span>
@@ -1402,7 +1401,6 @@
             }
         }
 
-        // Helper FileReader Async untuk Android
         const readFileAsBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1459,7 +1457,6 @@
                         fileData: base64Data
                     };
 
-                    // Kirim stream satuan per file agar Android WebView tidak hang
                     const res = await fetchAPI('uploadSingleOTDR', {
                         fileItem: fileItem,
                         folderName: folderVal,
@@ -1478,7 +1475,6 @@
                 }
             }
 
-            // Reset UI State
             btn.disabled = false;
             btn.classList.remove('opacity-50');
             progressBox.classList.add('hidden');
@@ -1722,7 +1718,7 @@
                 
                 this.results = [];
                 
-                // Fungsi parser SOR GR-196 (Membaca file sebagai Binary DataView)
+                // Fungsi parser SOR Telcordia GR-196 Biner murni (Tanpa bergantung Map Structure yang rentan)
                 const parseFile = (file) => {
                     return new Promise((resolve) => {
                         const reader = new FileReader();
@@ -1736,74 +1732,60 @@
                                 const view = new DataView(buffer);
                                 const uint8 = new Uint8Array(buffer);
                                 
-                                // Fungsi pelacak tanda tangan string byte (bypass perbedaan format Map)
-                                const findSig = (str) => {
-                                    const chars = str.split('').map(c => c.charCodeAt(0));
-                                    for(let i = 0; i < uint8.length - chars.length; i++) {
-                                        let match = true;
-                                        for(let j = 0; j < chars.length; j++){ 
-                                            if(uint8[i+j] !== chars[j]){ match = false; break; } 
-                                        }
-                                        if(match) return i;
-                                    }
-                                    return -1;
-                                };
-
-                                let keyIdx = findSig("KeyEvents");
-                                let ior = 1.4677; // Standard Index of Refraction global (Fiber SMF)
+                                // Pelacak signature byte array yang sangat aman
+                                let keyIdx = -1;
+                                const keyStr = [75, 101, 121, 69, 118, 101, 110, 116, 115, 0]; // "KeyEvents\0"
                                 
+                                for(let i = 0; i < uint8.length - keyStr.length; i++) {
+                                    let match = true;
+                                    for(let j = 0; j < keyStr.length; j++){ 
+                                        if(uint8[i+j] !== keyStr[j]){ match = false; break; } 
+                                    }
+                                    if(match) { keyIdx = i; break; }
+                                }
+
                                 if (keyIdx !== -1) {
-                                    // Melewati string "KeyEvents" dan padding NULL
-                                    let offset = keyIdx;
-                                    while(offset < buffer.byteLength && view.getUint8(offset) !== 0) offset++; 
-                                    offset++;
+                                    let offset = keyIdx + 10; // Maju melewati "KeyEvents\0"
                                     
-                                    // Melewati string revisi dan padding NULL
-                                    while(offset < buffer.byteLength && view.getUint8(offset) !== 0) offset++; 
-                                    offset++;
+                                    // Lewati Revision String (Misal "SR-4731\0")
+                                    while (offset < view.byteLength && view.getUint8(offset) !== 0) { offset++; }
+                                    offset++; // Lewati char NULL penutup
                                     
-                                    // Membaca ukuran blok dan jumlah events (GR-196 standard)
+                                    // Ambil Ukuran Blok (Int32) dan Jumlah Event (Int16)
                                     let blockSize = view.getInt32(offset, true); offset += 4;
                                     let numEvents = view.getInt16(offset, true); offset += 2;
                                     
                                     let lastEventPropTime = 0;
                                     
-                                    // Ekstrak blok setiap event untuk mencari ujung (End of Fiber)
+                                    // Ekstrak List Event berdasarkan ukuran standar 42-byte per event di GR-196
                                     for(let i = 0; i < numEvents; i++) {
-                                        let eventNum = view.getInt16(offset, true); offset += 2;
-                                        let propTime = view.getInt32(offset, true); offset += 4;
-                                        let atten = view.getInt16(offset, true); offset += 2;
-                                        let eventLoss = view.getInt16(offset, true); offset += 2;
-                                        let reflect = view.getInt32(offset, true); offset += 4;
-                                        
-                                        offset += 6;  // Melompati Event Code (6 bytes ASCII)
-                                        offset += 2;  // Melompati Loss Meas Technique (2 bytes ASCII)
-                                        offset += 16; // Melompati 4 Markers (Masing-masing 4 bytes)
+                                        let evNum = view.getInt16(offset, true); offset += 2;
+                                        let propTime = view.getInt32(offset, true); offset += 4; // Waktu tempuh
                                         
                                         if (i === numEvents - 1) {
                                             lastEventPropTime = propTime;
                                         }
+                                        
+                                        // Skip data event lainnya (Redaman, Kode, Penanda Jarak, dll = 36 bytes)
+                                        offset += 36; 
                                     }
                                     
-                                    // Total Loss End-to-End berada tepat di akhir event list (int32)
+                                    // End to end loss selalu tepat di akhir list array event (4 Bytes Int32)
                                     let e2eLoss = view.getInt32(offset, true);
+                                    loss = (e2eLoss / 1000).toFixed(3); // Konversi mB -> dB
                                     
-                                    // Konversi dari satuan seperseribu dB (mB) ke dB
-                                    loss = (e2eLoss / 1000).toFixed(3);
-                                    
-                                    // Rumus Akurat Kalkulasi Jarak Presisi OTDR
-                                    // PropTime dlm standar Telcordia adalah satuan 0.0001 microsecond
-                                    // Kecepatan cahaya (c) = 299792.458 km/detik
-                                    let timeSeconds = lastEventPropTime * 1e-10;
+                                    // Kalkulasi Jarak Kabel Otentik (Mirip software STV Exfo/Anritsu)
+                                    let ior = 1.4677; // Standar Index Bias (IoR) Kabel FO SMF
+                                    let timeSeconds = lastEventPropTime * 1e-10; // Satuan 0.0001 ms -> detik
                                     let distKm = (timeSeconds * 299792.458) / ior;
                                     
                                     distance = distKm.toFixed(3);
                                     
                                 } else {
-                                    status = "Gagal (Format Tidak Standar)";
+                                    status = "Gagal (Format Invalid)";
                                 }
                             } catch(err) {
-                                status = "Error Parsing Binary";
+                                status = "Error Biner (Corrupt)";
                             }
                             
                             resolve({
@@ -1818,6 +1800,7 @@
                     });
                 };
                 
+                // Menjalankan proses pembacaan seluruh antrean file secara asinkron
                 for (let i = 0; i < files.length; i++) {
                     const res = await parseFile(files[i]);
                     this.results.push(res);
