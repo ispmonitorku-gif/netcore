@@ -1706,7 +1706,7 @@
         function closeMapModal() { animateModalClose('mapModal', 'mapModalContent'); }
 
         // ==============================================================
-        // IMPLEMENTASI TELCORDIA .SOR BINARY PARSER (OPSI B)
+        // IMPLEMENTASI TELCORDIA .SOR BINARY PARSER (REVISI AKURAT GR-196)
         // ==============================================================
         function openSorBatchModal() { animateModalOpen('sorBatchModal', 'sorBatchModalContent'); }
         function closeSorBatchModal() { animateModalClose('sorBatchModal', 'sorBatchModalContent'); }
@@ -1733,7 +1733,7 @@
                         this.results.push({
                             fileName: file.name,
                             status: 'Gagal Parse',
-                            distance: '0.00',
+                            distance: '0.000',
                             loss: '0.00'
                         });
                     }
@@ -1791,42 +1791,145 @@
             }
         };
 
-        // Fungsi Telcordia/Bellcore Standard SOR Binary Parser Langsung di Browser
+        // ALGORITMA TELCORDIA SR-4731 / GR-196 (AKURAT SESUAI STANDAR INDUSTRI)
         function parseTelcordiaSorBuffer(arrayBuffer, fileName) {
-            const bytes = new Uint8Array(arrayBuffer);
-            const decoder = new TextDecoder('ascii');
-            const textContent = decoder.decode(bytes);
+            try {
+                const dataView = new DataView(arrayBuffer);
+                const bytes = new Uint8Array(arrayBuffer);
+                
+                // Helper: Baca string dengan null-terminated
+                function getString(offset) {
+                    let str = '';
+                    let i = offset;
+                    while (i < bytes.length && bytes[i] !== 0) {
+                        str += String.fromCharCode(bytes[i]);
+                        i++;
+                    }
+                    return { str, length: i - offset + 1 };
+                }
 
-            // Cek header / blok Telcordia GR-196
-            if (bytes.length < 50) {
-                throw new Error("Ukuran file terlalu kecil.");
+                // 1. Ekstrak Map Block (Berisi index di mana letak blok data lainnya)
+                let offset = 0;
+                let mapHeader = getString(offset);
+                if (mapHeader.str !== "Map") {
+                    throw new Error("Invalid SOR: Bukan format Telcordia.");
+                }
+                offset += mapHeader.length;
+                
+                let mapRev = dataView.getUint16(offset, true); // Little endian
+                offset += 2;
+                let mapSize = dataView.getInt32(offset, true);
+                offset += 4;
+                let numBlocks = dataView.getUint16(offset, true);
+                offset += 2;
+                
+                let blockOffsets = {};
+                let currentDataOffset = mapSize; 
+                
+                for (let i = 1; i < numBlocks; i++) {
+                    let bName = getString(offset);
+                    offset += bName.length;
+                    let bRev = dataView.getUint16(offset, true);
+                    offset += 2;
+                    let bSize = dataView.getInt32(offset, true);
+                    offset += 4;
+                    
+                    blockOffsets[bName.str] = {
+                        offset: currentDataOffset,
+                        size: bSize,
+                        rev: bRev
+                    };
+                    currentDataOffset += bSize;
+                }
+
+                // 2. Ekstrak IOR (Index of Refraction) aktual dari pengukuran
+                let ior = 1.4677; // Default jika gagal/tidak ada
+                if (blockOffsets["FxdParams"]) {
+                    let fpOff = blockOffsets["FxdParams"].offset;
+                    let fpName = getString(fpOff);
+                    let p = fpOff + fpName.length + 6; // Lompati nama string, rev, dan size
+                    
+                    p += 4 + 2 + 2 + 4 + 4; // Lompati Date/Time, Unit, WaveLength, AcqOffset, AcqOffsetDist
+                    
+                    if (p + 2 <= arrayBuffer.byteLength) {
+                        let numPulses = dataView.getInt16(p, true);
+                        p += 2 + (2 * numPulses);
+                        
+                        if (p + 2 <= arrayBuffer.byteLength) {
+                            let numSpacings = dataView.getInt16(p, true);
+                            p += 2 + (4 * numSpacings);
+                            
+                            if (p + 2 <= arrayBuffer.byteLength) {
+                                let numIndices = dataView.getInt16(p, true);
+                                p += 2;
+                                
+                                if (numIndices > 0 && p + 4 <= arrayBuffer.byteLength) {
+                                    let iorVal = dataView.getInt32(p, true);
+                                    if (iorVal > 0) ior = iorVal / 100000;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 3. Ekstrak Waktu Tempuh Pantulan (Jarak) & End-to-End Loss
+                let distanceKm = 0;
+                let totalLossDb = 0;
+                let statusStr = "OK / Terekstrak";
+
+                if (blockOffsets["KeyEvents"]) {
+                    let keOff = blockOffsets["KeyEvents"].offset;
+                    let keName = getString(keOff);
+                    let headerSize = keName.length + 6;
+                    let p = keOff + headerSize;
+                    
+                    let numEvents = dataView.getInt16(p, true);
+                    p += 2;
+                    
+                    if (numEvents > 0 && numEvents < 10000) { // Safety check
+                        let eventSize = 22; // Ketentuan wajib dari standar SR-4731
+                        
+                        // Hitung End-of-Fiber / jarak total berdasarkan data event paling akhir
+                        let lastEventOffset = p + ((numEvents - 1) * eventSize);
+                        
+                        if (lastEventOffset + 6 <= arrayBuffer.byteLength) {
+                            // Waktu tempuh rambat cahaya (int32) terletak di offset +2 di dalam setiap blok event
+                            let lastEventTime = dataView.getInt32(lastEventOffset + 2, true);
+                            
+                            // Rumus fisika OTDR Telcordia: Jarak(km) = (Waktu * Kecepatan Cahaya) / (IOR * Pembagi Konversi Skala Waktu Biner)
+                            distanceKm = (lastEventTime * 299.792458) / (200000000 * ior);
+                        }
+                        
+                        // Loss End-to-End selalu tersimpan tepat setelah array seluruh event selesai
+                        let endToEndOffset = p + (numEvents * eventSize);
+                        
+                        if (endToEndOffset + 4 <= arrayBuffer.byteLength) {
+                            totalLossDb = dataView.getInt32(endToEndOffset, true) / 1000;
+                        }
+                    }
+                } else {
+                    throw new Error("Blok KeyEvents (Daftar Titik Potong) tidak ditemukan.");
+                }
+
+                if (totalLossDb > 30.0 || totalLossDb < 0) {
+                    statusStr = 'Warning / Cek Ulang';
+                }
+
+                return {
+                    fileName: fileName,
+                    status: statusStr,
+                    distance: distanceKm.toFixed(3),
+                    loss: totalLossDb.toFixed(2)
+                };
+            } catch (e) {
+                console.error("SOR Parser Error:", e);
+                return {
+                    fileName: fileName,
+                    status: "Gagal Parse",
+                    distance: "0.000",
+                    loss: "0.00"
+                };
             }
-
-            // Hitung checksum biner file aktual sebagai basis data jika blok vendor khusus terenkripsi
-            let checksum = 0;
-            for (let i = 0; i < Math.min(bytes.length, 4096); i++) {
-                checksum += bytes[i];
-            }
-
-            // Ekstraksi berbasis struktur blok standar Telecordia (.sor)
-            let distanceVal = ((checksum % 1800) / 100 + 2.0).toFixed(2);
-            let lossVal = "-" + ((checksum % 250) / 100 + 0.3).toFixed(2);
-
-            // Cek keberadaan blok KeyEvents atau FxdParams
-            if (textContent.includes("FxdParams") || textContent.includes("KeyEvents")) {
-                // Parsing akurat dari buffer jika ditemukan parameter spesifik
-                distanceVal = ((checksum % 2400) / 100 + 3.12).toFixed(2);
-                lossVal = "-" + ((checksum % 400) / 100 + 0.45).toFixed(2);
-            }
-
-            let statusStr = Math.abs(parseFloat(lossVal)) > 3.0 ? 'Warning / High Loss' : 'OK / Terekstrak';
-
-            return {
-                fileName: fileName,
-                status: statusStr,
-                distance: distanceVal,
-                loss: lossVal
-            };
         }
 
         window.addEventListener('DOMContentLoaded', checkSession);
