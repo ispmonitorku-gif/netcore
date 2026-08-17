@@ -1718,7 +1718,7 @@
                 
                 this.results = [];
                 
-                // Fungsi parser SOR Telcordia GR-196 Biner murni (Tanpa bergantung Map Structure yang rentan)
+                // Mesin Pembaca Map Block GR-196 - Anti Gagal & Anti Corrupt
                 const parseFile = (file) => {
                     return new Promise((resolve) => {
                         const reader = new FileReader();
@@ -1732,75 +1732,113 @@
                                 const view = new DataView(buffer);
                                 const uint8 = new Uint8Array(buffer);
                                 
-                                // Pelacak signature byte array yang sangat aman
-                                let keyIdx = -1;
-                                const keyStr = [75, 101, 121, 69, 118, 101, 110, 116, 115, 0]; // "KeyEvents\0"
-                                
-                                for(let i = 0; i < uint8.length - keyStr.length; i++) {
-                                    let match = true;
-                                    for(let j = 0; j < keyStr.length; j++){ 
-                                        if(uint8[i+j] !== keyStr[j]){ match = false; break; } 
+                                // 1. Cari Awal Peta (Map Block) untuk menghindari padding misterius dari Vendor
+                                let mapStart = -1;
+                                for(let i = 0; i < 500; i++) { 
+                                    if(uint8[i] === 77 && uint8[i+1] === 97 && uint8[i+2] === 112 && uint8[i+3] === 0) { // "Map\0"
+                                        mapStart = i; break;
                                     }
-                                    if(match) { keyIdx = i; break; }
+                                }
+                                
+                                if (mapStart === -1) throw new Error("File tidak memiliki Map Block Standar");
+                                
+                                let offset = mapStart;
+                                let blocks = {};
+                                
+                                offset += 4; // Lewati "Map\0"
+                                while(offset < buffer.byteLength && view.getUint8(offset) !== 0) offset++; offset++; // Lewati Revisi
+                                
+                                let mapSize = view.getInt32(offset, true); offset += 4;
+                                let numBlocks = view.getInt16(offset, true); offset += 2;
+                                let currentBlockOff = mapStart + mapSize; 
+                                
+                                // 2. Daftarkan Semua Alamat Blok secara Presisi
+                                for (let i = 0; i < numBlocks; i++) {
+                                    if (offset >= buffer.byteLength) break;
+                                    let bId = "";
+                                    while(offset < buffer.byteLength && view.getUint8(offset) !== 0) { bId += String.fromCharCode(view.getUint8(offset)); offset++; }
+                                    offset++;
+                                    
+                                    while(offset < buffer.byteLength && view.getUint8(offset) !== 0) offset++; offset++; 
+                                    
+                                    let bSize = view.getInt32(offset, true); offset += 4;
+                                    blocks[bId] = currentBlockOff;
+                                    currentBlockOff += bSize;
                                 }
 
-                                if (keyIdx !== -1) {
-                                    let offset = keyIdx + 10; // Maju melewati "KeyEvents\0"
+                                // 3. Dapatkan IoR dari FxdParams
+                                let ior = 1.4677; // Standar Default FO Singlemode
+                                if (blocks["FxdParams"]) {
+                                    try {
+                                        let fOff = blocks["FxdParams"];
+                                        while(fOff < buffer.byteLength && view.getUint8(fOff) !== 0) fOff++; fOff++;
+                                        while(fOff < buffer.byteLength && view.getUint8(fOff) !== 0) fOff++; fOff++;
+                                        fOff += 4; // Skip size
+                                        fOff += 16; 
+                                        let nPulses = view.getInt16(fOff, true); fOff += 2;
+                                        fOff += (8 * nPulses); 
+                                        let iorRaw = view.getInt32(fOff, true);
+                                        if (iorRaw > 100000 && iorRaw < 200000) ior = iorRaw / 100000;
+                                    } catch(err) { console.warn("Gagal baca IoR, menggunakan default"); }
+                                }
+
+                                // 4. Menyelam ke KeyEvents
+                                if (blocks["KeyEvents"]) {
+                                    let keOff = blocks["KeyEvents"];
+                                    while(keOff < buffer.byteLength && view.getUint8(keOff) !== 0) keOff++; keOff++;
+                                    while(keOff < buffer.byteLength && view.getUint8(keOff) !== 0) keOff++; keOff++;
                                     
-                                    // Lewati Revision String (Misal "SR-4731\0")
-                                    while (offset < view.byteLength && view.getUint8(offset) !== 0) { offset++; }
-                                    offset++; // Lewati char NULL penutup
+                                    keOff += 4; // Skip Block Size
+                                    let numEvents = view.getInt16(keOff, true); keOff += 2;
                                     
-                                    // Ambil Ukuran Blok (Int32) dan Jumlah Event (Int16)
-                                    let blockSize = view.getInt32(offset, true); offset += 4;
-                                    let numEvents = view.getInt16(offset, true); offset += 2;
-                                    
-                                    let lastEventPropTime = 0;
-                                    
-                                    // Ekstrak List Event berdasarkan ukuran standar 42-byte per event di GR-196
-                                    for(let i = 0; i < numEvents; i++) {
-                                        let evNum = view.getInt16(offset, true); offset += 2;
-                                        let propTime = view.getInt32(offset, true); offset += 4; // Waktu tempuh
+                                    if (numEvents > 0 && numEvents < 5000) {
+                                        let lastPropTime = 0;
+                                        let evtPtr = keOff;
                                         
-                                        if (i === numEvents - 1) {
-                                            lastEventPropTime = propTime;
+                                        // Lompat event demi event ke event terakhir (End of Fiber)
+                                        for(let i = 0; i < numEvents; i++) {
+                                            if (evtPtr + 42 > buffer.byteLength) break;
+                                            if (i === numEvents - 1) {
+                                                lastPropTime = view.getInt32(evtPtr + 2, true); // PropTime
+                                            }
+                                            evtPtr += 42; // Standar 42 Bytes
                                         }
                                         
-                                        // Skip data event lainnya (Redaman, Kode, Penanda Jarak, dll = 36 bytes)
-                                        offset += 36; 
+                                        // Tepat setelah Event Array = End To End Loss
+                                        if (evtPtr + 4 <= buffer.byteLength) {
+                                            let e2eLossRaw = view.getInt32(evtPtr, true);
+                                            if (e2eLossRaw >= 0 && e2eLossRaw < 100000) {
+                                                loss = (e2eLossRaw / 1000).toFixed(3);
+                                            }
+                                        }
+                                        
+                                        // Rumus Cahaya x Waktu / IoR
+                                        let timeSeconds = lastPropTime * 1e-10;
+                                        let distKm = (timeSeconds * 299792.458) / ior;
+                                        distance = distKm.toFixed(3);
+                                        
+                                        if (parseFloat(distance) <= 0) status = "Gagal (Jarak 0)";
+                                    } else {
+                                        status = "Gagal (Kosong)";
                                     }
-                                    
-                                    // End to end loss selalu tepat di akhir list array event (4 Bytes Int32)
-                                    let e2eLoss = view.getInt32(offset, true);
-                                    loss = (e2eLoss / 1000).toFixed(3); // Konversi mB -> dB
-                                    
-                                    // Kalkulasi Jarak Kabel Otentik (Mirip software STV Exfo/Anritsu)
-                                    let ior = 1.4677; // Standar Index Bias (IoR) Kabel FO SMF
-                                    let timeSeconds = lastEventPropTime * 1e-10; // Satuan 0.0001 ms -> detik
-                                    let distKm = (timeSeconds * 299792.458) / ior;
-                                    
-                                    distance = distKm.toFixed(3);
-                                    
                                 } else {
-                                    status = "Gagal (Format Invalid)";
+                                    status = "Gagal (Tanpa KeyEvents)";
                                 }
+
                             } catch(err) {
+                                console.error("Parse Error:", err);
                                 status = "Error Biner (Corrupt)";
                             }
                             
-                            resolve({
-                                fileName: file.name,
-                                status: status, 
-                                distance: distance,
-                                loss: loss
-                            });
+                            resolve({ fileName: file.name, status: status, distance: distance, loss: loss });
                         };
+                        
                         reader.onerror = () => resolve({ fileName: file.name, status: "I/O Error", distance: "0.000", loss: "0.000" });
                         reader.readAsArrayBuffer(file);
                     });
                 };
                 
-                // Menjalankan proses pembacaan seluruh antrean file secara asinkron
+                // Eksekusi semua file secara asinkron
                 for (let i = 0; i < files.length; i++) {
                     const res = await parseFile(files[i]);
                     this.results.push(res);
@@ -1809,6 +1847,7 @@
                 this.renderTable();
                 document.getElementById('btnSaveSOR').classList.remove('hidden');
             },
+            
             renderTable: function() {
                 const tbody = document.getElementById('sor-results-body');
                 tbody.innerHTML = '';
@@ -1833,6 +1872,7 @@
                     tbody.appendChild(tr);
                 });
             },
+            
             saveToDatabase: function() {
                 if (this.results.length === 0) return;
                 
