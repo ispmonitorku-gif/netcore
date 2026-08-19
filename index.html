@@ -322,7 +322,7 @@
         </div>
     </div>
 
-    <!-- Modal Form Node Registrasi (Dukungan Enter / Multiline) -->
+    <!-- Modal Form Node Registrasi -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[92vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 flex justify-between items-center border-b border-zinc-800">
@@ -388,7 +388,7 @@
         </div>
     </div>
 
-    <!-- Modal OTDR Files (Android Multi-Upload Robust) -->
+    <!-- Modal OTDR Files -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
@@ -417,7 +417,6 @@
                         </div>
                     </div>
                     
-                    <!-- Progress Bar Saat Upload Banyak File -->
                     <div id="uploadProgressContainer" class="hidden space-y-1">
                         <div class="flex justify-between text-[10px] text-zinc-400">
                             <span id="uploadProgressStatus">Mengunggah...</span>
@@ -1711,96 +1710,96 @@
 
         const sorApp = {
             results: [],
-            // Fungsi parser yang akan melakukan read file arrayBuffer, memetakan format biner Telcordia SOR
-            // ke dalam format JSON, kemudian mengekstrak jarak dan loss seperti di STV reader.
+            // Telcordia SR-4731 Native Binary Parser (Akurat untuk STV Standard)
             parseSorToJson: function(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         try {
                             const buffer = e.target.result;
-                            const bytes = new Uint8Array(buffer);
+                            const dataView = new DataView(buffer);
                             
-                            // 1. Inisialisasi format STV-like JSON 
                             let sorJson = {
                                 fileName: file.name,
                                 blocks: {},
                                 metadata: {}
                             };
 
-                            // Helper pencari block string ASCII di dalam struktur binary SOR
-                            const findBlockOffset = (blockName) => {
-                                const target = new TextEncoder().encode(blockName);
-                                for(let i=0; i < bytes.length - target.length; i++) {
-                                    let match = true;
-                                    for(let j=0; j<target.length; j++) {
-                                        if(bytes[i+j] !== target[j]) { match = false; break; }
-                                    }
-                                    if(match) return i;
+                            // Membaca MAP Block (berada pada index 0)
+                            let mapSize = dataView.getInt32(2, true); 
+                            let numBlocks = dataView.getInt16(6, true);
+                            let blocks = {};
+                            let pos = 8;
+                            let currentDataOffset = mapSize; 
+                            
+                            // Ekstrak struktur dan offset block 
+                            for(let i = 0; i < numBlocks; i++) {
+                                let nameChars = [];
+                                while(pos < buffer.byteLength) {
+                                    let charCode = dataView.getUint8(pos++);
+                                    if (charCode === 0) break;
+                                    nameChars.push(String.fromCharCode(charCode));
                                 }
-                                return -1;
-                            };
+                                let blockName = nameChars.join('');
+                                let revision = dataView.getInt16(pos, true); pos += 2;
+                                let blockSize = dataView.getInt32(pos, true); pos += 4;
+                                
+                                blocks[blockName] = { offset: currentDataOffset, size: blockSize, revision: revision };
+                                currentDataOffset += blockSize;
+                            }
 
-                            // Menemukan block utama Telcordia SR-4731
-                            const fxdIndex = findBlockOffset("FxdParams");
-                            const genIndex = findBlockOffset("GenParams");
-                            const keyIndex = findBlockOffset("KeyEvents");
-                            const lnkIndex = findBlockOffset("LnkParams");
-
+                            sorJson.blocks = blocks;
+                            
                             let distance = "0.000";
                             let loss = "0.000";
                             let status = "Format Tidak Dikenal";
 
-                            if (fxdIndex !== -1 || genIndex !== -1) {
-                                status = 'OK / Ter-ekstrak';
+                            // AKURASI 1: Ambil Total Jarak melalui pembacaan Blok FxdParams
+                            if (blocks["FxdParams"]) {
+                                status = "OK / Ter-ekstrak";
+                                let fxd = blocks["FxdParams"];
                                 
-                                // Mapping ketersediaan struktur block JSON 
-                                if (fxdIndex !== -1) sorJson.blocks.FxdParams = { offset: fxdIndex };
-                                if (genIndex !== -1) sorJson.blocks.GenParams = { offset: genIndex };
-                                if (lnkIndex !== -1) sorJson.blocks.LnkParams = { offset: lnkIndex };
-                                if (keyIndex !== -1) sorJson.blocks.KeyEvents = { offset: keyIndex };
-
-                                // 2. Ekstraksi Akurat Fallback STV 
-                                // Jika tidak ada library decoder struct spesifik milik STV yang dimasukkan, 
-                                // maka akan dilakukan fallback ekstraksi estimasi panjang Jarak dan Loss dari bytes biner asli.
-                                if (typeof window.STVParser !== 'undefined') {
-                                    // Panggilan jika external STV parsing library berhasil load 
-                                    const stvData = window.STVParser.parse(buffer);
-                                    distance = stvData.distance.toFixed(3);
-                                    loss = stvData.loss.toFixed(3);
-                                } else {
-                                    // Pembacaan mandiri dari checksum biner file SOR.
-                                    if (keyIndex !== -1 || lnkIndex !== -1) {
-                                        let baseIdx = keyIndex !== -1 ? keyIndex : lnkIndex;
-                                        let hash = 0;
-                                        // Scan sampel array points untuk membuat ektraksi panjang kabel realistis dari file tersebut
-                                        for(let i = baseIdx; i < baseIdx + 120 && i < bytes.length; i++) hash += bytes[i];
-                                        
-                                        // Hitungan generic parsing Jarak (km) dan Loss (dB) 
-                                        distance = ((hash % 50000) / 1000).toFixed(3); 
-                                        loss = "-" + ((hash % 1500) / 100).toFixed(3);
-                                    } else {
-                                        distance = (bytes.length / 5000).toFixed(3);
-                                        loss = "-0.00";
-                                    }
-                                }
-                            } else {
-                                throw new Error("Bukan file Telcordia SOR Standard");
+                                // FxdParams standard:
+                                // Byte + 20: Data spacing (4 bytes, 10^-8 meter)
+                                // Byte + 24: Num data points (4 bytes)
+                                let dataSpacing = dataView.getInt32(fxd.offset + 20, true); 
+                                let numPoints = dataView.getInt32(fxd.offset + 24, true);
+                                
+                                // Kalkulasi Aktual: (numPoints * dataSpacing) / 10^8 untuk mendapat jarak (Meter), lalu dibagi 1000 untuk KM
+                                let distanceMeters = (numPoints * dataSpacing) / 100000000;
+                                distance = (distanceMeters / 1000).toFixed(3);
                             }
 
-                            // Output konversi JSON SOR 
+                            // AKURASI 2: Ambil End-to-End Loss melalui pembacaan Blok KeyEvents
+                            if (blocks["KeyEvents"]) {
+                                let key = blocks["KeyEvents"];
+                                
+                                // Jumlah event: 2 bytes
+                                let numEvents = dataView.getInt16(key.offset, true);
+                                // Setiap struktur event berukuran 42 Bytes
+                                // Posisi End-to-End loss (4 Bytes) berada persis setelah iterasi array events
+                                let endToEndLossOffset = key.offset + 2 + (numEvents * 42);
+                                
+                                if (endToEndLossOffset + 4 <= buffer.byteLength) {
+                                    let totalLossVal = dataView.getInt32(endToEndLossOffset, true);
+                                    // Hitung ke Desibel (dB)
+                                    loss = (totalLossVal / 1000).toFixed(3);
+                                }
+                            }
+
                             resolve({
                                 fileName: file.name,
                                 status: status,
                                 distance: distance,
                                 loss: loss,
-                                jsonExtract: sorJson // <-- Object JSON Ekstrak SOR utuh 
+                                jsonExtract: sorJson
                             });
                         } catch (err) {
-                            reject(err);
+                            console.error("SOR Parse Error:", err);
+                            reject(new Error("File korup atau ekstensi bukan Telcordia SR-4731 standar."));
                         }
                     };
-                    reader.onerror = () => reject(new Error("File corrupt atau gagal dibaca"));
+                    reader.onerror = () => reject(new Error("Gagal membaca file biner."));
                     reader.readAsArrayBuffer(file);
                 });
             },
@@ -1810,7 +1809,7 @@
                 if (!files || files.length === 0) return;
 
                 const tbody = document.getElementById('sor-results-body');
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-zinc-500 italic"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Mengekstrak binary ke JSON...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-zinc-500 italic"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Mengekstrak binary SOR ke JSON...</td></tr>';
                 
                 this.results = [];
                 
