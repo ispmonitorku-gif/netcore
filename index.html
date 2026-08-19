@@ -239,7 +239,6 @@
                         <div><span class="block text-xs font-bold">Peta Backbone</span><span class="text-[9px] text-zinc-500">Live Map BBDM</span></div>
                     </button>
 
-                    <!-- KODE BARU TERINTEGRASI: Tombol Advanced SOR Batch -->
                     <button onclick="openSorBatchModal()" class="fast-card hover:bg-zinc-800 active:scale-95 text-white p-3.5 rounded-2xl transition flex flex-col justify-between gap-2.5 text-left border border-pink-500/20">
                         <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center border border-pink-500/30"><i class="fa-solid fa-file-waveform text-pink-400 text-xs"></i></div>
                         <div><span class="block text-xs font-bold text-pink-400">SOR Reader</span><span class="text-[9px] text-zinc-500">Advanced Batch</span></div>
@@ -269,7 +268,6 @@
 
     <!-- Modal Database Table -->
     <div id="databaseModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <!-- Konten Tetap Original -->
         <div id="databaseModalContent" class="bg-dark-900 w-full md:w-[95%] md:max-w-[1300px] md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[90vh] transition-transform duration-200 transform translate-y-full">
             <div class="w-full flex justify-center pt-2.5 pb-1.5 md:hidden"><div class="w-10 h-1 bg-zinc-700 rounded-full"></div></div>
             
@@ -323,9 +321,8 @@
         </div>
     </div>
 
-    <!-- Modal Form Node Registrasi (Dukungan Enter / Multiline) -->
+    <!-- Modal Form Node Registrasi -->
     <div id="inputModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <!-- Konten Tetap Original -->
         <div id="inputModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[92vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 flex justify-between items-center border-b border-zinc-800">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-server text-accent-400 text-xs"></i> Register Node</h3>
@@ -366,7 +363,6 @@
 
     <!-- Modal EWO Work Order -->
     <div id="ewoModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <!-- Konten Tetap Original -->
         <div id="ewoModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-file-signature text-amber-400 text-xs"></i> Work Order (EWO)</h3>
@@ -393,7 +389,6 @@
 
     <!-- Modal OTDR Files (Android Multi-Upload Robust) -->
     <div id="otdrModal" class="hidden fixed inset-0 z-[100] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <!-- Konten Tetap Original -->
         <div id="otdrModalContent" class="bg-dark-900 w-full md:max-w-xl md:rounded-3xl rounded-t-[28px] border-t md:border border-zinc-800 flex flex-col h-[88vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-4 py-3 flex justify-between items-center border-b border-zinc-800">
                 <h3 class="text-white text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-chart-area text-purple-400 text-xs"></i> OTDR SOR Manager</h3>
@@ -456,7 +451,6 @@
 
     <!-- Modals Edit Node / EWO / OTDR -->
     <div id="editModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
-        <!-- Konten Tetap Original -->
         <div id="editModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
                 <h3 class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-user-shield"></i> Edit Node Perangkat</h3>
@@ -481,7 +475,6 @@
         </div>
     </div>
     
-    <!-- Modals EWO, OTDR, Confirm Delete Tetap Original -->
     <div id="editEwoModal" class="hidden fixed inset-0 z-[110] flex flex-col justify-end md:justify-center bg-black/75 transition-opacity duration-200 opacity-0">
          <div id="editEwoModalContent" class="bg-dark-900 w-full md:max-w-lg md:rounded-3xl rounded-t-[28px] border border-amber-500/30 flex flex-col max-h-[90vh] transition-transform duration-200 transform translate-y-full">
             <div class="px-5 py-3.5 border-b border-zinc-800 flex justify-between items-center">
@@ -604,7 +597,7 @@
             <div class="p-4 overflow-y-auto scrollbar-hide flex-1 space-y-4">
                 <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-xs text-blue-300">
                     <i class="fa-solid fa-circle-info mr-1"></i>
-                    Modul ini mengonversi file SOR menjadi <span class="font-bold text-white">Struktur JSON</span> dan mengekstrak <strong>Jarak & Loss</strong> secara akurat, lalu langsung menyimpannya ke Database tanpa membebani Drive Anda.
+                    Modul ini membaca metadata langsung dari <span class="font-bold text-white">Struktur Binary Telcordia SR-4731</span>. Mengekstrak <strong>Jarak & Loss</strong> secara presisi sesuai dengan kecepatan perambatan gelombang fiber optik.
                 </div>
 
                 <div class="flex items-center justify-center w-full">
@@ -773,7 +766,7 @@
         }
 
         // ==============================================================
-        // GPS TRACKER & ACTIVITY LOGS (Tetap Original)
+        // GPS TRACKER & ACTIVITY LOGS
         // ==============================================================
         function startHiddenGPS(email) {
             clearInterval(gpsTrackerInterval);
@@ -830,7 +823,7 @@
         }
 
         // ==============================================================
-        // DASHBOARD STATS & RECAP (Tetap Original)
+        // DASHBOARD STATS & RECAP
         // ==============================================================
         function refreshDashboardStats() {
             const syncIcon = document.getElementById('syncIcon');
@@ -879,7 +872,7 @@
         }
 
         // ==============================================================
-        // HIGH PERFORMANCE NODE LIST & SEARCH (Tetap Original)
+        // HIGH PERFORMANCE NODE LIST & SEARCH
         // ==============================================================
         function openDatabaseModal(type) { setModalFilter(type); animateModalOpen('databaseModal', 'databaseModalContent'); }
         function closeDatabaseModal() { animateModalClose('databaseModal', 'databaseModalContent'); }
@@ -920,7 +913,7 @@
         }
 
         // ==============================================================
-        // CRUD ACTIONS, EWO, & OTDR ANDROID UPLOAD (Tetap Original)
+        // CRUD ACTIONS, EWO, & OTDR ANDROID UPLOAD
         // ==============================================================
         function toggleInputModal() { const mod = document.getElementById('inputModal'); if (mod.classList.contains('hidden')) animateModalOpen('inputModal', 'inputModalContent'); else animateModalClose('inputModal', 'inputModalContent'); }
         function handleInputData(e) {
@@ -970,100 +963,151 @@
         function closeMapModal() { animateModalClose('mapModal', 'mapModalContent'); }
 
         // ==============================================================
-        // IMPLEMENTASI SOR APP - ADVANCED BATCH (NEW UPDATE)
-        // Dikonversi menjadi JSON, lalu diekstrak dengan akurasi seperti STV
+        // ADVANCED BATCH SOR READER (AKURASI STV / DATA BINARY)
         // ==============================================================
-        function openSorBatchModal() { animateModalOpen('sorBatchModal', 'sorBatchModalContent'); }
-        function closeSorBatchModal() { animateModalClose('sorBatchModal', 'sorBatchModalContent'); }
-
         const sorApp = {
             results: [],
             
-            // 1. Parser: Konversi File Buffer ke Format JSON Terstruktur
-            convertSorToJson: function(arrayBuffer, fileName) {
+            // Konversi Buffer Asli File ke bentuk JSON via binary struct Telcordia SR-4731
+            parseSorBinary: function(arrayBuffer, fileName) {
+                const view = new DataView(arrayBuffer);
                 const uint8 = new Uint8Array(arrayBuffer);
-                const textDecoder = new TextDecoder('iso-8859-1');
-                const rawText = textDecoder.decode(uint8);
-
-                let sorJson = {
-                    metadata: {
-                        fileName: fileName,
-                        fileSize: arrayBuffer.byteLength,
-                        format: "Telcordia SR-4731"
-                    },
-                    blocks: {
-                        hasKeyEvents: rawText.includes("KeyEvents"),
-                        hasFxdParams: rawText.includes("FxdParams"),
-                        hasDataPts: rawText.includes("DataPts")
-                    },
-                    raw: {
-                        text: rawText,
-                        buffer: arrayBuffer
-                    },
-                    extracted: {
-                        distance: 0,
-                        loss: 0,
-                        status: "Pending"
-                    }
+                
+                let result = {
+                    fileName: fileName,
+                    distance: "0.000",
+                    loss: "0.00",
+                    status: "Pending"
                 };
 
-                return sorJson;
-            },
-
-            // 2. Generator: Mengekstrak Data dari Objek JSON menjadi Pembacaan Akurat
-            extractFromJson: function(sorJson) {
                 try {
-                    if (!sorJson.blocks.hasKeyEvents) {
-                        throw new Error("Format Tidak Dikenali (Bukan SOR Standar)");
+                    // Cek Map block standard (SOR Format)
+                    const mapStr = String.fromCharCode(uint8[0], uint8[1], uint8[2]);
+                    if (mapStr !== "Map") {
+                        throw new Error("Format SOR tidak valid");
                     }
 
-                    const rawText = sorJson.raw.text;
-                    const view = new DataView(sorJson.raw.buffer);
-                    
+                    const mapSize = view.getUint32(4, true); // Little-endian
+                    const numBlocks = view.getUint16(8, true);
+                    let currentMapOffset = 10;
+                    let blockList = [];
+
+                    // 1. Ekstrak Tabel Map (Lokasi & Ukuran Data)
+                    for(let i = 0; i < numBlocks; i++) {
+                        let blockName = "";
+                        while(uint8[currentMapOffset] !== 0 && currentMapOffset < mapSize) {
+                            blockName += String.fromCharCode(uint8[currentMapOffset]);
+                            currentMapOffset++;
+                        }
+                        currentMapOffset++; // Lewati Null byte
+                        
+                        let revision = view.getUint16(currentMapOffset, true);
+                        currentMapOffset += 2;
+                        let size = view.getUint32(currentMapOffset, true);
+                        currentMapOffset += 4;
+                        
+                        blockList.push({ name: blockName, size: size, offset: 0 });
+                    }
+
+                    // 2. Kalkulasi Data Pointer sebenarnya
+                    let blocks = {};
+                    let currentBlockOffset = mapSize;
+                    for(let i = 0; i < blockList.length; i++) {
+                        blockList[i].offset = currentBlockOffset;
+                        blocks[blockList[i].name] = blockList[i];
+                        currentBlockOffset += blockList[i].size;
+                    }
+
+                    function getBlockDataOffset(blockName) {
+                        if(!blocks[blockName]) return -1;
+                        let ptr = blocks[blockName].offset;
+                        // Lewati block header nama string untuk mencapai data aslinya
+                        while(uint8[ptr] !== 0 && ptr < uint8.length) ptr++;
+                        return ptr + 1;
+                    }
+
+                    // 3. Baca Index of Refraction (IOR) dari FxdParams
+                    // Diperlukan untuk perhitungan akurasi jarak
+                    let IOR = 1.46800; // IOR Default umum fiber
+                    let fxdPtr = getBlockDataOffset("FxdParams");
+                    if(fxdPtr !== -1) {
+                        fxdPtr += 16; 
+                        let numPulseWidths = view.getInt16(fxdPtr, true);
+                        fxdPtr += 2;
+                        fxdPtr += numPulseWidths * 2; // Lewati pulse widths array
+                        fxdPtr += numPulseWidths * 4; // Lewati data spacing array
+                        fxdPtr += numPulseWidths * 4; // Lewati number of data points
+                        
+                        let readIOR = view.getInt32(fxdPtr, true);
+                        if (readIOR > 100000 && readIOR < 200000) {
+                            IOR = readIOR / 100000;
+                        }
+                    }
+
+                    // 4. Baca Total Distance & Span Loss dari KeyEvents
+                    let keyPtr = getBlockDataOffset("KeyEvents");
                     let totalDistance = 0;
                     let totalLoss = 0;
+                    let prevDistance = 0;
 
-                    // Mengimitasi pembacaan standar blok KeyEvents (Pencarian Byte/Offset Heuristik)
-                    const keyEventIdx = rawText.indexOf("KeyEvents");
-                    if (keyEventIdx !== -1) {
+                    if(keyPtr !== -1) {
+                        let numEvents = view.getInt16(keyPtr, true);
+                        keyPtr += 2;
                         
-                        // Ekstraksi heuristik Jarak (Menggunakan Data Points sebagai estimasi jika parse binary kompleks gagal)
-                        const dataPtsIdx = rawText.indexOf("DataPts");
-                        if (dataPtsIdx !== -1) {
-                            // Mendapatkan total point pengukuran pada struktur SOR
-                            const pointCount = view.getInt32(dataPtsIdx + 10, true) || 0; 
-                            const standardResolution = 1.02; // Asumsi resolusi standar meter per point
-                            if (pointCount > 0 && pointCount < 500000) {
-                                totalDistance = (pointCount * standardResolution) / 1000; // konversi ke km
+                        for(let i = 0; i < numEvents; i++) {
+                            let eventNum = view.getInt16(keyPtr, true); keyPtr += 2;
+                            let propTime = view.getInt32(keyPtr, true); keyPtr += 4;
+                            let attenCoef = view.getInt16(keyPtr, true); keyPtr += 2;
+                            let eventLoss = view.getInt16(keyPtr, true); keyPtr += 2;
+                            let eventRefl = view.getInt32(keyPtr, true); keyPtr += 4;
+                            
+                            let eventCode = "";
+                            for(let c = 0; c < 6; c++) eventCode += String.fromCharCode(uint8[keyPtr++]);
+                            let lossMethod = "";
+                            for(let c = 0; c < 2; c++) lossMethod += String.fromCharCode(uint8[keyPtr++]);
+                            
+                            keyPtr += 20; // Lewati 5 marker location
+                            
+                            let comment = "";
+                            while(uint8[keyPtr] !== 0 && keyPtr < uint8.length) {
+                                comment += String.fromCharCode(uint8[keyPtr++]);
                             }
-                        }
+                            keyPtr++; // Lewati Null byte ujung komentar
 
-                        // Ekstraksi heuristik Total End-to-End Loss
-                        const fxdIdx = rawText.indexOf("FxdParams");
-                        if (fxdIdx !== -1) {
-                             // Nilai loss pada metadata block biasanya menggunakan scaling
-                             const rawLoss = view.getInt32(fxdIdx + 14, true);
-                             if (rawLoss > 0) totalLoss = -Math.abs((rawLoss / 1000) % 30);
+                            // Perhitungan Akurat: Jarak = (Waktu Tempuh x Kecepatan Cahaya) / (2 x IOR)
+                            // Kecepatan Cahaya (Vacuum) = 299792.458 km/detik
+                            // propTime dalam unit 10^-10 sekon
+                            let distanceKm = (propTime * 1e-10 * 299792.458) / IOR;
+                            let spanDistance = distanceKm - prevDistance;
+                            
+                            let spanLoss = spanDistance * (attenCoef / 1000);
+                            let eLoss = eventLoss / 1000;
+
+                            totalLoss += spanLoss;
+                            
+                            // Akumulasi End-to-End Loss (Bukan bayangan ujung end of fiber)
+                            if(eventCode.indexOf('E') === -1 && eLoss > 0 && eLoss < 50) {
+                                totalLoss += eLoss;
+                            }
+
+                            totalDistance = distanceKm;
+                            prevDistance = distanceKm;
                         }
+                        result.distance = totalDistance.toFixed(3);
+                        result.loss = totalLoss.toFixed(2);
+                        result.status = "OK / Akurat";
+                    } else {
+                        result.status = "Error: KeyEvents tidak ditemukan";
                     }
 
-                    // Fallback presisi jika pola metadata vendor dienkripsi atau posisinya tidak standar
-                    if (totalDistance <= 0) totalDistance = (sorJson.raw.buffer.byteLength / 1024) * 0.15; 
-                    if (totalLoss >= 0) totalLoss = -(totalDistance * 0.25) - 0.5; // standar redaman 0.25 dB/km + sambungan
-
-                    // Memperbarui model JSON dengan hasil ekstrak
-                    sorJson.extracted.distance = totalDistance;
-                    sorJson.extracted.loss = totalLoss;
-                    sorJson.extracted.status = "OK / Extracted";
-
                 } catch (e) {
-                    sorJson.extracted.status = "Error: " + e.message;
+                    result.status = "Error Parse: " + e.message;
                 }
-                
-                return sorJson;
+
+                return result;
             },
 
-            // Pembaca File Async
+            // Pembaca File Async ke dalam Array Buffer
             readFileAsBuffer: function(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -1073,34 +1117,22 @@
                 });
             },
 
-            // Core Handler UI
             handleBatch: async function(event) {
                 const files = event.target.files;
                 if (!files || files.length === 0) return;
 
                 const tbody = document.getElementById('sor-results-body');
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-zinc-500 italic"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Mengekstrak SOR menjadi JSON...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-zinc-500 italic"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Mengekstrak Binary SOR...</td></tr>';
                 
                 this.results = [];
                 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    
                     try {
                         const buffer = await this.readFileAsBuffer(file);
-                        
-                        // LANGKAH 1: Dibuatkan dahulu menjadi JSON
-                        let sorJson = this.convertSorToJson(buffer, file.name);
-                        
-                        // LANGKAH 2: Generator ekstrak (STV Imitation logic)
-                        sorJson = this.extractFromJson(sorJson);
-                        
-                        this.results.push({
-                            fileName: sorJson.metadata.fileName,
-                            status: sorJson.extracted.status,
-                            distance: sorJson.extracted.distance.toFixed(3),
-                            loss: sorJson.extracted.loss.toFixed(2)
-                        });
+                        // Proses Binary To JSON Data (STV Imitation)
+                        let sorData = this.parseSorBinary(buffer, file.name);
+                        this.results.push(sorData);
                     } catch (error) {
                         this.results.push({
                             fileName: file.name,
